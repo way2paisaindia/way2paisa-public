@@ -1,23 +1,18 @@
-# Way2Paisa Public Website
+# Way2Paisa Public Website — Phase 3
 
-Next.js public property portal connected to the Way2Paisa Supabase database.
+Premium Next.js property portal connected to the Way2Paisa Supabase database.
 
-## Features
-- Live active project listings
-- Search by project/developer/location
-- BHK and budget filters
-- Location explorer
-- WhatsApp and email CTAs
-- Website enquiry form writing to `public.leads`
+## Phase 3 features
+- Premium home page
+- Full `/properties` search and filters
+- Individual `/projects/[slug]` detail pages
+- Project inventory snapshot from `public.inventory`
+- Project-specific enquiry capture into `public.leads`
+- WhatsApp project enquiry links
+- Dynamic project SEO metadata
 
-## Deploy
-1. Copy `.env.local.example` to `.env.local` for local testing.
-2. Set `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` to the project's publishable key.
-3. `npm install && npm run dev`
-4. Create a NEW Vercel project named `way2paisa-public` and deploy this folder.
-5. Add production environment variables in Vercel.
-6. Connect `way2paisa.in` and `www.way2paisa.in` to the new public project.
-
-Keep `admin.way2paisa.in` on the existing Admin project.
-
-Never put a Supabase service-role key in this app.
+## Environment variables
+- NEXT_PUBLIC_SUPABASE_URL
+- NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+- NEXT_PUBLIC_WHATSAPP_NUMBER
+- NEXT_PUBLIC_SITE_URL
