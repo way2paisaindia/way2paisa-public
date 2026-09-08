@@ -1,0 +1,16 @@
+.imageWrap:has(> img)::after,
+.projectHeroImage:has(> img)::after{
+  content:'';
+  position:absolute;
+  top:auto!important;
+  right:12px!important;
+  bottom:12px!important;
+  width:clamp(70px,16%,120px)!important;
+  aspect-ratio:1200/486;
+  background:transparent url('/way2paisa-watermark.png') center/contain no-repeat!important;
+  border-radius:0!important;
+  opacity:.15!important;
+  pointer-events:none;
+  z-index:3;
+}
+.projectHeroImage:has(> img)::after{right:16px!important;bottom:16px!important;width:clamp(85px,14%,135px)!important}
