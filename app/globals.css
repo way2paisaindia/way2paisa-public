@@ -46,3 +46,14 @@ footer{background:#03172e;color:#d6e5f3;padding:58px 5.5% 26px;display:grid;grid
 @media(max-width:680px){.projectGalleryGrid{grid-template-columns:1fr 1fr;gap:10px}.galleryLightbox{padding:58px 12px}.galleryStage{width:92vw;height:68vh}.galleryPrev{left:6px}.galleryNext{right:6px}.galleryPrev,.galleryNext{width:40px;height:40px;font-size:30px}}
 
 .listingActions{grid-template-columns:1fr 1fr 1fr}.listingActions .shareBtn{width:100%}@media(max-width:680px){.listingActions{grid-template-columns:1fr 1fr}.listingActions .shareBtn{grid-column:1/-1}}
+
+/* Global visual consistency: details, embedded watermark, logo lockup */
+.projectSummary strong,.detailGrid strong,.detailGrid .stackedValue{font-size:18px!important;line-height:1.45;font-weight:700}
+.projectSummary .stackedValue,.detailGrid .stackedValue{font-size:18px!important}
+.imageWrap:has(> img)::after,.projectHeroImage:has(> img)::after{background:transparent url('/way2paisa-watermark.png') center/contain no-repeat!important;opacity:.28!important;width:clamp(76px,15%,120px)!important;top:auto!important;right:12px!important;bottom:12px!important;border-radius:0!important;filter:brightness(0) invert(1);mix-blend-mode:normal}
+.projectHeroImage:has(> img)::after{right:18px!important;bottom:18px!important}
+.galleryWatermark{right:10px!important;bottom:10px!important;opacity:.28!important}.galleryWatermark img{width:90px!important;filter:brightness(0) invert(1)}
+.brandedMedia .mediaOpen>span>span{right:10px!important;bottom:10px!important;opacity:.28!important}.brandedMedia .mediaOpen>span>span img,.mediaFull>span>span img{width:90px!important;filter:brightness(0) invert(1)}
+.logoLockup{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;width:max-content}.logoLockup>img{display:block;margin-left:auto!important;margin-right:auto!important}.logoLockup .logoTagline,.footerBrand .logoTagline{width:100%;text-align:center!important;font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;font-size:9px!important;font-weight:600!important;letter-spacing:1.35px!important;color:var(--navy)!important;margin:4px auto 0!important}
+.footerBrand{display:flex;flex-direction:column;align-items:center;text-align:center}.footerBrand>img{display:block;margin:0 auto}.footerBrand p{text-align:center}
+@media(max-width:680px){.projectSummary strong,.detailGrid strong,.detailGrid .stackedValue{font-size:17px!important}}
