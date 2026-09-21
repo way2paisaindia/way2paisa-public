@@ -74,3 +74,10 @@ footer .logoTagline{color:#d6e5f3!important}
 
 /* Trusted network logo carousels */
 .logoCarousel{position:relative;padding:0 48px}.logoCarousel .partnerScroller{scroll-behavior:smooth;scroll-snap-type:x mandatory;scrollbar-width:none}.logoCarousel .partnerScroller::-webkit-scrollbar{display:none}.logoCarousel .partnerLogo{scroll-snap-align:start;min-width:180px;height:86px;padding:14px 18px}.logoCarousel .partnerLogo img{max-width:140px;max-height:54px;width:auto;height:auto;object-fit:contain}.logoFallback{display:none;font-size:12px;color:var(--navy);font-weight:800;text-align:center}.logoArrow{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:#fff;color:var(--navy);font-size:27px;line-height:1;box-shadow:0 6px 20px rgba(7,42,84,.12);cursor:pointer}.logoArrow.left{left:0}.logoArrow.right{right:0}.logoArrow:hover{background:var(--navy);color:#fff}@media(max-width:680px){.logoCarousel{padding:0 36px}.logoCarousel .partnerLogo{min-width:145px;height:76px;padding:10px}.logoCarousel .partnerLogo img{max-width:115px;max-height:46px}.logoArrow{width:32px;height:32px;font-size:23px}}
+
+
+/* Trusted network: always show full brand name with the logo */
+.logoCarousel .partnerLogo{height:100px!important;flex-direction:column!important;gap:8px!important;padding:12px 14px!important}
+.logoCarousel .partnerLogo img{max-width:140px!important;max-height:50px!important;object-fit:contain!important}
+.partnerBrandName{display:block;width:100%;min-height:18px;color:var(--navy);font-size:12px;line-height:1.25;font-weight:800;text-align:center;white-space:normal}
+@media(max-width:680px){.logoCarousel .partnerLogo{height:92px!important}.logoCarousel .partnerLogo img{max-width:112px!important;max-height:43px!important}.partnerBrandName{font-size:11px}}
