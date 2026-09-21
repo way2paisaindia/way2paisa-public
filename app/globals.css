@@ -89,3 +89,6 @@ footer .logoTagline{color:#d6e5f3!important}
 @media(max-width:680px){.projectSummary .stackedValue,.projectSummary .stackedValue span,.detailGrid .stackedValue,.detailGrid .stackedValue span,.detailGrid strong{font-size:17px!important}}
 
 .cardPossession{display:inline-flex!important;flex-direction:column;gap:2px}.cardPossession>span{display:block}
+
+/* Customer sharing: native sheet first, explicit fallbacks when unavailable */
+.projectShare{margin-top:10px}.projectShareMain{width:100%;min-height:46px}.projectShareFallback{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:8px}.projectShareFallback a,.projectShareFallback button{display:flex;align-items:center;justify-content:center;min-height:38px;padding:8px;border:1px solid #bfd2e5;border-radius:8px;background:#fff;color:var(--navy);font-size:11px;font-weight:800;cursor:pointer}
