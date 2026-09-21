@@ -81,3 +81,9 @@ footer .logoTagline{color:#d6e5f3!important}
 .logoCarousel .partnerLogo img{max-width:140px!important;max-height:50px!important;object-fit:contain!important}
 .partnerBrandName{display:block;width:100%;min-height:18px;color:var(--navy);font-size:12px;line-height:1.25;font-weight:800;text-align:center;white-space:normal}
 @media(max-width:680px){.logoCarousel .partnerLogo{height:92px!important}.logoCarousel .partnerLogo img{max-width:112px!important;max-height:43px!important}.partnerBrandName{font-size:11px}}
+
+
+/* Project detail typography: possession/carpet values match all feature values */
+.projectSummary .stackedValue,.projectSummary .stackedValue span,.detailGrid .stackedValue,.detailGrid .stackedValue span,.detailGrid strong{font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif!important;font-size:18px!important;line-height:1.45!important;font-weight:700!important;color:var(--navy)!important}
+.projectSummary .stackedValue span,.detailGrid .stackedValue span{display:block!important}
+@media(max-width:680px){.projectSummary .stackedValue,.projectSummary .stackedValue span,.detailGrid .stackedValue,.detailGrid .stackedValue span,.detailGrid strong{font-size:17px!important}}
