@@ -98,3 +98,16 @@ footer .logoTagline{color:#d6e5f3!important}
 .promotionProjectList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.promotionProjectList article{border:1px solid var(--line);border-radius:10px;padding:14px;display:grid;gap:8px}.promotionProjectList b{color:var(--navy)}.promotionProjectList span{color:#60768b;font-size:12px}.promotionProjectList button{justify-self:start;border:0;border-radius:7px;padding:9px 11px;background:var(--navy);color:#fff;font-size:11px;font-weight:800;cursor:pointer}@media(max-width:680px){.promotionProjectList{grid-template-columns:1fr}}
 
 .shareMainIcon{width:14px;height:14px;display:inline-block;vertical-align:-2px;margin-right:6px;flex:0 0 14px}.projectShareMain{display:flex;align-items:center;justify-content:center}.shareOptionIcon{width:16px;height:16px;display:inline-block;flex:0 0 16px;margin-right:5px}
+
+/* Partner / lender logo wall — unified lockups + continuous motion */
+.partnerStrip h2,.partnerHeading{font-family:Georgia,"Times New Roman",serif!important;font-size:38px!important;line-height:1.1!important;font-weight:400!important;letter-spacing:-1px!important;color:var(--navy)!important;margin:10px 0 22px!important}
+.partnerHeading{margin-top:44px!important}
+.logoMarquee{width:100%;overflow:hidden;position:relative;padding:4px 0 12px;mask-image:linear-gradient(to right,transparent,#000 4%,#000 96%,transparent);-webkit-mask-image:linear-gradient(to right,transparent,#000 4%,#000 96%,transparent)}
+.logoMarqueeTrack{display:flex;width:max-content;gap:14px;animation:way2paisaLogoMarquee 45s linear infinite;will-change:transform}
+.logoMarquee:hover .logoMarqueeTrack{animation-play-state:paused}
+.logoMarquee .partnerLogo{flex:0 0 190px;width:190px;height:86px!important;border:1px solid var(--line);border-radius:10px;background:#fff;display:flex!important;align-items:center!important;justify-content:center!important;padding:15px 18px!important}
+.logoMarquee .partnerLogo img{display:block;max-width:154px!important;width:auto!important;max-height:52px!important;height:auto!important;object-fit:contain!important}
+.logoMarquee .partnerBrandName,.logoMarquee .logoArrow{display:none!important}
+@keyframes way2paisaLogoMarquee{from{transform:translateX(0)}to{transform:translateX(calc(-50% - 7px))}}
+@media(prefers-reduced-motion:reduce){.logoMarqueeTrack{animation:none;overflow-x:auto}}
+@media(max-width:680px){.partnerStrip h2,.partnerHeading{font-size:30px!important}.logoMarquee .partnerLogo{flex-basis:155px;width:155px;height:76px!important;padding:11px!important}.logoMarquee .partnerLogo img{max-width:128px!important;max-height:45px!important}.logoMarqueeTrack{animation-duration:36s}}
