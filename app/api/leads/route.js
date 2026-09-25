@@ -60,9 +60,12 @@ async function sendWhatsAppLeadAlert({ name, phone, email, projectName, appointm
     }),
   });
 
+  const responseBody = await response.text();
   if (!response.ok) {
-    console.error('MSG91 WhatsApp lead notification failed', await response.text());
+    console.error('MSG91 WhatsApp lead notification failed', responseBody);
+    return;
   }
+  console.info('MSG91 WhatsApp lead notification accepted', responseBody);
 }
 
 export async function POST(request) {
