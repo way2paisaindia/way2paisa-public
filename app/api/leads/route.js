@@ -2,6 +2,9 @@ import { createClient } from '@supabase/supabase-js';
 
 const notificationTo = 'way2paisaindia@gmail.com';
 const notificationFrom = 'Way2Paisa Enquiries <onboarding@resend.dev>';
+const whatsAppAlertTo = '918850373012';
+const msg91WhatsAppNumber = '918850373012';
+const msg91WhatsAppTemplate = 'new_way2paisa_booking';
 
 function clean(value, max = 500) {
   return typeof value === 'string' ? value.trim().slice(0, max) : '';
@@ -9,6 +12,54 @@ function clean(value, max = 500) {
 
 function text(value) {
   return value || 'Not provided';
+}
+
+async function sendWhatsAppLeadAlert({ name, phone, email, projectName, appointmentType, appointmentDate, appointmentTime }) {
+  // Keep this optional: the booking must still be saved and emailed if WhatsApp
+  // is temporarily unavailable or the MSG91 account has no prepaid balance.
+  if (!process.env.MSG91_AUTH_KEY) return;
+
+  const preference = appointmentType
+    ? `${appointmentType} | ${appointmentDate} | ${appointmentTime}`
+    : 'Project enquiry';
+  const response = await fetch('https://api.msg91.com/api/v5/whatsapp/whatsapp-outbound-message/', {
+    method: 'POST',
+    headers: {
+      authkey: process.env.MSG91_AUTH_KEY,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      integrated_number: process.env.MSG91_WHATSAPP_NUMBER || msg91WhatsAppNumber,
+      content_type: 'template',
+      payload: {
+        messaging_product: 'whatsapp',
+        type: 'template',
+        template: {
+          name: process.env.MSG91_WHATSAPP_TEMPLATE || msg91WhatsAppTemplate,
+          language: { code: 'en', policy: 'deterministic' },
+          namespace: null,
+          to_and_components: [{
+            to: [process.env.MSG91_WHATSAPP_ALERT_TO || whatsAppAlertTo],
+            components: {
+              body: {
+                type: 'text',
+                parameters: [
+                  { type: 'text', text: name },
+                  { type: 'text', text: `${phone}${email ? ` | ${email}` : ''}` },
+                  { type: 'text', text: projectName },
+                  { type: 'text', text: preference },
+                ],
+              },
+            },
+          }],
+        },
+      },
+    }),
+  });
+
+  if (!response.ok) {
+    console.error('MSG91 WhatsApp lead notification failed', await response.text());
+  }
 }
 
 export async function POST(request) {
@@ -88,6 +139,16 @@ export async function POST(request) {
       console.error('Resend lead notification failed', detail);
       return Response.json({ error: 'Your request was saved, but the team notification could not be sent. Please contact us on WhatsApp.' }, { status: 502 });
     }
+
+    await sendWhatsAppLeadAlert({
+      name,
+      phone,
+      email,
+      projectName,
+      appointmentType,
+      appointmentDate,
+      appointmentTime,
+    });
 
     return Response.json({ ok: true });
   } catch (error) {
