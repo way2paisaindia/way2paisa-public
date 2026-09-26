@@ -34,7 +34,7 @@ async function sendWhatsAppLeadAlert({ name, phone, email, projectName, appointm
       payload: {
         // MSG91 validates the recipient at this level. Keep the same number in
         // the template components for the bulk-template API format as well.
-        to: [process.env.MSG91_WHATSAPP_ALERT_TO || whatsAppAlertTo],
+        to: process.env.MSG91_WHATSAPP_ALERT_TO || whatsAppAlertTo,
         messaging_product: 'whatsapp',
         type: 'template',
         template: {
