@@ -44,15 +44,11 @@ async function sendWhatsAppLeadAlert({ name, phone, email, projectName, appointm
           to_and_components: [{
             to: [process.env.MSG91_WHATSAPP_ALERT_TO || whatsAppAlertTo],
             components: {
-              body: {
-                type: 'text',
-                parameters: [
-                  { type: 'text', text: name },
-                  { type: 'text', text: `${phone}${email ? ` | ${email}` : ''}` },
-                  { type: 'text', text: projectName },
-                  { type: 'text', text: preference },
-                ],
-              },
+              // MSG91 maps template variables by numbered component keys.
+              body_1: { type: 'text', value: name },
+              body_2: { type: 'text', value: `${phone}${email ? ` | ${email}` : ''}` },
+              body_3: { type: 'text', value: projectName },
+              body_4: { type: 'text', value: preference },
             },
           }],
         },
