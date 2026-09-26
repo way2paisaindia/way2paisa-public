@@ -2,7 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 
 const notificationTo = 'way2paisaindia@gmail.com';
 const notificationFrom = 'Way2Paisa Enquiries <onboarding@resend.dev>';
-const whatsAppAlertTo = '919820139735';
+const whatsAppAlertTo = '918850373012';
 const msg91WhatsAppNumber = '918850373012';
 const msg91WhatsAppTemplate = 'new_way2paisa_booking';
 
