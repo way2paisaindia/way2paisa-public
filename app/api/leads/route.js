@@ -15,14 +15,11 @@ function text(value) {
   return value || 'Not provided';
 }
 
-async function sendWhatsAppLeadAlert({ name, phone, email, projectName, appointmentType, appointmentDate, appointmentTime }) {
+async function sendWhatsAppLeadAlert({ name, phone, email, projectName, preference }) {
   // Keep this optional: the booking must still be saved and emailed if WhatsApp
   // is temporarily unavailable or the MSG91 account has no prepaid balance.
   if (!process.env.MSG91_AUTH_KEY) return;
 
-  const preference = appointmentType
-    ? `${appointmentType} | ${appointmentDate} | ${appointmentTime}`
-    : 'Project enquiry';
   const response = await fetch('https://api.msg91.com/api/v5/whatsapp/whatsapp-outbound-message/bulk/', {
     method: 'POST',
     headers: {
@@ -68,13 +65,16 @@ export async function POST(request) {
     const name = clean(body.name, 120);
     const phone = clean(body.phone, 40);
     const email = clean(body.email, 160);
-    const projectName = clean(body.projectName, 200);
+    const projectName = clean(body.projectName, 200) || 'General advisory enquiry';
+    const preferredBhk = clean(body.preferred_bhk, 80);
+    const budget = clean(body.budget, 100);
+    const preferredLocations = clean(body.preferred_locations, 300);
     const landingPage = clean(body.landingPage, 1000);
     const appointmentType = clean(body.appointmentType, 80);
     const appointmentDate = clean(body.appointmentDate, 20);
     const appointmentTime = clean(body.appointmentTime, 20);
 
-    if (!name || !phone || !body.projectId || !projectName) {
+    if (!name || !phone) {
       return Response.json({ error: 'Please complete your name and mobile number.' }, { status: 400 });
     }
     if (email && !/^\S+@\S+\.\S+$/.test(email)) {
@@ -84,9 +84,16 @@ export async function POST(request) {
       return Response.json({ error: 'Please select an appointment date and time.' }, { status: 400 });
     }
 
+    const enquiryPreference = appointmentType
+      ? \`${appointmentType} | ${appointmentDate} | ${appointmentTime}\`
+      : [
+          preferredBhk && \`Configuration: ${preferredBhk}\`,
+          budget && \`Budget: ${budget}\`,
+          preferredLocations && \`Locations: ${preferredLocations}\`,
+        ].filter(Boolean).join(' | ') || 'Advisory enquiry';
     const remarks = appointmentType
-      ? `${appointmentType}: ${projectName} on ${appointmentDate} at ${appointmentTime}`
-      : `Project enquiry: ${projectName}`;
+      ? \`${appointmentType}: ${projectName} on ${appointmentDate} at ${appointmentTime}\`
+      : \`${projectName}: ${enquiryPreference}\`;
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL,
       process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
@@ -95,9 +102,12 @@ export async function POST(request) {
       name,
       phone,
       email: email || null,
-      project_id: body.projectId,
-      source: appointmentType ? 'Website - Appointment' : 'Website - Project Detail',
+      project_id: body.projectId || null,
+      source: clean(body.source, 100) || (appointmentType ? 'Website - Appointment' : body.projectId ? 'Website - Project Detail' : 'Website - Advisory enquiry'),
       campaign: projectName,
+      preferred_bhk: preferredBhk || null,
+      budget: budget || null,
+      preferred_locations: preferredLocations || null,
       landing_page: landingPage || null,
       remarks,
       appointment_type: appointmentType || null,
@@ -107,8 +117,8 @@ export async function POST(request) {
     if (leadError) throw leadError;
 
     const subject = appointmentType
-      ? `New ${appointmentType}: ${projectName}`
-      : `New project enquiry: ${projectName}`;
+      ? \`New ${appointmentType}: ${projectName}\`
+      : body.projectId ? \`New project enquiry: ${projectName}\` : 'New advisory enquiry';
     const emailResponse = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
@@ -127,6 +137,9 @@ export async function POST(request) {
           `Mobile: ${phone}`,
           `Email: ${text(email)}`,
           `Project: ${projectName}`,
+          `Configuration: ${text(preferredBhk)}`,
+          `Budget: ${text(budget)}`,
+          `Preferred locations: ${text(preferredLocations)}`,
           `Appointment: ${text(appointmentType)}`,
           `Date: ${text(appointmentDate)}`,
           `Time: ${text(appointmentTime)}`,
@@ -145,9 +158,7 @@ export async function POST(request) {
       phone,
       email,
       projectName,
-      appointmentType,
-      appointmentDate,
-      appointmentTime,
+      preference: enquiryPreference,
     });
 
     return Response.json({ ok: true });
