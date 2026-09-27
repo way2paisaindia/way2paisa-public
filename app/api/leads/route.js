@@ -2,9 +2,10 @@ import { createClient } from '@supabase/supabase-js';
 
 const notificationTo = 'way2paisaindia@gmail.com';
 const notificationFrom = 'Way2Paisa Enquiries <onboarding@resend.dev>';
-const whatsAppAlertTo = '918850373012';
+const whatsAppAlertTo = '919820139735';
 const msg91WhatsAppNumber = '918850373012';
 const msg91WhatsAppTemplate = 'new_way2paisa_booking';
+const msg91WhatsAppNamespace = 'adfcde5d_459d_4162_8e52_20d0085acf76';
 
 function clean(value, max = 500) {
   return typeof value === 'string' ? value.trim().slice(0, max) : '';
@@ -22,7 +23,7 @@ async function sendWhatsAppLeadAlert({ name, phone, email, projectName, appointm
   const preference = appointmentType
     ? `${appointmentType} | ${appointmentDate} | ${appointmentTime}`
     : 'Project enquiry';
-  const response = await fetch('https://api.msg91.com/api/v5/whatsapp/whatsapp-outbound-message/', {
+  const response = await fetch('https://api.msg91.com/api/v5/whatsapp/whatsapp-outbound-message/bulk/', {
     method: 'POST',
     headers: {
       authkey: process.env.MSG91_AUTH_KEY,
@@ -32,15 +33,12 @@ async function sendWhatsAppLeadAlert({ name, phone, email, projectName, appointm
       integrated_number: process.env.MSG91_WHATSAPP_NUMBER || msg91WhatsAppNumber,
       content_type: 'template',
       payload: {
-        // MSG91 validates the recipient at this level. Keep the same number in
-        // the template components for the bulk-template API format as well.
-        to: process.env.MSG91_WHATSAPP_ALERT_TO || whatsAppAlertTo,
         messaging_product: 'whatsapp',
         type: 'template',
         template: {
           name: process.env.MSG91_WHATSAPP_TEMPLATE || msg91WhatsAppTemplate,
           language: { code: 'en', policy: 'deterministic' },
-          namespace: null,
+          namespace: process.env.MSG91_WHATSAPP_NAMESPACE || msg91WhatsAppNamespace,
           to_and_components: [{
             to: [process.env.MSG91_WHATSAPP_ALERT_TO || whatsAppAlertTo],
             components: {
