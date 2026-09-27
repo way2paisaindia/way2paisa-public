@@ -85,15 +85,15 @@ export async function POST(request) {
     }
 
     const enquiryPreference = appointmentType
-      ? \`${appointmentType} | ${appointmentDate} | ${appointmentTime}\`
+      ? `${appointmentType} | ${appointmentDate} | ${appointmentTime}`
       : [
-          preferredBhk && \`Configuration: ${preferredBhk}\`,
-          budget && \`Budget: ${budget}\`,
-          preferredLocations && \`Locations: ${preferredLocations}\`,
+          preferredBhk && `Configuration: ${preferredBhk}`,
+          budget && `Budget: ${budget}`,
+          preferredLocations && `Locations: ${preferredLocations}`,
         ].filter(Boolean).join(' | ') || 'Advisory enquiry';
     const remarks = appointmentType
-      ? \`${appointmentType}: ${projectName} on ${appointmentDate} at ${appointmentTime}\`
-      : \`${projectName}: ${enquiryPreference}\`;
+      ? `${appointmentType}: ${projectName} on ${appointmentDate} at ${appointmentTime}`
+      : `${projectName}: ${enquiryPreference}`;
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL,
       process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
@@ -117,8 +117,8 @@ export async function POST(request) {
     if (leadError) throw leadError;
 
     const subject = appointmentType
-      ? \`New ${appointmentType}: ${projectName}\`
-      : body.projectId ? \`New project enquiry: ${projectName}\` : 'New advisory enquiry';
+      ? `New ${appointmentType}: ${projectName}`
+      : body.projectId ? `New project enquiry: ${projectName}` : 'New advisory enquiry';
     const emailResponse = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
