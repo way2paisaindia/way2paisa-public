@@ -16,6 +16,9 @@ export const metadata = {
     type: 'website',
   },
   robots: { index: true, follow: true },
+  verification: {
+    google: '1NXPGzMhg35Vq4JumJDxQp6yc9AcTlMbo13tp2NIbGo',
+  },
 };
 
 export default function RootLayout({ children }) {
