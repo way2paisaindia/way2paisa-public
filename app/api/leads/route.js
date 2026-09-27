@@ -73,6 +73,9 @@ export async function POST(request) {
     const appointmentType = clean(body.appointmentType, 80);
     const appointmentDate = clean(body.appointmentDate, 20);
     const appointmentTime = clean(body.appointmentTime, 20);
+    const whatsappUpdates = body.whatsapp_updates === true;
+    const emailNotifications = body.email_notifications === true;
+    const consentDetails = `WhatsApp updates: ${whatsappUpdates ? 'Yes' : 'No'} | Email updates: ${emailNotifications ? 'Yes' : 'No'}`;
 
     if (!name || !phone) {
       return Response.json({ error: 'Please complete your name and mobile number.' }, { status: 400 });
@@ -91,9 +94,10 @@ export async function POST(request) {
           budget && `Budget: ${budget}`,
           preferredLocations && `Locations: ${preferredLocations}`,
         ].filter(Boolean).join(' | ') || 'Advisory enquiry';
+    const leadPreference = `${enquiryPreference} | ${consentDetails}`;
     const remarks = appointmentType
-      ? `${appointmentType}: ${projectName} on ${appointmentDate} at ${appointmentTime}`
-      : `${projectName}: ${enquiryPreference}`;
+      ? `${appointmentType}: ${projectName} on ${appointmentDate} at ${appointmentTime} | ${consentDetails}`
+      : `${projectName}: ${leadPreference}`;
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL,
       process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
@@ -140,6 +144,8 @@ export async function POST(request) {
           `Configuration: ${text(preferredBhk)}`,
           `Budget: ${text(budget)}`,
           `Preferred locations: ${text(preferredLocations)}`,
+          `WhatsApp updates consent: ${whatsappUpdates ? 'Yes' : 'No'}`,
+          `Email updates consent: ${emailNotifications ? 'Yes' : 'No'}`,
           `Appointment: ${text(appointmentType)}`,
           `Date: ${text(appointmentDate)}`,
           `Time: ${text(appointmentTime)}`,
@@ -158,7 +164,7 @@ export async function POST(request) {
       phone,
       email,
       projectName,
-      preference: enquiryPreference,
+      preference: leadPreference,
     });
 
     return Response.json({ ok: true });
