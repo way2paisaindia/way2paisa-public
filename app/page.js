@@ -19,7 +19,7 @@ const dubaiZones=[
  {name:'Dubai Marina',desc:'Dubai Marina · JBR · JLT · Palm Jumeirah',query:'Dubai Marina',image:'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=1200&q=85'},
  {name:'Jumeirah',desc:'Jumeirah · JVC · Umm Suqeim · Al Wasl',query:'Jumeirah',image:'https://images.unsplash.com/photo-1546412414-e1885259563a?auto=format&fit=crop&w=1200&q=85'},
  {name:'Deira',desc:'Deira · Dubai Creek · Mirdif · Warsan',query:'Deira',image:'https://images.unsplash.com/photo-1526495124232-a04e1849168c?auto=format&fit=crop&w=1200&q=85'},
- {name:'Bur Dubai',desc:'Bur Dubai · Dubailand · Majan · Maritime City',query:'Bur Dubai',image:'https://images.unsplash.com/photo-1526495124232-a04e1849168c?auto=format&fit=crop&w=1200&q=85'},
+ {name:'Bur Dubai',desc:'Bur Dubai · Dubailand · Majan · Maritime City',query:'Bur Dubai',image:'https://images.unsplash.com/photo-1546412414-e1885259563a?auto=format&fit=crop&w=1200&q=85'},
  {name:'Jebel Ali',desc:'Jebel Ali · Dubai South · Al Furjan · DIP',query:'Jebel Ali',image:'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=1200&q=85'}
 ];
 const priorityDeveloperNames=['Godrej Properties','Shapoorji Pallonji','Prestige Group','Hiranandani Group','Embassy Group','Mahindra Lifespaces','Piramal Realty','Raymond Realty','Rustomjee Group','Adani Group','L&T Realty','Runwal Group','Oberoi Realty','Dosti Realty','DLF','Sunteck Realty','Lodha Group','Wadhwa Group','Kalpataru Group','Chandak Group','Kolte Patil','Sobha','Puravankara Builders','Ajmera Realty','Birla Estates','Bombay Realty','DAMAC Properties','Emaar Properties','Danube Properties','SAMANA Developers'];
