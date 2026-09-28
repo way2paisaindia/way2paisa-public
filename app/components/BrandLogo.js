@@ -55,6 +55,24 @@ const brandDomains = {
   'Federal Bank': 'federalbank.co.in',
 };
 
+
+const officialLogoUrls = {
+  'Godrej Properties': 'https://www.godrejproperties.com/images/revamp/godrej_properties_logo.svg',
+  'Shapoorji Pallonji': 'https://www.shapoorjipallonji.com/assets/vectors/icons/icon_splogo_blue.svg',
+  'Prestige Group': 'https://d1t2fddy6amcvs.cloudfront.net/images/logo.svg',
+  'Hiranandani Group': 'https://hiranandani.com/img/Hiranandani-logo.png',
+  'Mahindra Lifespaces': 'https://mldlprodstorage.blob.core.windows.net/live/2024/04/mahindra_logo_new_horizontal-1-scaled-new.webp',
+  'Piramal Realty': 'https://www.piramalrealty.com/images/logo_colour.svg',
+  'Raymond Realty': 'https://images.raymondrealty.in/raymond/1770872826510_logo-18-10-2025.png',
+  'Rustomjee Group': 'https://www.rustomjee.com/_next/static/media/header-logo.0789e56b.svg',
+  'L&T Realty': 'https://www.lntrealty.com/wp-content/themes/lntrealty/assets/images/brand-logo-desktop.webp',
+  'Dosti Realty': 'https://admin.dostirealty.com/uploads/logo_d017b4ac56.png',
+  'Chandak Group': 'https://www.chandakgroup.com/assets/images/Chandak-Group-Final-Logo.svg',
+  'Kolte Patil': 'https://www.koltepatil.com/assets/dist/images/24k-logo-home.png',
+  'Sobha': 'https://www.sobha.com/wp-content/uploads/2024/11/New-SOBHA-Logo-black.png',
+  'Puravankara Builders': 'https://www.puravankara.com/_next/image?url=%2Fimages%2Flogo.png&w=384&q=75',
+};
+
 const normalise = (value = '') => value.toLowerCase().replace(/[^a-z0-9]/g, '');
 
 function domainFor(name) {
@@ -69,7 +87,7 @@ function domainFor(name) {
 export function BrandLogo({ name, fallback, className = '' }) {
   const [failed, setFailed] = useState(false);
   const domain = domainFor(name);
-  const source = fallback || (domain ? `https://www.google.com/s2/favicons?domain=${domain}&sz=256` : null);
+  const source = officialLogoUrls[name] || fallback || (domain ? `https://www.google.com/s2/favicons?domain=${domain}&sz=256` : null);
 
   return (
     <div className={`brandLockup ${className}`.trim()} title={name}>
