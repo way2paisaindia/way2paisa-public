@@ -146,3 +146,18 @@ footer .footerBrand .logoTagline{display:block!important;color:#ffffff!important
 .locationGrid .zoneContent b{position:static!important;display:block!important;margin-top:13px!important;color:#b8ddff!important;font-size:11px!important}
 @media(max-width:900px){.locationGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 @media(max-width:560px){.locationGrid{grid-template-columns:1fr!important}.locationGrid>a,.locationGrid .zoneContent{min-height:220px!important}}
+
+
+/*Dubai property-page regional shortcuts*/
+.listingDubaiZones{max-width:1450px;margin:0 auto;padding:54px 5.5% 10px}
+.listingZoneHead{margin-bottom:24px}.listingZoneHead h2{font-family:Georgia,"Times New Roman",serif;color:var(--navy);font-size:clamp(34px,4vw,50px);font-weight:400;letter-spacing:-1.7px;line-height:1.08;margin:8px 0}.listingZoneHead p{margin:0;color:var(--muted);line-height:1.65}
+.listingDubaiZoneGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.listingDubaiZoneGrid>a{position:relative;display:block;min-height:190px;overflow:hidden;border-radius:14px;background:var(--navy);color:#fff;isolation:isolate}
+.listingDubaiZoneGrid>a>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;transition:transform .35s ease}
+.listingDubaiZoneGrid>a>span{position:absolute;inset:0;background:linear-gradient(180deg,rgba(3,23,46,.08),rgba(3,23,46,.88));z-index:-1}
+.listingDubaiZoneGrid>a:hover>img{transform:scale(1.05)}
+.listingDubaiZoneGrid>a>div{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;padding:18px}
+.listingDubaiZoneGrid b{padding:5px 9px;margin-bottom:auto;border-radius:999px;background:rgba(255,255,255,.93);color:var(--navy);font-size:10px}
+.listingDubaiZoneGrid strong{font-family:Georgia,"Times New Roman",serif;font-size:25px;line-height:1.05}
+.listingDubaiZoneGrid em{margin-top:7px;color:rgba(255,255,255,.86);font-size:10px;font-style:normal;line-height:1.45}
+@media(max-width:680px){.listingDubaiZones{padding-top:38px}.listingDubaiZoneGrid{grid-template-columns:1fr 1fr}.listingDubaiZoneGrid>a{min-height:180px}}
