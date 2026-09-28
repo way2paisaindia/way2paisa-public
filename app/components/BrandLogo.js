@@ -46,14 +46,15 @@ export function hasBrandLogo(name, logoUrl) {
 
 export function BrandLogo({ name, logoUrl = '', className = '' }) {
   const [failed, setFailed] = useState(false);
-  const source = officialLogoUrls[name] || logoUrl;
+  const source = logoUrl || officialLogoUrls[name];
+  const renderedSource = logoUrl ? `/api/developer-logo?name=${encodeURIComponent(name)}` : source;
 
   if (!source || failed) return null;
 
   return (
     <div className={`brandLockup ${className}`.trim()} title={name}>
       <img
-        src={source}
+        src={renderedSource}
         alt={`${name} logo`}
         loading="lazy"
         onError={() => setFailed(true)}
