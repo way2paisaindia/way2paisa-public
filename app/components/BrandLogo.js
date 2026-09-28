@@ -7,6 +7,8 @@ import { useState } from 'react';
  * favicons are usually a symbol only and look incorrect in a partner logo wall.
  */
 const officialLogoUrls = {
+  'DAMAC Properties': 'https://commons.wikimedia.org/wiki/Special:FilePath/Damac%20logo.svg',
+  'Emaar Properties': 'https://www.emaar.com/images/emaar-logo.svg',
   'Shapoorji Pallonji': 'https://www.shapoorjipallonji.com/assets/vectors/icons/icon_splogo_blue.svg',
   'Prestige Group': 'https://d1t2fddy6amcvs.cloudfront.net/images/logo.svg',
   'Hiranandani Group': 'https://hiranandani.com/img/Hiranandani-logo.png',
