@@ -124,3 +124,9 @@ footer .logoTagline{color:#d6e5f3!important}
 /* Keep the footer logo descriptor legible against the dark footer. */
 footer .footerBrand .logoTagline{display:block!important;color:#ffffff!important;font-size:12px!important;line-height:1.35!important;font-weight:800!important;letter-spacing:1.8px!important;margin-top:6px!important;text-shadow:0 1px 1px rgba(0,0,0,.45)!important}
 @media(max-width:680px){footer .footerBrand .logoTagline{font-size:10px!important;letter-spacing:1.35px!important;margin-top:5px!important}}
+
+
+/* Both partner headings deliberately share the same visual hierarchy. */
+.partnerTitle{display:block!important;font-family:Georgia,"Times New Roman",serif!important;font-size:38px!important;line-height:1.1!important;font-weight:400!important;letter-spacing:-1px!important;color:var(--navy)!important;margin:10px 0 22px!important}
+.partnerTitle + .logoMarquee{margin-top:0!important}
+@media(max-width:680px){.partnerTitle{font-size:30px!important}}
