@@ -78,7 +78,7 @@ export function BrandLogo({ name, fallback, className = '' }) {
           src={source}
           alt={`${name} logo`}
           loading="lazy"
-          onError={(event) => {\n            const iconSource = domain ? `https://www.google.com/s2/favicons?domain=${domain}&sz=256` : null;\n            if (!fallback && iconSource && event.currentTarget.src !== iconSource) {\n              event.currentTarget.src = iconSource;\n              return;\n            }\n            setFailed(true);\n          }}
+          onError={() => setFailed(true)}
         />
       )}
       <span>{name}</span>
