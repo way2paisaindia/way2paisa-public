@@ -8,7 +8,7 @@ import { useState } from 'react';
  */
 const officialLogoUrls = {
   'Lodha': 'https://www.lodhagroup.com/themes/lodhanew/images/home/Lodha-90-Grey-Logo.svg',
-  'Kalpataru': 'https://d2j4tkbto6uvqv.cloudfront.net/kalpataru/Logo.svg',
+  'Kalpataru': '/kalpataru-logo.svg',
   'Shapoorji Pallonji Real Estate': 'https://www.shapoorjipallonji.com/assets/vectors/icons/icon_splogo_blue.svg',
   'DAMAC Properties': 'https://commons.wikimedia.org/wiki/Special:FilePath/Damac%20logo.svg',
   'Emaar Properties': 'https://www.emaar.com/images/emaar-logo.svg',
