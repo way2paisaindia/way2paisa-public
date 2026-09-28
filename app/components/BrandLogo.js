@@ -69,7 +69,7 @@ function domainFor(name) {
 export function BrandLogo({ name, fallback, className = '' }) {
   const [failed, setFailed] = useState(false);
   const domain = domainFor(name);
-  const source = domain ? `https://logo.clearbit.com/${domain}` : fallback;
+  const source = fallback || (domain ? `https://www.google.com/s2/favicons?domain=${domain}&sz=256` : null);
 
   return (
     <div className={`brandLockup ${className}`.trim()} title={name}>
@@ -78,7 +78,7 @@ export function BrandLogo({ name, fallback, className = '' }) {
           src={source}
           alt={`${name} logo`}
           loading="lazy"
-          onError={() => setFailed(true)}
+          onError={(event) => {\n            const iconSource = domain ? `https://www.google.com/s2/favicons?domain=${domain}&sz=256` : null;\n            if (!fallback && iconSource && event.currentTarget.src !== iconSource) {\n              event.currentTarget.src = iconSource;\n              return;\n            }\n            setFailed(true);\n          }}
         />
       )}
       <span>{name}</span>
