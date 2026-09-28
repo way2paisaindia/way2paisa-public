@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 /*
  * This is deliberately an allow-list. Do not fall back to a website favicon:
@@ -44,17 +44,48 @@ export function hasBrandLogo(name, logoUrl) {
   return Boolean(officialLogoUrls[name] || logoUrl);
 }
 
+function fallbackInitials(name) {
+  return String(name || 'W')
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map(part => part[0])
+    .join('')
+    .toUpperCase();
+}
+
+function FallbackLogo({ name, className }) {
+  return (
+    <div className={`brandLockup brandFallback ${className}`.trim()} title={name} aria-label={`${name} brand mark`}>
+      <svg viewBox="0 0 260 72" role="img" aria-label={`${name} brand mark`}>
+        <rect x="2" y="2" width="68" height="68" rx="14" />
+        <text x="36" y="46" textAnchor="middle" className="brandFallbackInitials">{fallbackInitials(name)}</text>
+        <text x="84" y="44" className="brandFallbackName">{name}</text>
+      </svg>
+    </div>
+  );
+}
+
 export function BrandLogo({ name, logoUrl = '', className = '' }) {
   const [failed, setFailed] = useState(false);
+  const imageRef = useRef(null);
   const source = logoUrl || officialLogoUrls[name];
-  const renderedSource = logoUrl ? `/api/developer-logo?name=${encodeURIComponent(name)}` : source;
 
-  if (!source || failed) return null;
+  useEffect(() => {
+    setFailed(!source);
+    const timeout = window.setTimeout(() => {
+      if (imageRef.current?.naturalWidth === 0) setFailed(true);
+    }, 4000);
+    return () => window.clearTimeout(timeout);
+  }, [source]);
+
+  if (!source || failed) return <FallbackLogo name={name} className={className} />;
 
   return (
     <div className={`brandLockup ${className}`.trim()} title={name}>
       <img
-        src={renderedSource}
+        ref={imageRef}
+        src={source}
         alt={`${name} logo`}
         loading="lazy"
         onError={() => setFailed(true)}
