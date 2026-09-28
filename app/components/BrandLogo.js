@@ -40,13 +40,13 @@ const officialLogoUrls = {
   'YES BANK': 'https://upload.wikimedia.org/wikipedia/commons/f/fd/Yes_Bank_Logo_2024.jpg',
 };
 
-export function hasBrandLogo(name) {
-  return Boolean(officialLogoUrls[name]);
+export function hasBrandLogo(name, logoUrl) {
+  return Boolean(officialLogoUrls[name] || logoUrl);
 }
 
-export function BrandLogo({ name, className = '' }) {
+export function BrandLogo({ name, logoUrl = '', className = '' }) {
   const [failed, setFailed] = useState(false);
-  const source = officialLogoUrls[name];
+  const source = officialLogoUrls[name] || logoUrl;
 
   if (!source || failed) return null;
 
