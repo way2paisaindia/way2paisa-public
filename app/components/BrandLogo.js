@@ -57,7 +57,6 @@ const brandDomains = {
 
 
 const officialLogoUrls = {
-  'Godrej Properties': 'https://www.godrejproperties.com/images/revamp/godrej_properties_logo.svg',
   'Shapoorji Pallonji': 'https://www.shapoorjipallonji.com/assets/vectors/icons/icon_splogo_blue.svg',
   'Prestige Group': 'https://d1t2fddy6amcvs.cloudfront.net/images/logo.svg',
   'Hiranandani Group': 'https://hiranandani.com/img/Hiranandani-logo.png',
@@ -68,7 +67,6 @@ const officialLogoUrls = {
   'L&T Realty': 'https://www.lntrealty.com/wp-content/themes/lntrealty/assets/images/brand-logo-desktop.webp',
   'Dosti Realty': 'https://admin.dostirealty.com/uploads/logo_d017b4ac56.png',
   'Chandak Group': 'https://www.chandakgroup.com/assets/images/Chandak-Group-Final-Logo.svg',
-  'Kolte Patil': 'https://www.koltepatil.com/assets/dist/images/24k-logo-home.png',
   'Sobha': 'https://www.sobha.com/wp-content/uploads/2024/11/New-SOBHA-Logo-black.png',
   'Puravankara Builders': 'https://www.puravankara.com/_next/image?url=%2Fimages%2Flogo.png&w=384&q=75',
 };
@@ -99,7 +97,6 @@ export function BrandLogo({ name, fallback, className = '' }) {
           onError={() => setFailed(true)}
         />
       )}
-      <span>{name}</span>
     </div>
   );
 }
