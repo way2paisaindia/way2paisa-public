@@ -20,7 +20,7 @@ const officialLogoUrls = {
   'Sunteck Realty': 'https://www.sunteckindia.com/images/logo.svg',
   'Chandak Group': 'https://www.chandakgroup.com/assets/images/Chandak-Group-Final-Logo.svg',
   'Sobha': 'https://www.sobha.com/wp-content/uploads/2024/11/New-SOBHA-Logo-black.png',
-  'Puravankara Builders': 'https://www.puravankara.com/_next/image?url=%2Fimages%2Flogo.png&w=1200&q=100',
+  'Puravankara Builders': 'https://www.puravankara.com/uploads/purva_logo01_54d51bb6a0.png',
   'Bombay Realty': 'https://www.bombayrealty.in/images/br_logo_start.jpg',
 
   'HDFC Bank': 'https://upload.wikimedia.org/wikipedia/commons/2/28/HDFC_Bank_Logo.svg',
