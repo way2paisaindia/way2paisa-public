@@ -26,8 +26,8 @@ const dubaiZoneCards=[
  {name:'Dubai Marina',desc:'Dubai Marina · JBR · JLT · Palm Jumeirah',image:'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=1200&q=85'},
  {name:'Jumeirah',desc:'Jumeirah · JVC · Umm Suqeim · Al Wasl',image:'https://images.unsplash.com/photo-1546412414-e1885259563a?auto=format&fit=crop&w=1200&q=85'},
  {name:'Deira',desc:'Deira · Dubai Creek · Mirdif · Warsan',image:'https://images.unsplash.com/photo-1526495124232-a04e1849168c?auto=format&fit=crop&w=1200&q=85'},
- {name:'Bur Dubai',desc:'Bur Dubai · Dubailand · Majan · Maritime City',image:'https://images.unsplash.com/photo-1526495124232-a04e1849168c?auto=format&fit=crop&w=1200&q=85&sat=-25'},
- {name:'Jebel Ali',desc:'Jebel Ali · Dubai South · Al Furjan · DIP',image:'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=1200&q=85&sat=-45'}
+ {name:'Bur Dubai',desc:'Bur Dubai · Dubailand · Majan · Maritime City',image:'https://images.unsplash.com/photo-1486299267070-83823f5448dd?auto=format&fit=crop&w=1200&q=85'},
+ {name:'Jebel Ali',desc:'Jebel Ali · Dubai South · Al Furjan · DIP',image:'https://images.unsplash.com/photo-1511818966892-d7d671e672a2?auto=format&fit=crop&w=1200&q=85'}
 ];
 const dubaiZoneForProject=p=>{
  if(String(p.market||'').toLowerCase()!=='dubai')return '';
