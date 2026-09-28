@@ -2,60 +2,10 @@
 
 import { useState } from 'react';
 
-const brandDomains = {
-  'Godrej Properties': 'godrejproperties.com',
-  'Shapoorji Pallonji': 'shapoorjipallonji.com',
-  'Prestige Group': 'prestigeconstructions.com',
-  'Hiranandani Group': 'hirandanigroup.com',
-  'Embassy Group': 'embassygroup.com',
-  'Mahindra Lifespaces': 'mahindralifespaces.com',
-  'Piramal Realty': 'piramalrealty.com',
-  'Raymond Realty': 'raymondrealty.in',
-  'Rustomjee Group': 'rustomjee.com',
-  'Adani Group': 'adanirealty.com',
-  'L&T Realty': 'lntrealty.com',
-  'Runwal Group': 'runwal.com',
-  'Oberoi Realty': 'oberoirealty.com',
-  'Dosti Realty': 'dostirealty.com',
-  'Lodha Group': 'lodhagroup.com',
-  'Wadhwa Group': 'thewadhwagroup.com',
-  'Kalpataru Group': 'kalpataru.com',
-  'Sunteck Realty': 'sunteckindia.com',
-  'Chandak Group': 'chandakgroup.com',
-  'Kolte Patil': 'koltepatil.com',
-  'Ajmera Realty': 'ajmera.com',
-  'Birla Estates': 'birlaestates.com',
-  'Sobha': 'sobha.com',
-  'Puravankara Builders': 'puravankara.com',
-  'Bombay Realty': 'bombayrealty.in',
-  'SBI': 'sbi.co.in',
-  'HDFC Bank': 'hdfcbank.com',
-  'ICICI Bank': 'icicibank.com',
-  'Axis Bank': 'axisbank.com',
-  'Kotak Mahindra Bank': 'kotak.com',
-  'IDFC FIRST Bank': 'idfcfirstbank.com',
-  'RBL Bank': 'rblbank.com',
-  'IndusInd Bank': 'indusind.com',
-  'Bank of Baroda': 'bankofbaroda.in',
-  'YES BANK': 'yesbank.in',
-  'Standard Chartered': 'sc.com',
-  'DBS Bank': 'dbs.com',
-  'LIC Housing Finance': 'lichousing.com',
-  'PNB Housing Finance': 'pnbhousing.com',
-  'ICICI Home Finance': 'icicihfc.com',
-  'Bajaj Finserv': 'bajajfinserv.in',
-  'Tata Capital': 'tatacapital.com',
-  'Aditya Birla Capital': 'adityabirlacapital.com',
-  'Shriram Housing Finance': 'shriramhousing.in',
-  'Ujjivan Small Finance Bank': 'ujjivansfb.in',
-  'L&T Finance': 'ltfinance.com',
-  'Piramal Finance': 'piramalfinance.com',
-  'Aavas Financiers': 'aavas.in',
-  'Home First Finance': 'homefirstindia.com',
-  'Federal Bank': 'federalbank.co.in',
-};
-
-
+/*
+ * This is deliberately an allow-list. Do not fall back to a website favicon:
+ * favicons are usually a symbol only and look incorrect in a partner logo wall.
+ */
 const officialLogoUrls = {
   'Shapoorji Pallonji': 'https://www.shapoorjipallonji.com/assets/vectors/icons/icon_splogo_blue.svg',
   'Prestige Group': 'https://d1t2fddy6amcvs.cloudfront.net/images/logo.svg',
@@ -64,39 +14,43 @@ const officialLogoUrls = {
   'Piramal Realty': 'https://www.piramalrealty.com/images/logo_colour.svg',
   'Raymond Realty': 'https://images.raymondrealty.in/raymond/1770872826510_logo-18-10-2025.png',
   'Rustomjee Group': 'https://www.rustomjee.com/_next/static/media/header-logo.0789e56b.svg',
+  'Adani Group': 'https://www.adanirealty.com/-/media/project/realty/header/adani_realty.ashx',
   'L&T Realty': 'https://www.lntrealty.com/wp-content/themes/lntrealty/assets/images/brand-logo-desktop.webp',
   'Dosti Realty': 'https://admin.dostirealty.com/uploads/logo_d017b4ac56.png',
+  'Sunteck Realty': 'https://www.sunteckindia.com/images/logo.svg',
   'Chandak Group': 'https://www.chandakgroup.com/assets/images/Chandak-Group-Final-Logo.svg',
   'Sobha': 'https://www.sobha.com/wp-content/uploads/2024/11/New-SOBHA-Logo-black.png',
-  'Puravankara Builders': 'https://www.puravankara.com/_next/image?url=%2Fimages%2Flogo.png&w=384&q=75',
+  'Puravankara Builders': 'https://www.puravankara.com/_next/image?url=%2Fimages%2Flogo.png&w=1200&q=100',
+  'Bombay Realty': 'https://www.bombayrealty.in/images/br_logo_start.jpg',
+
+  'HDFC Bank': 'https://upload.wikimedia.org/wikipedia/commons/2/28/HDFC_Bank_Logo.svg',
+  'ICICI Bank': 'https://upload.wikimedia.org/wikipedia/commons/1/12/ICICI_Bank_Logo.svg',
+  'Axis Bank': 'https://upload.wikimedia.org/wikipedia/commons/1/1a/Axis_Bank_logo.svg',
+  'IDFC FIRST Bank': 'https://upload.wikimedia.org/wikipedia/commons/3/3f/Logo_of_IDFC_First_Bank.svg',
+  'RBL Bank': 'https://upload.wikimedia.org/wikipedia/commons/7/70/RBL_Bank_SVG_Logo.svg',
+  'IndusInd Bank': 'https://upload.wikimedia.org/wikipedia/commons/4/40/IndusInd_Bank_SVG_Logo.svg',
+  'Bank of Baroda': 'https://upload.wikimedia.org/wikipedia/commons/d/df/Bank_of_Baroda_Logo_since_Dec_19.png',
+  'YES BANK': 'https://upload.wikimedia.org/wikipedia/commons/f/fd/Yes_Bank_Logo_2024.jpg',
 };
 
-const normalise = (value = '') => value.toLowerCase().replace(/[^a-z0-9]/g, '');
-
-function domainFor(name) {
-  const key = Object.keys(brandDomains).find((item) => {
-    const a = normalise(item).replace('group', '');
-    const b = normalise(name).replace('group', '');
-    return a === b || a.includes(b) || b.includes(a);
-  });
-  return key ? brandDomains[key] : null;
+export function hasBrandLogo(name) {
+  return Boolean(officialLogoUrls[name]);
 }
 
-export function BrandLogo({ name, fallback, className = '' }) {
+export function BrandLogo({ name, className = '' }) {
   const [failed, setFailed] = useState(false);
-  const domain = domainFor(name);
-  const source = officialLogoUrls[name] || fallback || (domain ? `https://www.google.com/s2/favicons?domain=${domain}&sz=256` : null);
+  const source = officialLogoUrls[name];
+
+  if (!source || failed) return null;
 
   return (
     <div className={`brandLockup ${className}`.trim()} title={name}>
-      {source && !failed && (
-        <img
-          src={source}
-          alt={`${name} logo`}
-          loading="lazy"
-          onError={() => setFailed(true)}
-        />
-      )}
+      <img
+        src={source}
+        alt={`${name} logo`}
+        loading="lazy"
+        onError={() => setFailed(true)}
+      />
     </div>
   );
 }
