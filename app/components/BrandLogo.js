@@ -1,12 +1,15 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 
 /*
  * This is deliberately an allow-list. Do not fall back to a website favicon:
  * favicons are usually a symbol only and look incorrect in a partner logo wall.
  */
 const officialLogoUrls = {
+  'Lodha': 'https://www.lodhagroup.com/themes/lodhanew/images/home/Lodha-90-Grey-Logo.svg',
+  'Kalpataru': 'https://d2j4tkbto6uvqv.cloudfront.net/kalpataru/Logo.svg',
+  'Shapoorji Pallonji Real Estate': 'https://www.shapoorjipallonji.com/assets/vectors/icons/icon_splogo_blue.svg',
   'DAMAC Properties': 'https://commons.wikimedia.org/wiki/Special:FilePath/Damac%20logo.svg',
   'Emaar Properties': 'https://www.emaar.com/images/emaar-logo.svg',
   'Shapoorji Pallonji': 'https://www.shapoorjipallonji.com/assets/vectors/icons/icon_splogo_blue.svg',
@@ -56,8 +59,8 @@ function fallbackInitials(name) {
 
 function FallbackLogo({ name, className }) {
   return (
-    <div className={`brandLockup brandFallback ${className}`.trim()} title={name} aria-label={`${name} brand mark`}>
-      <svg viewBox="0 0 260 72" role="img" aria-label={`${name} brand mark`}>
+    <div className={`brandFallback ${className}`.trim()} title={name} role="img" aria-label={`${name} logo`}>
+      <svg viewBox="0 0 260 72" aria-hidden="true">
         <rect x="2" y="2" width="68" height="68" rx="14" />
         <text x="36" y="46" textAnchor="middle" className="brandFallbackInitials">{fallbackInitials(name)}</text>
         <text x="84" y="44" className="brandFallbackName">{name}</text>
@@ -67,29 +70,23 @@ function FallbackLogo({ name, className }) {
 }
 
 export function BrandLogo({ name, logoUrl = '', className = '' }) {
-  const [failed, setFailed] = useState(false);
-  const imageRef = useRef(null);
-  const source = logoUrl || officialLogoUrls[name];
-
-  useEffect(() => {
-    setFailed(!source);
-    const timeout = window.setTimeout(() => {
-      if (imageRef.current?.naturalWidth === 0) setFailed(true);
-    }, 4000);
-    return () => window.clearTimeout(timeout);
-  }, [source]);
-
-  if (!source || failed) return <FallbackLogo name={name} className={className} />;
+  const [loaded, setLoaded] = useState(false);
+  // The verified company-level source always wins over a project-specific logo.
+  const source = officialLogoUrls[name] || logoUrl;
 
   return (
-    <div className={`brandLockup ${className}`.trim()} title={name}>
-      <img
-        ref={imageRef}
-        src={source}
-        alt={`${name} logo`}
-        loading="lazy"
-        onError={() => setFailed(true)}
-      />
+    <div className={`brandLockup ${className}`.trim()} title={name} aria-label={`${name} logo`}>
+      {!loaded && <FallbackLogo name={name} />}
+      {source && (
+        <img
+          className={loaded ? 'brandLogoImage' : 'brandLogoImage brandLogoImagePending'}
+          src={source}
+          alt=""
+          loading="lazy"
+          onLoad={() => setLoaded(true)}
+          onError={() => setLoaded(false)}
+        />
+      )}
     </div>
   );
 }
