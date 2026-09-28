@@ -11,11 +11,11 @@ export default function ListingImage({src, alt, ...props}) {
   useEffect(() => {
     setFailed(!src);
     const checkLoadedImage = () => {
-      if (imageRef.current?.complete && imageRef.current.naturalWidth === 0) {
+      if (imageRef.current?.naturalWidth === 0) {
         setFailed(true);
       }
     };
-    const timeout = window.setTimeout(checkLoadedImage, 1500);
+    const timeout = window.setTimeout(checkLoadedImage, 5000);
     return () => window.clearTimeout(timeout);
   }, [src]);
 
