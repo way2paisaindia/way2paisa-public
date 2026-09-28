@@ -30,7 +30,6 @@ const officialLogoUrls = {
   'SAMANA Developers': '/samana-developers.svg',
   'Puravankara Builders': 'https://www.puravankara.com/uploads/purva_logo01_54d51bb6a0.png',
   'Bombay Realty': 'https://www.bombayrealty.in/images/br_logo_start.jpg',
-
   'HDFC Bank': 'https://upload.wikimedia.org/wikipedia/commons/2/28/HDFC_Bank_Logo.svg',
   'ICICI Bank': 'https://upload.wikimedia.org/wikipedia/commons/1/12/ICICI_Bank_Logo.svg',
   'Axis Bank': 'https://upload.wikimedia.org/wikipedia/commons/1/1a/Axis_Bank_logo.svg',
@@ -40,19 +39,9 @@ const officialLogoUrls = {
   'Bank of Baroda': 'https://upload.wikimedia.org/wikipedia/commons/d/df/Bank_of_Baroda_Logo_since_Dec_19.png',
   'YES BANK': 'https://upload.wikimedia.org/wikipedia/commons/f/fd/Yes_Bank_Logo_2024.jpg',
 };
-
-export function hasBrandLogo(name, logoUrl) {
-  return Boolean(officialLogoUrls[name] || logoUrl);
-}
-
+export function hasBrandLogo(name, logoUrl) { return Boolean(officialLogoUrls[name] || logoUrl); }
 export function BrandLogo({ name, logoUrl = '', className = '' }) {
-  // The verified company-level source always wins over a project-specific logo.
   const source = officialLogoUrls[name] || logoUrl;
   if (!source) return null;
-
-  return (
-    <div className={`brandLockup ${className}`.trim()} title={name} aria-label={`${name} logo`}>
-      <img className="brandLogoImage" src={source} alt={`${name} logo`} loading="lazy" />
-    </div>
-  );
+  return <div className={`brandLockup ${className}`.trim()} title={name} aria-label={`${name} logo`}><img className="brandLogoImage" src={source} alt={`${name} logo`} loading="eager" /></div>;
 }
