@@ -24,7 +24,9 @@ const officialLogoUrls = {
   'Kolte Patil': 'https://www.koltepatil.com/assets/dist/images/logo.jpg',
   'DLF': 'https://www.dlf.in/images/logo-black.svg',
   'Chandak Group': 'https://www.chandakgroup.com/assets/images/Chandak-Group-Final-Logo.svg',
-  'Sobha': 'https://www.sobha.com/wp-content/uploads/2024/11/New-SOBHA-Logo-black.png',
+  'Sobha': 'https://en.wikipedia.org/wiki/Special:FilePath/Sobha_(company).svg',
+  'Danube Properties': 'https://commons.wikimedia.org/wiki/Special:FilePath/Danube%20Properties.png?width=1280',
+  'SAMANA Developers': 'https://thefirstpoint.ae/storage/Developer_logo/liKjlfhNI6RFgqJvnM2LugbfaB7GaMooWGmYVCIC.png',
   'Puravankara Builders': 'https://www.puravankara.com/uploads/purva_logo01_54d51bb6a0.png',
   'Bombay Realty': 'https://www.bombayrealty.in/images/br_logo_start.jpg',
 
