@@ -20,7 +20,7 @@ const officialLogoUrls = {
   'Dosti Realty': 'https://admin.dostirealty.com/uploads/logo_d017b4ac56.png',
   'Sunteck Realty': 'https://www.sunteckindia.com/images/logo.svg',
   'Kolte Patil': 'https://www.koltepatil.com/assets/dist/images/logo.jpg',
-  'DLF': 'https://www.dlf.in/images/logo.svg',
+  'DLF': 'https://www.dlf.in/images/logo-black.svg',
   'Chandak Group': 'https://www.chandakgroup.com/assets/images/Chandak-Group-Final-Logo.svg',
   'Sobha': 'https://www.sobha.com/wp-content/uploads/2024/11/New-SOBHA-Logo-black.png',
   'Puravankara Builders': 'https://www.puravankara.com/uploads/purva_logo01_54d51bb6a0.png',
