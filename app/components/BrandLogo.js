@@ -1,7 +1,5 @@
 'use client';
 
-import { useState } from 'react';
-
 /*
  * This is deliberately an allow-list. Do not fall back to a website favicon:
  * favicons are usually a symbol only and look incorrect in a partner logo wall.
@@ -47,46 +45,14 @@ export function hasBrandLogo(name, logoUrl) {
   return Boolean(officialLogoUrls[name] || logoUrl);
 }
 
-function fallbackInitials(name) {
-  return String(name || 'W')
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map(part => part[0])
-    .join('')
-    .toUpperCase();
-}
-
-function FallbackLogo({ name, className }) {
-  return (
-    <div className={`brandFallback ${className}`.trim()} title={name} role="img" aria-label={`${name} logo`}>
-      <svg viewBox="0 0 260 72" aria-hidden="true">
-        <rect x="2" y="2" width="68" height="68" rx="14" />
-        <text x="36" y="46" textAnchor="middle" className="brandFallbackInitials">{fallbackInitials(name)}</text>
-        <text x="84" y="44" className="brandFallbackName">{name}</text>
-      </svg>
-    </div>
-  );
-}
-
 export function BrandLogo({ name, logoUrl = '', className = '' }) {
-  const [loaded, setLoaded] = useState(false);
   // The verified company-level source always wins over a project-specific logo.
   const source = officialLogoUrls[name] || logoUrl;
+  if (!source) return null;
 
   return (
     <div className={`brandLockup ${className}`.trim()} title={name} aria-label={`${name} logo`}>
-      {!loaded && <FallbackLogo name={name} />}
-      {source && (
-        <img
-          className={loaded ? 'brandLogoImage' : 'brandLogoImage brandLogoImagePending'}
-          src={source}
-          alt=""
-          loading="lazy"
-          onLoad={() => setLoaded(true)}
-          onError={() => setLoaded(false)}
-        />
-      )}
+      <img className="brandLogoImage" src={source} alt={`${name} logo`} loading="lazy" />
     </div>
   );
 }
