@@ -11,9 +11,9 @@ function wait(milliseconds) {
   return new Promise(resolve => setTimeout(resolve, milliseconds));
 }
 
-async function waitForMediaContainer(graphBase, containerId, accessToken) {
+async function waitForMediaContainer(graphRoot, containerId, accessToken) {
   for (let attempt = 1; attempt <= 8; attempt += 1) {
-    const statusResponse = await fetch(graphBase + '/' + containerId + '?fields=status_code,status&access_token=' + encodeURIComponent(accessToken));
+    const statusResponse = await fetch(graphRoot + '/' + containerId + '?fields=status_code,status&access_token=' + encodeURIComponent(accessToken));
     const statusPayload = await statusResponse.json().catch(() => ({}));
     const status = statusPayload.status_code || statusPayload.status || '';
     console.info('Instagram media container status', { attempt, status, responseOk: statusResponse.ok });
@@ -61,7 +61,8 @@ export async function POST(request) {
     creativeUrl.searchParams.set('project', promotion.project_id);
     creativeUrl.searchParams.set('v', promotion.id);
 
-    const graphBase = 'https://graph.instagram.com/' + graphVersion + '/' + instagramAccountId;
+    const graphRoot = 'https://graph.instagram.com/' + graphVersion;
+    const graphBase = graphRoot + '/' + instagramAccountId;
     const containerResponse = await fetch(graphBase + '/media', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -75,7 +76,7 @@ export async function POST(request) {
       return Response.json({ error: message }, { status: 502 });
     }
 
-    const containerState = await waitForMediaContainer(graphBase, container.id, accessToken);
+    const containerState = await waitForMediaContainer(graphRoot, container.id, accessToken);
     if (!containerState.ready) {
       await supabase.from('project_promotions').update({ publish_error: containerState.error }).eq('id', promotion.id);
       return Response.json({ error: containerState.error }, { status: 502 });
@@ -94,7 +95,7 @@ export async function POST(request) {
       return Response.json({ error: message }, { status: 502 });
     }
 
-    const detailsResponse = await fetch(graphBase + '/' + published.id + '?fields=permalink&access_token=' + encodeURIComponent(accessToken));
+    const detailsResponse = await fetch(graphRoot + '/' + published.id + '?fields=permalink&access_token=' + encodeURIComponent(accessToken));
     const details = await detailsResponse.json().catch(() => ({}));
     const permalink = details.permalink || '';
     const platformPostUrls = { ...(promotion.platform_post_urls || {}), Instagram: permalink || published.id };
