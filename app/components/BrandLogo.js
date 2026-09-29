@@ -5,6 +5,9 @@
  * favicons are usually a symbol only and look incorrect in a partner logo wall.
  */
 const officialLogoUrls = {
+  'Godrej Properties': '/brand-logos/godrej.png', 'Runwal Group': '/brand-logos/runwal.png',
+  'Oberoi Realty': '/brand-logos/oberoi.jpg', 'Wadhwa Group': '/brand-logos/wadhwa.png',
+  'Ajmera Realty': '/brand-logos/ajmera.png',
   'Lodha': '/brand-logos/lodha.svg', 'Lodha Group': '/brand-logos/lodha.svg',
   'Kalpataru': '/brand-logos/kalpataru.svg', 'Kalpataru Group': '/brand-logos/kalpataru.svg',
   'Shapoorji Pallonji Real Estate': '/brand-logos/shapoorji.svg', 'Shapoorji Pallonji': '/brand-logos/shapoorji.svg',
