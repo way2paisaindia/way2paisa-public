@@ -165,3 +165,10 @@ footer .footerBrand .logoTagline{display:block!important;color:#ffffff!important
 
 /* Visible developer mark when an external logo host is unavailable */
 .brandFallback svg{display:block;width:100%;max-width:210px;height:52px;overflow:visible}.brandFallback rect{fill:#0d2f59}.brandFallbackInitials{fill:#fff;font:700 23px Arial,sans-serif;letter-spacing:.02em}.brandFallbackName{fill:#102b4c;font:700 16px Arial,sans-serif;letter-spacing:.01em}.projectDeveloperLogo .brandFallback svg{max-width:190px;height:46px}.developerProfile .brandFallback svg{max-width:200px;height:52px}@media(max-width:680px){.brandFallback svg{max-width:170px;height:42px}.projectDeveloperLogo .brandFallback svg{max-width:160px;height:39px}}
+
+/* Partner logo loop: eight repeated groups make the reset mathematically seamless. */
+.logoMarqueeTrack{animation-duration:60s!important}
+@keyframes way2paisaLogoMarquee{from{transform:translateX(0)}to{transform:translateX(calc(-12.5% - 12.25px))}}
+/* This override is intentionally last: the RBL artwork has a wide internal canvas. */
+.logoMarquee .partnerLogo img[alt="RBL Bank logo"]{width:190px!important;max-width:190px!important;height:72px!important;max-height:72px!important;object-fit:contain!important}
+@media(max-width:680px){.logoMarqueeTrack{animation-duration:48s!important}.logoMarquee .partnerLogo img[alt="RBL Bank logo"]{width:150px!important;max-width:150px!important;height:58px!important;max-height:58px!important}}
