@@ -68,25 +68,26 @@ export default function PromotionStudio(){
   setCustomCreativeUrl('');setCustomCreativePath('');setCreativeUrl(standardCreativeUrl);setNotice('Uploaded creative removed. The Way2Paisa template is available again.');
  }
  async function publishInstagram(){
-  if(!promotionId){setNotice('Save the promotion draft first.');return}
+  let id=promotionId;
+  if(!id){const saved=await save('draft');if(!saved)return;id=saved.id}
   if(!selected.includes('Instagram')){setNotice('Instagram must be selected before publishing.');return}
   if(!window.confirm('Publish this reviewed creative and caption to @way2paisa_ now? This will create a real Instagram post.'))return;
   setPublishing(true);setNotice('');
   const {data:{session}}=await db.auth.getSession();
-  const response=await fetch('/api/admin/promotions/publish',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+(session?.access_token||'')},body:JSON.stringify({promotionId})});
+  const response=await fetch('/api/admin/promotions/publish',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+(session?.access_token||'')},body:JSON.stringify({promotionId:id})});
   const result=await response.json().catch(()=>({}));
   setPublishing(false);
   if(!response.ok){setNotice(result.error||'Instagram could not publish this promotion.');return}
   const waiting=selected.filter(x=>x!=='Instagram');
   setPostUrl(result.permalink||'');setNotice(waiting.length?'Published to Instagram. '+waiting.join(', ')+' are selected but need their account connections before direct publishing.':'Published to Instagram successfully.');
-  setHistory(x=>x.map(item=>item.id===promotionId?{...item,status:'published',platform_post_urls:{...(item.platform_post_urls||{}),Instagram:result.permalink||result.postId}}:item));
+  setHistory(x=>x.map(item=>item.id===id?{...item,status:'published',platform_post_urls:{...(item.platform_post_urls||{}),Instagram:result.permalink||result.postId}}:item));
  }
  async function signIn(event){event.preventDefault();setLoginError('');setSigningIn(true);const {error}=await db.auth.signInWithPassword({email:loginEmail.trim(),password:loginPassword});setSigningIn(false);if(error){setLoginError('We could not sign in with those details. Please check your email and password.');return}window.location.reload();}
 
  if(!ready)return <main className="adminStudio"><p>Loading secure Promotion Studio…</p></main>;
  if(!allowed)return <main className="adminStudio"><header><span>WAY2PAISA ADMIN</span><h1>Admin access required</h1><p>Sign in with an active Way2Paisa admin account to create or review promotions.</p></header><section className="studioCard adminLogin"><form onSubmit={signIn}><label>Admin email<input type="email" value={loginEmail} onChange={e=>setLoginEmail(e.target.value)} autoComplete="email" required/></label><label>Password<input type="password" value={loginPassword} onChange={e=>setLoginPassword(e.target.value)} autoComplete="current-password" required/></label>{loginError&&<p className="studioNotice">{loginError}</p>}<button type="submit" disabled={signingIn}>{signingIn?'Signing in…':'Sign in securely'}</button></form><p><small>This is a private administrator login. It does not create a public account.</small></p></section></main>;
  return <main className="adminStudio"><header><span>WAY2PAISA ADMIN</span><h1>Promotion Studio</h1><p>Write your own caption, select the channels you want, and use either the Way2Paisa template or your own approved branded creative.</p></header>
- <section className="studioCard"><label>Project<select value={projectId} onChange={e=>{setProjectId(e.target.value);resetCreative()}}><option value="">Select a verified project</option>{projects.map(p=><option value={p.id} key={p.id}>{p.name}</option>)}</select></label>
+ <section className="studioCard"><label>Project<select value={projectId} onChange={e=>{const chosen=projects.find(p=>p.id===e.target.value);setProjectId(e.target.value);if(chosen)createDraft(chosen);else resetCreative()}}><option value="">Select a verified project</option>{projects.map(p=><option value={p.id} key={p.id}>{p.name}</option>)}</select></label>
  <button onClick={createDraft} disabled={!project}>Create promotion</button><label>Headline<input value={headline} onChange={e=>setHeadline(e.target.value)}/></label><label>Caption<textarea value={caption} onChange={e=>setCaption(e.target.value)} rows="10"/></label><label>Creative notes (optional)<textarea value={brief} onChange={e=>setBrief(e.target.value)} rows="3"/></label>
  <fieldset><legend>Channels</legend>{platforms.map(x=><label key={x}><input type="checkbox" checked={selected.includes(x)} onChange={()=>setSelected(s=>s.includes(x)?s.filter(y=>y!==x):[...s,x])}/>{x}<small> — {channelState[x]}</small></label>)}</fieldset>
  <div className="studioActions"><button onClick={()=>save('draft')} disabled={saving}>{saving?'Saving…':'Save draft'}</button><button className="approveBtn" onClick={useStandardCreative} disabled={saving||uploading}>Use Way2Paisa template</button><label className="creativeUpload">Upload your own creative<input type="file" accept="image/jpeg,image/png,image/webp" onChange={uploadCreative} disabled={uploading}/></label>{customCreativeUrl&&<button onClick={removeUploadedCreative} disabled={uploading}>Remove uploaded creative</button>}</div>
