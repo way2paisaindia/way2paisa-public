@@ -8,7 +8,11 @@ const fallbackImage = 'https://www.way2paisa.in/way2paisa-mark.jpg';
 function safeUrl(value) {
   try {
     const url = new URL(value);
-    return url.protocol === 'https:' || url.protocol === 'http:' ? url.toString() : fallbackImage;
+    if (url.protocol !== 'https:' && url.protocol !== 'http:') return fallbackImage;
+    // Satori (the PNG renderer) cannot decode WebP inputs. Use the brand fallback
+    // rather than returning a partially rendered image that Meta cannot process.
+    if (/\.webp($|\?)/i.test(url.pathname)) return fallbackImage;
+    return url.toString();
   } catch {
     return fallbackImage;
   }
@@ -37,7 +41,7 @@ export async function GET(request) {
   const origin = new URL(request.url).origin;
   const logoUrl = origin + '/way2paisa-logo.png';
   const heroUrl = safeUrl(project.hero_image_url);
-  const price = project.price_original || 'Price on Request';
+  const price = (project.price_original || 'Price on Request').replace(/₹/g, 'Rs. ');
   const configuration = project.bhk_original || 'Verified project';
   const location = project.market || 'Mumbai · MMR';
   const rera = project.rera_number ? 'MahaRERA: ' + project.rera_number : 'Verified project details';
