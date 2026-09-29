@@ -47,7 +47,7 @@ export async function POST(request) {
 
     const { data: promotion, error: promotionError } = await supabase
       .from('project_promotions')
-      .select('id,project_id,caption,platforms,platform_post_urls,projects(name,slug,active,verified)')
+      .select('id,project_id,caption,platforms,platform_post_urls,creative_image_url,projects(name,slug,active,verified)')
       .eq('id', promotionId)
       .maybeSingle();
     if (promotionError || !promotion) return Response.json({ error: 'Promotion not found or not available to this admin.' }, { status: 404 });
@@ -57,16 +57,17 @@ export async function POST(request) {
     const accessToken = process.env.INSTAGRAM_ACCESS_TOKEN;
     if (!accessToken) return Response.json({ error: 'Instagram publishing is not configured yet.' }, { status: 503 });
 
-    const creativeUrl = new URL('/api/admin/promotion-creative', request.url);
-    creativeUrl.searchParams.set('project', promotion.project_id);
-    creativeUrl.searchParams.set('v', promotion.id);
+    const generatedCreativeUrl = new URL('/api/admin/promotion-creative', request.url);
+    generatedCreativeUrl.searchParams.set('project', promotion.project_id);
+    generatedCreativeUrl.searchParams.set('v', promotion.id);
+    const creativeUrl = promotion.creative_image_url || generatedCreativeUrl.toString();
 
     const graphRoot = 'https://graph.instagram.com/' + graphVersion;
     const graphBase = graphRoot + '/' + instagramAccountId;
     const containerResponse = await fetch(graphBase + '/media', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({ image_url: creativeUrl.toString(), caption: promotion.caption, access_token: accessToken }),
+      body: new URLSearchParams({ image_url: creativeUrl, caption: promotion.caption, access_token: accessToken }),
     });
     const container = await containerResponse.json().catch(() => ({}));
     console.info('Instagram media container request', { responseOk: containerResponse.ok, hasContainerId: Boolean(container.id), errorCode: container?.error?.code || null });
