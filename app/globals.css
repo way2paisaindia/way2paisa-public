@@ -131,6 +131,14 @@ footer .footerBrand .logoTagline{display:block!important;color:#ffffff!important
 .partnerTitle + .logoMarquee{margin-top:0!important}
 @media(max-width:680px){.partnerTitle{font-size:30px!important}}
 
+/* Footer partner wall: show every complete logo at once.  A moving strip can
+   leave most marks outside the viewport and make the bank row look empty. */
+.logoMarquee{overflow:visible!important;mask-image:none!important;-webkit-mask-image:none!important;padding:4px 0 18px!important}
+.logoMarqueeTrack{display:grid!important;width:100%!important;grid-template-columns:repeat(6,minmax(0,1fr));gap:18px!important;animation:none!important;transform:none!important}
+.logoMarquee .partnerLogo{width:100%!important;min-width:0!important;flex:initial!important}
+@media(max-width:980px){.logoMarqueeTrack{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:640px){.logoMarqueeTrack{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px!important}}
+
 
 /* Visual destination cards for Mumbai/MMR zones. */
 .locationGrid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:18px!important}
