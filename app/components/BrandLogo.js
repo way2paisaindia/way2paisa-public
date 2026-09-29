@@ -7,7 +7,7 @@
 const officialLogoUrls = {
   'Godrej Properties': '/brand-logos/godrej.png', 'Runwal Group': '/brand-logos/runwal.png',
   'Oberoi Realty': '/brand-logos/oberoi.jpg', 'Wadhwa Group': '/brand-logos/wadhwa.png',
-  'Ajmera Realty': '/brand-logos/ajmera.png',
+  'Ajmera Realty': '/brand-logos/ajmera.png', 'Birla Estates': '/brand-logos/birla.png',
   'Lodha': '/brand-logos/lodha.svg', 'Lodha Group': '/brand-logos/lodha.svg',
   'Kalpataru': '/brand-logos/kalpataru.svg', 'Kalpataru Group': '/brand-logos/kalpataru.svg',
   'Shapoorji Pallonji Real Estate': '/brand-logos/shapoorji.svg', 'Shapoorji Pallonji': '/brand-logos/shapoorji.svg',
@@ -20,7 +20,7 @@ const officialLogoUrls = {
   'Sobha': '/brand-logos/sobha.svg', 'Danube Properties': '/brand-logos/danube.png', 'SAMANA Developers': '/brand-logos/samana.svg',
   'Puravankara Builders': '/brand-logos/puravankara.png', 'Bombay Realty': '/brand-logos/bombay-realty.jpg',
   'HDFC Bank': '/brand-logos/hdfc.svg', 'ICICI Bank': '/brand-logos/icici.svg', 'Axis Bank': '/brand-logos/axis.svg',
-  'IDFC FIRST Bank': '/brand-logos/idfc.svg', 'RBL Bank': '/brand-logos/rbl.svg', 'IndusInd Bank': '/brand-logos/indusind.svg',
+  'IDFC FIRST Bank': '/brand-logos/idfc.png', 'RBL Bank': '/brand-logos/rbl.jpg', 'IndusInd Bank': '/brand-logos/indusind.svg',
   'Bank of Baroda': '/brand-logos/bob.png', 'YES BANK': '/brand-logos/yes-bank.jpg',
 };
 export function hasBrandLogo(name, logoUrl) { return Boolean(officialLogoUrls[name] || logoUrl); }
