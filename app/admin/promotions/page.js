@@ -14,13 +14,15 @@ export default function PromotionStudio(){
  const project=useMemo(()=>projects.find(x=>x.id===projectId),[projects,projectId]);
  const standardCreativeUrl=project?'/api/admin/promotion-creative?project='+encodeURIComponent(project.id)+'&v='+(promotionId||Date.now()):'';
  function resetCreative(){setPromotionId('');setCreativeUrl('');setCustomCreativeUrl('');setCustomCreativePath('');setPostUrl('')}
- function createDraft(){
-  if(!project)return;
-  const lines=[project.name,project.locations?.name||project.market,project.bhk_original,project.price_original||'Price on Request',project.possession_original&&project.possession_original.replace('|',' · '),project.rera_number&&'MahaRERA: '+project.rera_number].filter(Boolean);
-  setHeadline(project.name+' | '+(project.locations?.name||project.market||''));
+ function createDraft(chosenProject=project){
+  if(!chosenProject)return;
+  const lines=[chosenProject.name,chosenProject.locations?.name||chosenProject.market,chosenProject.bhk_original,chosenProject.price_original||'Price on Request',chosenProject.possession_original&&chosenProject.possession_original.replace('|',' · '),chosenProject.rera_number&&'MahaRERA: '+chosenProject.rera_number].filter(Boolean);
+  setHeadline(chosenProject.name+' | '+(chosenProject.locations?.name||chosenProject.market||''));
   setCaption('Discover '+lines.join(' · ')+'. Connect with Way2Paisa for verified details and a personalised site visit.');
   setBrief('Use only verified listing facts and approved project media. Keep every commercial claim factual.');
-  resetCreative();setNotice('Editable promotion created. Save a draft, then use the Way2Paisa template or upload your approved creative.');
+  resetCreative();
+  setCreativeUrl('/api/admin/promotion-creative?project='+encodeURIComponent(chosenProject.id)+'&v='+Date.now());
+  setNotice('Project details loaded. Edit the caption or notes, upload your own creative if preferred, then publish when ready.');
  }
  async function save(status='draft'){
   if(!project||!caption.trim()){setNotice('Choose a project and generate or enter the caption first.');return null}
