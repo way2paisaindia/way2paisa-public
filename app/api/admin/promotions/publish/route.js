@@ -1,0 +1,85 @@
+import { createClient } from '@supabase/supabase-js';
+
+const instagramAccountId = process.env.INSTAGRAM_ACCOUNT_ID || '17841460118476853';
+const graphVersion = process.env.INSTAGRAM_GRAPH_API_VERSION || 'v24.0';
+
+function errorMessage(payload, fallback) {
+  return payload?.error?.message || payload?.message || fallback;
+}
+
+export async function POST(request) {
+  try {
+    const authorization = request.headers.get('authorization') || '';
+    const token = authorization.startsWith('Bearer ') ? authorization.slice(7) : '';
+    if (!token) return Response.json({ error: 'Sign in as an active admin before publishing.' }, { status: 401 });
+
+    const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY, {
+      auth: { persistSession: false, autoRefreshToken: false },
+      global: { headers: { Authorization: authorization } },
+    });
+    const { data: { user }, error: userError } = await supabase.auth.getUser(token);
+    if (userError || !user) return Response.json({ error: 'Your admin session has expired. Please sign in again.' }, { status: 401 });
+
+    const { data: admin } = await supabase.from('admin_profiles').select('id').eq('id', user.id).eq('active', true).maybeSingle();
+    if (!admin) return Response.json({ error: 'Only active Way2Paisa admins can publish promotions.' }, { status: 403 });
+
+    const { promotionId } = await request.json();
+    if (!promotionId) return Response.json({ error: 'Promotion is required.' }, { status: 400 });
+
+    const { data: promotion, error: promotionError } = await supabase
+      .from('project_promotions')
+      .select('id,project_id,caption,platforms,platform_post_urls,projects(name,slug,active,verified)')
+      .eq('id', promotionId)
+      .maybeSingle();
+    if (promotionError || !promotion) return Response.json({ error: 'Promotion not found or not available to this admin.' }, { status: 404 });
+    if (!promotion.platforms?.includes('Instagram')) return Response.json({ error: 'Instagram is not selected for this promotion.' }, { status: 400 });
+    if (!promotion.projects?.active || !promotion.projects?.verified) return Response.json({ error: 'Only verified active listings can be published.' }, { status: 400 });
+
+    const accessToken = process.env.INSTAGRAM_ACCESS_TOKEN;
+    if (!accessToken) return Response.json({ error: 'Instagram publishing is not configured yet.' }, { status: 503 });
+
+    const creativeUrl = new URL('/api/admin/promotion-creative', request.url);
+    creativeUrl.searchParams.set('project', promotion.project_id);
+    creativeUrl.searchParams.set('v', promotion.id);
+
+    const graphBase = 'https://graph.instagram.com/' + graphVersion + '/' + instagramAccountId;
+    const containerResponse = await fetch(graphBase + '/media', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({ image_url: creativeUrl.toString(), caption: promotion.caption, access_token: accessToken }),
+    });
+    const container = await containerResponse.json().catch(() => ({}));
+    if (!containerResponse.ok || !container.id) {
+      const message = errorMessage(container, 'Instagram did not accept the creative.');
+      await supabase.from('project_promotions').update({ publish_error: message }).eq('id', promotion.id);
+      return Response.json({ error: message }, { status: 502 });
+    }
+
+    const publishResponse = await fetch(graphBase + '/media_publish', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({ creation_id: container.id, access_token: accessToken }),
+    });
+    const published = await publishResponse.json().catch(() => ({}));
+    if (!publishResponse.ok || !published.id) {
+      const message = errorMessage(published, 'Instagram could not publish the creative.');
+      await supabase.from('project_promotions').update({ publish_error: message }).eq('id', promotion.id);
+      return Response.json({ error: message }, { status: 502 });
+    }
+
+    const detailsResponse = await fetch(graphBase + '/' + published.id + '?fields=permalink&access_token=' + encodeURIComponent(accessToken));
+    const details = await detailsResponse.json().catch(() => ({}));
+    const permalink = details.permalink || '';
+    const platformPostUrls = { ...(promotion.platform_post_urls || {}), Instagram: permalink || published.id };
+
+    const { error: updateError } = await supabase.from('project_promotions')
+      .update({ status: 'published', platform_post_urls: platformPostUrls, publish_error: null, approved_by: user.id, approved_at: new Date().toISOString() })
+      .eq('id', promotion.id);
+    if (updateError) return Response.json({ error: 'Instagram posted successfully, but its history could not be saved.' }, { status: 500 });
+
+    return Response.json({ ok: true, postId: published.id, permalink });
+  } catch (error) {
+    console.error('Instagram promotion publishing failed', error);
+    return Response.json({ error: 'Could not publish this promotion. Please try again.' }, { status: 500 });
+  }
+}
