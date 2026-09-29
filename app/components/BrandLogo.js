@@ -19,7 +19,7 @@ const officialLogoUrls = {
   'Kolte Patil': '/brand-logos/kolte-patil.jpg', 'DLF': '/brand-logos/dlf.svg', 'Chandak Group': '/brand-logos/chandak.svg',
   'Sobha': '/brand-logos/sobha.svg', 'Danube Properties': '/brand-logos/danube.png', 'SAMANA Developers': '/brand-logos/samana.svg',
   'Puravankara Builders': '/brand-logos/puravankara.png', 'Bombay Realty': '/brand-logos/bombay-realty.jpg',
-  'HDFC Bank': '/brand-logos/hdfc.svg', 'ICICI Bank': '/brand-logos/icici.svg', 'Axis Bank': '/brand-logos/axis.svg',
+  'HDFC Bank': '/brand-logos/hdfc.svg', 'ICICI Bank': '/brand-logos/icici.svg', 'Axis Bank': '/brand-logos/axis.svg', 'Kotak Mahindra Bank': 'https://www.kotak.com/content/dam/Kotak/kotak-logo.svg',
   'IDFC FIRST Bank': '/brand-logos/idfc.png', 'RBL Bank': '/brand-logos/rbl.jpg', 'IndusInd Bank': '/brand-logos/indusind.svg',
   'Bank of Baroda': '/brand-logos/bob.png', 'YES BANK': '/brand-logos/yes-bank.jpg',
 };
