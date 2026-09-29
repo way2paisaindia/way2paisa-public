@@ -3,8 +3,8 @@ import {useEffect,useMemo,useState} from 'react';
 import {createClient} from '@supabase/supabase-js';
 
 const db=createClient(process.env.NEXT_PUBLIC_SUPABASE_URL,process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY);
-const platforms=['Instagram','Facebook','LinkedIn','X','YouTube','Google Business'];
-const channelState={Instagram:'Connected',Facebook:'Connect account',LinkedIn:'Connect account',X:'Connect account',YouTube:'Connect account','Google Business':'Connect account'};
+const platforms=['Instagram','Instagram Reel','Facebook','LinkedIn','X','YouTube','Google Business'];
+const channelState={Instagram:'Connected','Instagram Reel':'Open Reel creator',Facebook:'Connect account',LinkedIn:'Connect account',X:'Connect account',YouTube:'Connect account','Google Business':'Connect account'};
 
 export default function PromotionStudio(){
  const [ready,setReady]=useState(false),[allowed,setAllowed]=useState(false),[projects,setProjects]=useState([]),[history,setHistory]=useState([]),[projectId,setProjectId]=useState(''),[caption,setCaption]=useState(''),[headline,setHeadline]=useState(''),[brief,setBrief]=useState(''),[selected,setSelected]=useState(['Instagram']),[saving,setSaving]=useState(false),[publishing,setPublishing]=useState(false),[uploading,setUploading]=useState(false),[notice,setNotice]=useState(''),[promotionId,setPromotionId]=useState(''),[creativeUrl,setCreativeUrl]=useState(''),[customCreativeUrl,setCustomCreativeUrl]=useState(''),[customCreativePath,setCustomCreativePath]=useState(''),[postUrl,setPostUrl]=useState(''),[loginEmail,setLoginEmail]=useState(''),[loginPassword,setLoginPassword]=useState(''),[signingIn,setSigningIn]=useState(false),[loginError,setLoginError]=useState('');
@@ -14,6 +14,7 @@ export default function PromotionStudio(){
  const project=useMemo(()=>projects.find(x=>x.id===projectId),[projects,projectId]);
  const standardCreativeUrl=project?'/api/admin/promotion-creative?project='+encodeURIComponent(project.id)+'&v='+(promotionId||Date.now()):'';
  function resetCreative(){setPromotionId('');setCreativeUrl('');setCustomCreativeUrl('');setCustomCreativePath('');setPostUrl('')}
+ function removeAutomaticCreative(){setCreativeUrl('');setPostUrl('');setNotice('Automatic Way2Paisa creative removed. Upload your own approved creative to continue.')}
  function createDraft(chosenProject=project){
   if(!chosenProject)return;
   const lines=[chosenProject.name,chosenProject.locations?.name||chosenProject.market,chosenProject.bhk_original,chosenProject.price_original||'Price on Request',chosenProject.possession_original&&chosenProject.possession_original.replace('|',' · '),chosenProject.rera_number&&'MahaRERA: '+chosenProject.rera_number].filter(Boolean);
@@ -70,6 +71,7 @@ export default function PromotionStudio(){
   setCustomCreativeUrl('');setCustomCreativePath('');setCreativeUrl(standardCreativeUrl);setNotice('Uploaded creative removed. The Way2Paisa template is available again.');
  }
  async function publishInstagram(){
+  if(!creativeUrl){setNotice('Add an approved creative before publishing.');return}
   let id=promotionId;
   if(!id){const saved=await save('draft');if(!saved)return;id=saved.id}
   if(!selected.includes('Instagram')){setNotice('Instagram must be selected before publishing.');return}
@@ -80,7 +82,7 @@ export default function PromotionStudio(){
   const result=await response.json().catch(()=>({}));
   setPublishing(false);
   if(!response.ok){setNotice(result.error||'Instagram could not publish this promotion.');return}
-  const waiting=selected.filter(x=>x!=='Instagram');
+  const waiting=selected.filter(x=>x!=='Instagram'&&x!=='Instagram Reel');
   setPostUrl(result.permalink||'');setNotice(waiting.length?'Published to Instagram. '+waiting.join(', ')+' are selected but need their account connections before direct publishing.':'Published to Instagram successfully.');
   setHistory(x=>x.map(item=>item.id===id?{...item,status:'published',platform_post_urls:{...(item.platform_post_urls||{}),Instagram:result.permalink||result.postId}}:item));
  }
@@ -93,7 +95,7 @@ export default function PromotionStudio(){
  <button onClick={createDraft} disabled={!project}>Create promotion</button><label>Headline<input value={headline} onChange={e=>setHeadline(e.target.value)}/></label><label>Caption<textarea value={caption} onChange={e=>setCaption(e.target.value)} rows="10"/></label><label>Creative notes (optional)<textarea value={brief} onChange={e=>setBrief(e.target.value)} rows="3"/></label>
  <fieldset><legend>Channels</legend>{platforms.map(x=><label key={x}><input type="checkbox" checked={selected.includes(x)} onChange={()=>setSelected(s=>s.includes(x)?s.filter(y=>y!==x):[...s,x])}/>{x}<small> — {channelState[x]}</small></label>)}</fieldset>
  <div className="studioActions"><button onClick={()=>save('draft')} disabled={saving}>{saving?'Saving…':'Save draft'}</button><button className="approveBtn" onClick={useStandardCreative} disabled={saving||uploading}>Use Way2Paisa template</button><label className="creativeUpload">Upload your own creative<input type="file" accept="image/jpeg,image/png,image/webp" onChange={uploadCreative} disabled={uploading}/></label>{customCreativeUrl&&<button onClick={removeUploadedCreative} disabled={uploading}>Remove uploaded creative</button>}</div>
- {creativeUrl&&<div className="creativePreview"><div><b>Creative preview</b><span>{customCreativeUrl?'Your uploaded creative':'Way2Paisa template'}</span></div><img src={creativeUrl} alt={headline||project?.name||'Way2Paisa promotion creative'}/><div className="studioActions"><a className="creativeOpen" href={creativeUrl} target="_blank" rel="noreferrer">Open full image</a><button className="instagramPublish" onClick={publishInstagram} disabled={publishing}>{publishing?'Publishing…':'Publish to Instagram'}</button></div></div>}
+ {creativeUrl&&<div className="creativePreview"><div><b>Creative preview</b><span>{customCreativeUrl?'Your uploaded creative':'Automatic Way2Paisa creative'}</span></div><img src={creativeUrl} alt={headline||project?.name||'Way2Paisa promotion creative'}/><div className="studioActions"><a className="creativeOpen" href={creativeUrl} target="_blank" rel="noreferrer">Open full image</a>{!customCreativeUrl&&<button type="button" onClick={removeAutomaticCreative}>Remove automatic creative</button>}<a className="creativeOpen" href="https://www.instagram.com/reels/create/" target="_blank" rel="noreferrer">Open Instagram Reel creator</a><button className="instagramPublish" onClick={publishInstagram} disabled={publishing}>{publishing?'Publishing…':'Publish image to Instagram'}</button></div><p><small>For a full-screen Reel, open the Reel creator, upload a short vertical video (9:16), and paste this editable caption. Instagram image publishing creates a regular post; a Reel requires video.</small></p></div>}
  {postUrl&&<p className="studioSuccess">Live post: <a href={postUrl} target="_blank" rel="noreferrer">Open on Instagram ↗</a></p>}
  {notice&&<p className="studioNotice">{notice}</p>}</section>
  <section><h2>Create &amp; Promote</h2><p>Select any verified listing below to load it into the Promotion Studio.</p><div className="promotionProjectList">{projects.map(p=><article key={p.id}><b>{p.name}</b><span>{p.locations?.name||p.market||'Location pending'} · {p.bhk_original||'Configuration on request'}</span><button type="button" onClick={()=>{setProjectId(p.id);createDraft(p);window.scrollTo({top:0,behavior:'smooth'})}}>Create &amp; Promote</button></article>)}</div></section>
