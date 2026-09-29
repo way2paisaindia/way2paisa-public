@@ -5,7 +5,8 @@
  * favicons are usually a symbol only and look incorrect in a partner logo wall.
  */
 const officialLogoUrls = {
-  'Lodha': '/brand-logos/lodha.svg', 'Kalpataru': '/brand-logos/kalpataru.svg',
+  'Lodha': '/brand-logos/lodha.svg', 'Lodha Group': '/brand-logos/lodha.svg',
+  'Kalpataru': '/brand-logos/kalpataru.svg', 'Kalpataru Group': '/brand-logos/kalpataru.svg',
   'Shapoorji Pallonji Real Estate': '/brand-logos/shapoorji.svg', 'Shapoorji Pallonji': '/brand-logos/shapoorji.svg',
   'DAMAC Properties': '/brand-logos/damac.svg', 'Emaar Properties': '/brand-logos/emaar.svg', 'Prestige Group': '/brand-logos/prestige.svg',
   'Hiranandani Group': '/brand-logos/hiranandani.png', 'Mahindra Lifespaces': '/brand-logos/mahindra.webp', 'Piramal Realty': '/brand-logos/piramal.svg',
@@ -16,7 +17,7 @@ const officialLogoUrls = {
   'Sobha': '/brand-logos/sobha.svg', 'Danube Properties': '/brand-logos/danube.png', 'SAMANA Developers': '/brand-logos/samana.svg',
   'Puravankara Builders': '/brand-logos/puravankara.png', 'Bombay Realty': '/brand-logos/bombay-realty.jpg',
   'HDFC Bank': '/brand-logos/hdfc.svg', 'ICICI Bank': '/brand-logos/icici.svg', 'Axis Bank': '/brand-logos/axis.svg',
-  'IDFC FIRST Bank': '/brand-logos/idfc.png', 'RBL Bank': '/brand-logos/rbl.jpg', 'IndusInd Bank': '/brand-logos/indusind.svg',
+  'IDFC FIRST Bank': '/brand-logos/idfc.svg', 'RBL Bank': '/brand-logos/rbl.svg', 'IndusInd Bank': '/brand-logos/indusind.svg',
   'Bank of Baroda': '/brand-logos/bob.png', 'YES BANK': '/brand-logos/yes-bank.jpg',
 };
 export function hasBrandLogo(name, logoUrl) { return Boolean(officialLogoUrls[name] || logoUrl); }
