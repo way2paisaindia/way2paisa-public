@@ -7,6 +7,25 @@ function errorMessage(payload, fallback) {
   return payload?.error?.message || payload?.message || fallback;
 }
 
+function wait(milliseconds) {
+  return new Promise(resolve => setTimeout(resolve, milliseconds));
+}
+
+async function waitForMediaContainer(graphBase, containerId, accessToken) {
+  for (let attempt = 1; attempt <= 8; attempt += 1) {
+    const statusResponse = await fetch(graphBase + '/' + containerId + '?fields=status_code,status&access_token=' + encodeURIComponent(accessToken));
+    const statusPayload = await statusResponse.json().catch(() => ({}));
+    const status = statusPayload.status_code || statusPayload.status || '';
+    console.info('Instagram media container status', { attempt, status, responseOk: statusResponse.ok });
+    if (status === 'FINISHED') return { ready: true };
+    if (!statusResponse.ok || status === 'ERROR' || status === 'EXPIRED') {
+      return { ready: false, error: errorMessage(statusPayload, 'Instagram could not process this creative.') };
+    }
+    await wait(2000);
+  }
+  return { ready: false, error: 'Instagram is still processing the creative. Please try publishing this draft again in a minute.' };
+}
+
 export async function POST(request) {
   try {
     const authorization = request.headers.get('authorization') || '';
@@ -49,10 +68,17 @@ export async function POST(request) {
       body: new URLSearchParams({ image_url: creativeUrl.toString(), caption: promotion.caption, access_token: accessToken }),
     });
     const container = await containerResponse.json().catch(() => ({}));
+    console.info('Instagram media container request', { responseOk: containerResponse.ok, hasContainerId: Boolean(container.id), errorCode: container?.error?.code || null });
     if (!containerResponse.ok || !container.id) {
       const message = errorMessage(container, 'Instagram did not accept the creative.');
       await supabase.from('project_promotions').update({ publish_error: message }).eq('id', promotion.id);
       return Response.json({ error: message }, { status: 502 });
+    }
+
+    const containerState = await waitForMediaContainer(graphBase, container.id, accessToken);
+    if (!containerState.ready) {
+      await supabase.from('project_promotions').update({ publish_error: containerState.error }).eq('id', promotion.id);
+      return Response.json({ error: containerState.error }, { status: 502 });
     }
 
     const publishResponse = await fetch(graphBase + '/media_publish', {
@@ -61,6 +87,7 @@ export async function POST(request) {
       body: new URLSearchParams({ creation_id: container.id, access_token: accessToken }),
     });
     const published = await publishResponse.json().catch(() => ({}));
+    console.info('Instagram media publish request', { responseOk: publishResponse.ok, hasPublishedId: Boolean(published.id), errorCode: published?.error?.code || null });
     if (!publishResponse.ok || !published.id) {
       const message = errorMessage(published, 'Instagram could not publish the creative.');
       await supabase.from('project_promotions').update({ publish_error: message }).eq('id', promotion.id);
