@@ -11,8 +11,8 @@ function wait(milliseconds) {
   return new Promise(resolve => setTimeout(resolve, milliseconds));
 }
 
-async function waitForMediaContainer(graphRoot, containerId, accessToken) {
-  for (let attempt = 1; attempt <= 8; attempt += 1) {
+async function waitForMediaContainer(graphRoot, containerId, accessToken, maxAttempts = 8) {
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
     const statusResponse = await fetch(graphRoot + '/' + containerId + '?fields=status_code,status&access_token=' + encodeURIComponent(accessToken));
     const statusPayload = await statusResponse.json().catch(() => ({}));
     const status = statusPayload.status_code || statusPayload.status || '';
@@ -80,7 +80,7 @@ export async function POST(request) {
       return Response.json({ error: message }, { status: 502 });
     }
 
-    const containerState = await waitForMediaContainer(graphRoot, container.id, accessToken);
+    const containerState = await waitForMediaContainer(graphRoot, container.id, accessToken, isReel ? 20 : 8);
     if (!containerState.ready) {
       await supabase.from('project_promotions').update({ publish_error: containerState.error }).eq('id', promotion.id);
       return Response.json({ error: containerState.error }, { status: 502 });
