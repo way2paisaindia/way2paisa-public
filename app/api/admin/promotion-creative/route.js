@@ -11,6 +11,11 @@ function imageCandidates(value) {
     const candidates = [];
     // Some developer websites expose an original JPEG/PNG followed by ".webp".
     // Prefer that original file because next/og cannot decode WebP.
+    if (/\.webp$/i.test(url.pathname) && url.hostname.endsWith('ik.imagekit.io')) {
+      const converted = new URL(url);
+      converted.searchParams.set('tr', 'f-jpg');
+      candidates.push(converted.toString());
+    }
     if (/\.(jpe?g|png)\.webp$/i.test(url.pathname)) {
       const original = new URL(url);
       original.pathname = original.pathname.replace(/\.webp$/i, '');
