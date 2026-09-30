@@ -3,50 +3,6 @@ import { ImageResponse } from 'next/og';
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 
-function imageCandidates(value) {
-  try {
-    const url = new URL(value);
-    if (url.protocol !== 'https:' && url.protocol !== 'http:') return [];
-
-    const candidates = [];
-    // Some developer websites expose an original JPEG/PNG followed by ".webp".
-    // Prefer that original file because next/og cannot decode WebP.
-    if (/\.webp$/i.test(url.pathname) && url.hostname.endsWith('ik.imagekit.io')) {
-      const converted = new URL(url);
-      converted.searchParams.set('tr', 'f-jpg');
-      candidates.push(converted.toString());
-    }
-    if (/\.(jpe?g|png)\.webp$/i.test(url.pathname)) {
-      const original = new URL(url);
-      original.pathname = original.pathname.replace(/\.webp$/i, '');
-      candidates.push(original.toString());
-    }
-    if (/\.(jpe?g|png)$/i.test(url.pathname)) candidates.push(url.toString());
-    return [...new Set(candidates)];
-  } catch {
-    return [];
-  }
-}
-
-async function canRenderImage(url) {
-  try {
-    const response = await fetch(url, {
-      headers: { Range: 'bytes=0-2048' },
-      cache: 'no-store',
-    });
-    const type = response.headers.get('content-type') || '';
-    return response.ok && /^image\/(jpeg|png)/i.test(type);
-  } catch {
-    return false;
-  }
-}
-
-async function findProjectImage(urls) {
-  const candidates = urls.flatMap(imageCandidates);
-  const checks = await Promise.all(candidates.map(async (url) => ({ url, ok: await canRenderImage(url) })));
-  return checks.find((item) => item.ok)?.url || null;
-}
-
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const projectId = searchParams.get('project');
@@ -56,37 +12,22 @@ export async function GET(request) {
   const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
   if (!base || !key) return new Response('Creative service is not configured.', { status: 500 });
 
-  const headers = { apikey: key, Authorization: 'Bearer ' + key };
   const query = new URL(base + '/rest/v1/projects');
   query.searchParams.set('select', 'id,name,slug,hero_image_url,market,bhk_original,price_original,rera_number');
   query.searchParams.set('id', 'eq.' + projectId);
   query.searchParams.set('active', 'eq.true');
   query.searchParams.set('verified', 'eq.true');
 
-  const response = await fetch(query, { headers, cache: 'no-store' });
+  const response = await fetch(query, { headers: { apikey: key, Authorization: 'Bearer ' + key }, cache: 'no-store' });
   const projects = await response.json().catch(() => []);
   const project = Array.isArray(projects) ? projects[0] : null;
   if (!project) return new Response('Verified project not found.', { status: 404 });
-
-  const mediaQuery = new URL(base + '/rest/v1/project_media');
-  mediaQuery.searchParams.set('select', 'image_url,sort_order');
-  mediaQuery.searchParams.set('project_id', 'eq.' + project.id);
-  mediaQuery.searchParams.set('active', 'eq.true');
-  mediaQuery.searchParams.set('order', 'sort_order.asc');
-  const mediaResponse = await fetch(mediaQuery, { headers, cache: 'no-store' });
-  const media = await mediaResponse.json().catch(() => []);
-  const heroUrl = await findProjectImage([
-    project.hero_image_url,
-    ...(Array.isArray(media) ? media.map((item) => item.image_url) : []),
-  ]);
-
-  // Never silently create a brand-only "project" post. The studio will show an
-  // upload choice when the verified listing has no compatible JPG/PNG source.
-  if (!heroUrl) {
-    return new Response('No compatible project image is available. Upload an approved image creative.', { status: 422 });
-  }
+  if (!project.hero_image_url) return new Response('No project image is available.', { status: 422 });
 
   const origin = new URL(request.url).origin;
+  // This internal Node route converts each genuine stored project source,
+  // including WebP/AVIF, into a JPEG that next/og can render reliably.
+  const heroUrl = origin + '/api/admin/promotion-source-image?project=' + encodeURIComponent(project.id);
   const logoUrl = origin + '/way2paisa-logo.png';
   const price = (project.price_original || 'Price on Request').replace(/₹/g, 'Rs. ');
   const configuration = project.bhk_original || 'Verified project';
