@@ -19,7 +19,7 @@ async function waitForMediaContainer(graphRoot, containerId, accessToken) {
     console.info('Instagram media container status', { attempt, status, responseOk: statusResponse.ok });
     if (status === 'FINISHED') return { ready: true };
     if (!statusResponse.ok || status === 'ERROR' || status === 'EXPIRED') {
-      return { ready: false, error: errorMessage(statusPayload, 'Instagram could not process this creative.') };
+      return { ready: false, error: errorMessage(statusPayload, 'Instagram could not process this image or video.') };
     }
     await wait(2000);
   }
@@ -47,11 +47,13 @@ export async function POST(request) {
 
     const { data: promotion, error: promotionError } = await supabase
       .from('project_promotions')
-      .select('id,project_id,caption,platforms,platform_post_urls,creative_image_url,projects(name,slug,active,verified)')
+      .select('id,project_id,caption,platforms,platform_post_urls,creative_image_url,creative_video_url,projects(name,slug,active,verified)')
       .eq('id', promotionId)
       .maybeSingle();
     if (promotionError || !promotion) return Response.json({ error: 'Promotion not found or not available to this admin.' }, { status: 404 });
-    if (!promotion.platforms?.includes('Instagram')) return Response.json({ error: 'Instagram is not selected for this promotion.' }, { status: 400 });
+    const isReel = Boolean(promotion.creative_video_url);
+    if (isReel && !promotion.platforms?.includes('Instagram Reel')) return Response.json({ error: 'Instagram Reel is not selected for this video.' }, { status: 400 });
+    if (!isReel && !promotion.platforms?.includes('Instagram')) return Response.json({ error: 'Instagram is not selected for this promotion.' }, { status: 400 });
     if (!promotion.projects?.active || !promotion.projects?.verified) return Response.json({ error: 'Only verified active listings can be published.' }, { status: 400 });
 
     const accessToken = process.env.INSTAGRAM_ACCESS_TOKEN;
@@ -61,18 +63,19 @@ export async function POST(request) {
     generatedCreativeUrl.searchParams.set('project', promotion.project_id);
     generatedCreativeUrl.searchParams.set('v', promotion.id);
     const creativeUrl = promotion.creative_image_url || generatedCreativeUrl.toString();
+    const mediaUrl = isReel ? promotion.creative_video_url : creativeUrl;
 
     const graphRoot = 'https://graph.instagram.com/' + graphVersion;
     const graphBase = graphRoot + '/' + instagramAccountId;
     const containerResponse = await fetch(graphBase + '/media', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({ image_url: creativeUrl, caption: promotion.caption, access_token: accessToken }),
+      body: new URLSearchParams(isReel ? { media_type: 'REELS', video_url: mediaUrl, caption: promotion.caption, share_to_feed: 'true', access_token: accessToken } : { image_url: mediaUrl, caption: promotion.caption, access_token: accessToken }),
     });
     const container = await containerResponse.json().catch(() => ({}));
     console.info('Instagram media container request', { responseOk: containerResponse.ok, hasContainerId: Boolean(container.id), errorCode: container?.error?.code || null });
     if (!containerResponse.ok || !container.id) {
-      const message = errorMessage(container, 'Instagram did not accept the creative.');
+      const message = errorMessage(container, 'Instagram did not accept this image or video.');
       await supabase.from('project_promotions').update({ publish_error: message }).eq('id', promotion.id);
       return Response.json({ error: message }, { status: 502 });
     }
@@ -91,7 +94,7 @@ export async function POST(request) {
     const published = await publishResponse.json().catch(() => ({}));
     console.info('Instagram media publish request', { responseOk: publishResponse.ok, hasPublishedId: Boolean(published.id), errorCode: published?.error?.code || null });
     if (!publishResponse.ok || !published.id) {
-      const message = errorMessage(published, 'Instagram could not publish the creative.');
+      const message = errorMessage(published, 'Instagram could not publish this image or video.');
       await supabase.from('project_promotions').update({ publish_error: message }).eq('id', promotion.id);
       return Response.json({ error: message }, { status: 502 });
     }
