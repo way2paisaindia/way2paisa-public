@@ -4,17 +4,17 @@ import {createClient} from '@supabase/supabase-js';
 
 const db=createClient(process.env.NEXT_PUBLIC_SUPABASE_URL,process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY);
 const platforms=['Instagram','Instagram Reel','Facebook','LinkedIn','X','YouTube','Google Business'];
-const channelState={Instagram:'Connected','Instagram Reel':'Open Reel creator',Facebook:'Connect account',LinkedIn:'Connect account',X:'Connect account',YouTube:'Connect account','Google Business':'Connect account'};
+const channelState={Instagram:'Connected','Instagram Reel':'Connected (MP4)',Facebook:'Connect account',LinkedIn:'Connect account',X:'Connect account',YouTube:'Connect account','Google Business':'Connect account'};
 
 export default function PromotionStudio(){
- const [ready,setReady]=useState(false),[allowed,setAllowed]=useState(false),[projects,setProjects]=useState([]),[history,setHistory]=useState([]),[projectId,setProjectId]=useState(''),[caption,setCaption]=useState(''),[headline,setHeadline]=useState(''),[brief,setBrief]=useState(''),[selected,setSelected]=useState(['Instagram']),[saving,setSaving]=useState(false),[publishing,setPublishing]=useState(false),[uploading,setUploading]=useState(false),[notice,setNotice]=useState(''),[promotionId,setPromotionId]=useState(''),[creativeUrl,setCreativeUrl]=useState(''),[customCreativeUrl,setCustomCreativeUrl]=useState(''),[customCreativePath,setCustomCreativePath]=useState(''),[postUrl,setPostUrl]=useState(''),[loginEmail,setLoginEmail]=useState(''),[loginPassword,setLoginPassword]=useState(''),[signingIn,setSigningIn]=useState(false),[loginError,setLoginError]=useState('');
+ const [mediaKind,setMediaKind]=useState('image'),[videoUrl,setVideoUrl]=useState(''),[videoPath,setVideoPath]=useState(''),[ready,setReady]=useState(false),[allowed,setAllowed]=useState(false),[projects,setProjects]=useState([]),[history,setHistory]=useState([]),[projectId,setProjectId]=useState(''),[caption,setCaption]=useState(''),[headline,setHeadline]=useState(''),[brief,setBrief]=useState(''),[selected,setSelected]=useState(['Instagram']),[saving,setSaving]=useState(false),[publishing,setPublishing]=useState(false),[uploading,setUploading]=useState(false),[notice,setNotice]=useState(''),[promotionId,setPromotionId]=useState(''),[creativeUrl,setCreativeUrl]=useState(''),[customCreativeUrl,setCustomCreativeUrl]=useState(''),[customCreativePath,setCustomCreativePath]=useState(''),[postUrl,setPostUrl]=useState(''),[loginEmail,setLoginEmail]=useState(''),[loginPassword,setLoginPassword]=useState(''),[signingIn,setSigningIn]=useState(false),[loginError,setLoginError]=useState('');
 
  useEffect(()=>{(async()=>{const {data:{user}}=await db.auth.getUser();if(!user){setReady(true);return}const {data:profile}=await db.from('admin_profiles').select('id').eq('id',user.id).eq('active',true).maybeSingle();if(!profile){setReady(true);return}setAllowed(true);const [{data:p},{data:h}]=await Promise.all([db.from('projects').select('id,name,slug,price_original,bhk_original,possession_original,rera_number,market,locations(name)').eq('active',true).eq('verified',true).order('name'),db.from('project_promotions').select('id,caption,platforms,status,created_at,platform_post_urls,creative_image_url,projects(name)').order('created_at',{ascending:false}).limit(30)]);setProjects(p||[]);setHistory(h||[]);setReady(true)})()},[]);
 
  const project=useMemo(()=>projects.find(x=>x.id===projectId),[projects,projectId]);
  const standardCreativeUrl=project?'/api/admin/promotion-creative?project='+encodeURIComponent(project.id)+'&v='+(promotionId||Date.now()):'';
- function resetCreative(){setPromotionId('');setCreativeUrl('');setCustomCreativeUrl('');setCustomCreativePath('');setPostUrl('')}
- function removeAutomaticCreative(){setCreativeUrl('');setPostUrl('');setNotice('Automatic Way2Paisa creative removed. Upload your own approved creative to continue.')}
+ function resetCreative(){setPromotionId('');setCreativeUrl('');setCustomCreativeUrl('');setCustomCreativePath('');setVideoUrl('');setVideoPath('');setMediaKind('image');setPostUrl('')}
+ function removeAutomaticCreative(){setCreativeUrl('');setPostUrl('');setNotice('Automatic Way2Paisa creative removed. Upload your own approved image or MP4 video to continue.')}
  function createDraft(chosenProject=project){
   if(!chosenProject)return;
   const lines=[chosenProject.name,chosenProject.locations?.name||chosenProject.market,chosenProject.bhk_original,chosenProject.price_original||'Price on Request',chosenProject.possession_original&&chosenProject.possession_original.replace('|',' · '),chosenProject.rera_number&&'MahaRERA: '+chosenProject.rera_number].filter(Boolean);
@@ -29,7 +29,7 @@ export default function PromotionStudio(){
   if(!project||!caption.trim()){setNotice('Choose a project and generate or enter the caption first.');return null}
   setSaving(true);setNotice('');
   const {data:{user}}=await db.auth.getUser();
-  const row={project_id:project.id,caption,headline,creative_brief:brief,platforms:selected,status,creative_image_url:customCreativeUrl||null,creative_storage_path:customCreativePath||null,approved_by:status==='approved'?user?.id:null,approved_at:status==='approved'?new Date().toISOString():null};
+  const row={project_id:project.id,caption,headline,creative_brief:brief,platforms:selected,status,creative_image_url:customCreativeUrl||null,creative_storage_path:customCreativePath||null,creative_video_url:videoUrl||null,creative_video_storage_path:videoPath||null,approved_by:status==='approved'?user?.id:null,approved_at:status==='approved'?new Date().toISOString():null};
   const {data,error}=await db.from('project_promotions').insert(row).select('id,caption,platforms,status,created_at,platform_post_urls,creative_image_url,projects(name)').single();
   setSaving(false);
   if(error){setNotice(error.message);return null}
@@ -43,6 +43,26 @@ export default function PromotionStudio(){
   const {error}=await db.from('project_promotions').update({creative_image_url:null,creative_storage_path:null}).eq('id',id);
   if(error){setNotice(error.message);return}
   setCustomCreativeUrl('');setCustomCreativePath('');setCreativeUrl('/api/admin/promotion-creative?project='+encodeURIComponent(project.id)+'&v='+encodeURIComponent(id));setPostUrl('');setNotice('Way2Paisa template selected. You can still upload a different approved creative.');
+ }
+ async function uploadVideo(event){
+  const file=event.target.files?.[0];event.target.value='';
+  if(!file)return;
+  if(file.type!=='video/mp4'||file.size>104857600){setNotice('Upload an MP4 video up to 100 MB.');return}
+  let id=promotionId;if(!id){const saved=await save('draft');if(!saved)return;id=saved.id}
+  setUploading(true);setNotice('');const {data:{user}}=await db.auth.getUser();
+  const path='admin/'+user.id+'/'+id+'/'+Date.now()+'.mp4';
+  const {error:uploadError}=await db.storage.from('promotion-videos').upload(path,file,{cacheControl:'3600',contentType:'video/mp4',upsert:false});
+  if(uploadError){setUploading(false);setNotice(uploadError.message);return}
+  const {data:urlData}=db.storage.from('promotion-videos').getPublicUrl(path);const url=urlData.publicUrl;
+  const {error:updateError}=await db.from('project_promotions').update({creative_video_url:url,creative_video_storage_path:path}).eq('id',id);
+  if(updateError){await db.storage.from('promotion-videos').remove([path]);setUploading(false);setNotice(updateError.message);return}
+  if(videoPath)await db.storage.from('promotion-videos').remove([videoPath]);
+  setUploading(false);setPromotionId(id);setVideoUrl(url);setVideoPath(path);setMediaKind('video');setCreativeUrl('');setPostUrl('');setSelected(x=>x.includes('Instagram Reel')?x:[...x,'Instagram Reel']);setNotice('Project video uploaded. It will publish as an Instagram Reel when approved.');
+ }
+ async function removeVideo(){
+  if(!promotionId||!videoUrl){setNotice('There is no uploaded video to remove.');return}
+  const {error}=await db.from('project_promotions').update({creative_video_url:null,creative_video_storage_path:null}).eq('id',promotionId);if(error){setNotice(error.message);return}
+  if(videoPath)await db.storage.from('promotion-videos').remove([videoPath]);setVideoUrl('');setVideoPath('');setMediaKind('image');setNotice('Uploaded video removed. You can use an image instead.');
  }
  async function uploadCreative(event){
   const file=event.target.files?.[0];event.target.value='';
@@ -71,11 +91,13 @@ export default function PromotionStudio(){
   setCustomCreativeUrl('');setCustomCreativePath('');setCreativeUrl(standardCreativeUrl);setNotice('Uploaded creative removed. The Way2Paisa template is available again.');
  }
  async function publishInstagram(){
-  if(!creativeUrl){setNotice('Add an approved creative before publishing.');return}
+  if(mediaKind==='video'&&!videoUrl){setNotice('Upload an approved MP4 video before publishing.');return}
+  if(mediaKind!=='video'&&!creativeUrl){setNotice('Add an approved creative before publishing.');return}
   let id=promotionId;
   if(!id){const saved=await save('draft');if(!saved)return;id=saved.id}
-  if(!selected.includes('Instagram')){setNotice('Instagram must be selected before publishing.');return}
-  if(!window.confirm('Publish this reviewed creative and caption to @way2paisa_ now? This will create a real Instagram post.'))return;
+  if(mediaKind==='video'&&!selected.includes('Instagram Reel')){setNotice('Select Instagram Reel before publishing this video.');return}
+  if(mediaKind!=='video'&&!selected.includes('Instagram')){setNotice('Instagram must be selected before publishing.');return}
+  if(!window.confirm(mediaKind==='video'?'Publish this reviewed MP4 and caption to @way2paisa_ as a real Instagram Reel now?':'Publish this reviewed image and caption to @way2paisa_ now? This will create a real Instagram post.'))return;
   setPublishing(true);setNotice('');
   const {data:{session}}=await db.auth.getSession();
   const response=await fetch('/api/admin/promotions/publish',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+(session?.access_token||'')},body:JSON.stringify({promotionId:id})});
@@ -94,8 +116,9 @@ export default function PromotionStudio(){
  <section className="studioCard"><label>Project<select value={projectId} onChange={e=>{const chosen=projects.find(p=>p.id===e.target.value);setProjectId(e.target.value);if(chosen)createDraft(chosen);else resetCreative()}}><option value="">Select a verified project</option>{projects.map(p=><option value={p.id} key={p.id}>{p.name}</option>)}</select></label>
  <button onClick={createDraft} disabled={!project}>Create promotion</button><label>Headline<input value={headline} onChange={e=>setHeadline(e.target.value)}/></label><label>Caption<textarea value={caption} onChange={e=>setCaption(e.target.value)} rows="10"/></label><label>Creative notes (optional)<textarea value={brief} onChange={e=>setBrief(e.target.value)} rows="3"/></label>
  <fieldset><legend>Channels</legend>{platforms.map(x=><label key={x}><input type="checkbox" checked={selected.includes(x)} onChange={()=>setSelected(s=>s.includes(x)?s.filter(y=>y!==x):[...s,x])}/>{x}<small> — {channelState[x]}</small></label>)}</fieldset>
- <div className="studioActions"><button onClick={()=>save('draft')} disabled={saving}>{saving?'Saving…':'Save draft'}</button><button className="approveBtn" onClick={useStandardCreative} disabled={saving||uploading}>Use Way2Paisa template</button><label className="creativeUpload">Upload your own creative<input type="file" accept="image/jpeg,image/png,image/webp" onChange={uploadCreative} disabled={uploading}/></label>{customCreativeUrl&&<button onClick={removeUploadedCreative} disabled={uploading}>Remove uploaded creative</button>}</div>
- {creativeUrl&&<div className="creativePreview"><div><b>Creative preview</b><span>{customCreativeUrl?'Your uploaded creative':'Automatic Way2Paisa creative'}</span></div><img src={creativeUrl} alt={headline||project?.name||'Way2Paisa promotion creative'}/><div className="studioActions"><a className="creativeOpen" href={creativeUrl} target="_blank" rel="noreferrer">Open full image</a>{!customCreativeUrl&&<button type="button" onClick={removeAutomaticCreative}>Remove automatic creative</button>}<a className="creativeOpen" href="https://www.instagram.com/reels/create/" target="_blank" rel="noreferrer">Open Instagram Reel creator</a><button className="instagramPublish" onClick={publishInstagram} disabled={publishing}>{publishing?'Publishing…':'Publish image to Instagram'}</button></div><p><small>For a full-screen Reel, open the Reel creator, upload a short vertical video (9:16), and paste this editable caption. Instagram image publishing creates a regular post; a Reel requires video.</small></p></div>}
+ <div className="studioActions"><button onClick={()=>save('draft')} disabled={saving}>{saving?'Saving…':'Save draft'}</button><button className="approveBtn" onClick={useStandardCreative} disabled={saving||uploading}>Use Way2Paisa template</button><label className="creativeUpload">Upload image creative<input type="file" accept="image/jpeg,image/png,image/webp" onChange={uploadCreative} disabled={uploading}/></label><label className="creativeUpload">Upload MP4 project video<input type="file" accept="video/mp4" onChange={uploadVideo} disabled={uploading}/></label>{customCreativeUrl&&<button onClick={removeUploadedCreative} disabled={uploading}>Remove uploaded image</button>}{videoUrl&&<button onClick={removeVideo} disabled={uploading}>Remove uploaded video</button>}</div>
+ {videoUrl&&mediaKind==='video'&&<div className="creativePreview"><div><b>Reel video preview</b><span>Your uploaded MP4</span></div><video src={videoUrl} controls preload="metadata"/><div className="studioActions"><a className="creativeOpen" href={videoUrl} target="_blank" rel="noreferrer">Open MP4 video</a><button type="button" onClick={removeVideo}>Remove uploaded video</button><button className="instagramPublish" onClick={publishInstagram} disabled={publishing}>{publishing?'Publishing…':'Publish as Instagram Reel'}</button></div><p><small>This MP4 will be published as a Reel to @way2paisa_.</small></p></div>}
+ {creativeUrl&&mediaKind!=='video'&&<div className="creativePreview"><div><b>Creative preview</b><span>{customCreativeUrl?'Your uploaded creative':'Automatic Way2Paisa creative'}</span></div><img src={creativeUrl} alt={headline||project?.name||'Way2Paisa promotion creative'}/><div className="studioActions"><a className="creativeOpen" href={creativeUrl} target="_blank" rel="noreferrer">Open full image</a>{!customCreativeUrl&&<button type="button" onClick={removeAutomaticCreative}>Remove automatic creative</button>}<a className="creativeOpen" href="https://www.instagram.com/reels/create/" target="_blank" rel="noreferrer">Open Instagram Reel creator</a><button className="instagramPublish" onClick={publishInstagram} disabled={publishing}>{publishing?'Publishing…':'Publish image to Instagram'}</button></div><p><small>For a full-screen Reel, open the Reel creator, upload a short vertical video (9:16), and paste this editable caption. Instagram image publishing creates a regular post; a Reel requires video.</small></p></div>}
  {postUrl&&<p className="studioSuccess">Live post: <a href={postUrl} target="_blank" rel="noreferrer">Open on Instagram ↗</a></p>}
  {notice&&<p className="studioNotice">{notice}</p>}</section>
  <section><h2>Create &amp; Promote</h2><p>Select any verified listing below to load it into the Promotion Studio.</p><div className="promotionProjectList">{projects.map(p=><article key={p.id}><b>{p.name}</b><span>{p.locations?.name||p.market||'Location pending'} · {p.bhk_original||'Configuration on request'}</span><button type="button" onClick={()=>{setProjectId(p.id);createDraft(p);window.scrollTo({top:0,behavior:'smooth'})}}>Create &amp; Promote</button></article>)}</div></section>
