@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 const instagramAccountId = process.env.INSTAGRAM_ACCOUNT_ID || '17841460118476853';
 const instagramGraphVersion = process.env.INSTAGRAM_GRAPH_API_VERSION || 'v24.0';
 const facebookGraphVersion = process.env.FACEBOOK_GRAPH_API_VERSION || 'v26.0';
+const googleTokenEndpoint = 'https://oauth2.googleapis.com/token';
 
 function errorMessage(payload, fallback) {
   return payload?.error?.message || payload?.message || fallback;
@@ -10,6 +11,29 @@ function errorMessage(payload, fallback) {
 
 function wait(milliseconds) {
   return new Promise(resolve => setTimeout(resolve, milliseconds));
+}
+
+async function getGoogleAccessToken() {
+  const clientId = process.env.GOOGLE_OAUTH_CLIENT_ID;
+  const clientSecret = process.env.GOOGLE_OAUTH_CLIENT_SECRET;
+  const refreshToken = process.env.GOOGLE_OAUTH_REFRESH_TOKEN;
+  if (!clientId || !clientSecret || !refreshToken) {
+    throw new Error('Google publishing is not configured yet. Connect the Google OAuth credentials in Vercel first.');
+  }
+  const response = await fetch(googleTokenEndpoint, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      client_id: clientId,
+      client_secret: clientSecret,
+      refresh_token: refreshToken,
+      grant_type: 'refresh_token',
+    }),
+    cache: 'no-store',
+  });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok || !payload.access_token) throw new Error(errorMessage(payload, 'Google could not refresh the publishing connection.'));
+  return payload.access_token;
 }
 
 async function waitForMediaContainer(graphRoot, containerId, accessToken, maxAttempts = 8) {
@@ -89,6 +113,67 @@ async function publishFacebook({ promotion, request, isVideo }) {
   return { id: published.id, permalink: details.permalink_url || 'https://www.facebook.com/' + published.id };
 }
 
+async function publishYouTube({ promotion }) {
+  if (!promotion.creative_video_url) throw new Error('Upload an MP4 project video before selecting YouTube.');
+  const accessToken = await getGoogleAccessToken();
+  const videoResponse = await fetch(promotion.creative_video_url, { cache: 'no-store' });
+  if (!videoResponse.ok) throw new Error('The uploaded video could not be retrieved for YouTube publishing.');
+  const contentType = videoResponse.headers.get('content-type') || 'video/mp4';
+  const video = new Blob([await videoResponse.arrayBuffer()], { type: contentType });
+  const title = String(promotion.headline || promotion.projects?.name || 'Way2Paisa property update').replace(/\s+/g, ' ').trim().slice(0, 100);
+  const description = String(promotion.caption || '').slice(0, 5000);
+  const metadata = {
+    snippet: {
+      title: title || 'Way2Paisa property update',
+      description,
+      categoryId: '22',
+    },
+    status: {
+      privacyStatus: process.env.YOUTUBE_PRIVACY_STATUS || 'public',
+      selfDeclaredMadeForKids: false,
+    },
+  };
+  const form = new FormData();
+  form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }), 'metadata.json');
+  form.append('video', video, 'way2paisa-project-video.mp4');
+  const response = await fetch('https://www.googleapis.com/upload/youtube/v3/videos?uploadType=multipart&part=snippet,status', {
+    method: 'POST',
+    headers: { Authorization: 'Bearer ' + accessToken },
+    body: form,
+    cache: 'no-store',
+  });
+  const published = await response.json().catch(() => ({}));
+  if (!response.ok || !published.id) throw new Error(errorMessage(published, 'YouTube could not upload this video.'));
+  return { id: published.id, permalink: 'https://www.youtube.com/watch?v=' + published.id };
+}
+
+async function publishGoogleBusiness({ promotion, request }) {
+  const locationName = String(process.env.GOOGLE_BUSINESS_LOCATION_NAME || '').replace(/^\/+|\/+$/g, '');
+  if (!locationName) throw new Error('Google Business is not configured yet. Add the Google Business location name in Vercel first.');
+  const accessToken = await getGoogleAccessToken();
+  const generatedCreativeUrl = new URL('/api/admin/promotion-creative', request.url);
+  generatedCreativeUrl.searchParams.set('project', promotion.project_id);
+  generatedCreativeUrl.searchParams.set('v', promotion.id);
+  const imageUrl = promotion.creative_image_url || generatedCreativeUrl.toString();
+  const listingUrl = new URL('/projects/' + promotion.projects.slug, request.url).toString();
+  const body = {
+    languageCode: 'en',
+    summary: String(promotion.caption || '').slice(0, 1500),
+    topicType: 'STANDARD',
+    callToAction: { actionType: 'LEARN_MORE', url: listingUrl },
+    media: [{ sourceUrl: imageUrl }],
+  };
+  const response = await fetch('https://mybusiness.googleapis.com/v4/' + locationName + '/localPosts', {
+    method: 'POST',
+    headers: { Authorization: 'Bearer ' + accessToken, 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+    cache: 'no-store',
+  });
+  const published = await response.json().catch(() => ({}));
+  if (!response.ok || !published.name) throw new Error(errorMessage(published, 'Google Business could not publish this post.'));
+  return { id: published.name, permalink: published.searchUrl || 'https://business.google.com/' };
+}
+
 export async function POST(request) {
   try {
     const authorization = request.headers.get('authorization') || '';
@@ -110,7 +195,7 @@ export async function POST(request) {
 
     const { data: promotion, error: promotionError } = await supabase
       .from('project_promotions')
-      .select('id,project_id,caption,platforms,platform_post_urls,creative_image_url,creative_video_url,projects(name,slug,active,verified)')
+      .select('id,project_id,caption,headline,platforms,platform_post_urls,creative_image_url,creative_video_url,projects(name,slug,active,verified)')
       .eq('id', promotionId)
       .maybeSingle();
     if (promotionError || !promotion) return Response.json({ error: 'Promotion not found or not available to this admin.' }, { status: 404 });
@@ -119,7 +204,11 @@ export async function POST(request) {
     const isVideo = Boolean(promotion.creative_video_url);
     const wantsInstagram = isVideo ? promotion.platforms?.includes('Instagram Reel') : promotion.platforms?.includes('Instagram');
     const wantsFacebook = promotion.platforms?.includes('Facebook');
-    if (!wantsInstagram && !wantsFacebook) return Response.json({ error: 'Select Instagram, Instagram Reel, or Facebook before publishing.' }, { status: 400 });
+    const wantsYouTube = isVideo && promotion.platforms?.includes('YouTube');
+    const wantsGoogleBusiness = !isVideo && promotion.platforms?.includes('Google Business');
+    if (!wantsInstagram && !wantsFacebook && !wantsYouTube && !wantsGoogleBusiness) {
+      return Response.json({ error: isVideo ? 'Select Instagram Reel, Facebook, or YouTube before publishing this video.' : 'Select Instagram, Facebook, or Google Business before publishing this image.' }, { status: 400 });
+    }
 
     const results = {};
     const errors = {};
@@ -135,6 +224,20 @@ export async function POST(request) {
       catch (error) { errors.Facebook = error.message || 'Facebook could not publish this promotion.'; }
     } else if (promotion.platform_post_urls?.Facebook) {
       results.Facebook = { id: promotion.platform_post_urls.Facebook, permalink: promotion.platform_post_urls.Facebook };
+    }
+
+    if (wantsYouTube && !promotion.platform_post_urls?.YouTube) {
+      try { results.YouTube = await publishYouTube({ promotion }); }
+      catch (error) { errors.YouTube = error.message || 'YouTube could not publish this video.'; }
+    } else if (wantsYouTube && promotion.platform_post_urls?.YouTube) {
+      results.YouTube = { id: promotion.platform_post_urls.YouTube, permalink: promotion.platform_post_urls.YouTube };
+    }
+
+    if (wantsGoogleBusiness && !promotion.platform_post_urls?.['Google Business']) {
+      try { results['Google Business'] = await publishGoogleBusiness({ promotion, request }); }
+      catch (error) { errors['Google Business'] = error.message || 'Google Business could not publish this post.'; }
+    } else if (wantsGoogleBusiness && promotion.platform_post_urls?.['Google Business']) {
+      results['Google Business'] = { id: promotion.platform_post_urls['Google Business'], permalink: promotion.platform_post_urls['Google Business'] };
     }
 
     const platformPostUrls = { ...(promotion.platform_post_urls || {}) };
