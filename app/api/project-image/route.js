@@ -27,7 +27,7 @@ export async function GET(request) {
   if (!base || !key) return new Response('Image service is not configured.', { status: 500 });
 
   const projectQuery = new URL(base + '/rest/v1/projects');
-  projectQuery.searchParams.set('select', 'hero_image_url');
+  projectQuery.searchParams.set('select', 'hero_image_url,overview_source_url');
   projectQuery.searchParams.set('id', 'eq.' + projectId);
   projectQuery.searchParams.set('active', 'eq.true');
   projectQuery.searchParams.set('verified', 'eq.true');
@@ -36,7 +36,8 @@ export async function GET(request) {
     cache: 'no-store',
   });
   const projects = await projectResponse.json().catch(() => []);
-  const source = safeUrl(Array.isArray(projects) ? projects[0]?.hero_image_url : null);
+  const project = Array.isArray(projects) ? projects[0] : null;
+  const source = safeUrl(project?.hero_image_url);
   if (!source) return new Response('Verified project image not found.', { status: 404 });
 
   try {
@@ -47,6 +48,7 @@ export async function GET(request) {
       headers: {
         Accept: 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
         'User-Agent': 'Mozilla/5.0 (compatible; Way2PaisaMedia/1.0)',
+        ...(safeUrl(project?.overview_source_url) ? { Referer: safeUrl(project.overview_source_url) } : {}),
       },
       cache: 'no-store',
     });
