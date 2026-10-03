@@ -69,6 +69,8 @@ export async function POST(request) {
     const preferredBhk = clean(body.preferred_bhk, 80);
     const budget = clean(body.budget, 100);
     const preferredLocations = clean(body.preferred_locations, 300);
+    const financeProduct = clean(body.financeProduct, 120);
+    const employmentType = clean(body.employmentType, 120);
     const landingPage = clean(body.landingPage, 1000);
     const appointmentType = clean(body.appointmentType, 80);
     const appointmentDate = clean(body.appointmentDate, 20);
@@ -89,6 +91,13 @@ export async function POST(request) {
 
     const enquiryPreference = appointmentType
       ? `${appointmentType} | ${appointmentDate} | ${appointmentTime}`
+      : financeProduct
+      ? [
+          `Finance product: ${financeProduct}`,
+          budget && `Approximate requirement: ${budget}`,
+          employmentType && `Applicant profile: ${employmentType}`,
+          preferredLocations && `City / area: ${preferredLocations}`,
+        ].filter(Boolean).join(' | ')
       : [
           preferredBhk && `Configuration: ${preferredBhk}`,
           budget && `Budget: ${budget}`,
@@ -122,6 +131,7 @@ export async function POST(request) {
 
     const subject = appointmentType
       ? `New ${appointmentType}: ${projectName}`
+      : financeProduct ? `New finance enquiry: ${financeProduct}`
       : body.projectId ? `New project enquiry: ${projectName}` : 'New advisory enquiry';
     const emailResponse = await fetch('https://api.resend.com/emails', {
       method: 'POST',
@@ -141,6 +151,8 @@ export async function POST(request) {
           `Mobile: ${phone}`,
           `Email: ${text(email)}`,
           `Project: ${projectName}`,
+          `Finance product: ${text(financeProduct)}`,
+          `Applicant profile: ${text(employmentType)}`,
           `Configuration: ${text(preferredBhk)}`,
           `Budget: ${text(budget)}`,
           `Preferred locations: ${text(preferredLocations)}`,
