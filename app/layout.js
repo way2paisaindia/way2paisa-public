@@ -1,6 +1,7 @@
 import './globals.css';
 import './upgrade.css';
 import './media-watermark.css';
+import './emi.css';
 import QuickContact from './components/QuickContact';
 
 export const metadata = {
