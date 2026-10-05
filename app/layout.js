@@ -1,6 +1,7 @@
 import './globals.css';
 import './upgrade.css';
 import './media-watermark.css';
+import QuickContact from './components/QuickContact';
 
 export const metadata = {
   metadataBase: new URL('https://www.way2paisa.in'),
@@ -22,5 +23,5 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
-  return <html lang="en"><body>{children}</body></html>;
+  return <html lang="en"><body>{children}<QuickContact/></body></html>;
 }
