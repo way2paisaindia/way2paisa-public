@@ -25,7 +25,7 @@ function parsedIntent(query){
   const bhk=(text.match(/\b([1-5])\s*(?:bhk|bed(?:room)?s?)\b/i)||[])[1];
   const ready=/\bready\b|\bready possession\b|\bmove[ -]?in\b|\boc\b|\bcompleted\b/.test(text);
   const budget=budgetFrom(text,isDubai);
-  const stopWords=new Set(['show','find','need','want','looking','homes','home','house','apartment','property','properties','near','with','under','below','upto','up','to','within','budget','ready','possession','move','in','bhk','bedroom','bedrooms','crore','crores','lakh','lakhs','million','dubai','mumbai','mmr','aed','inr','the','and','for']);
+  const stopWords=new Set(['show','find','need','want','looking','homes','home','house','apartment','property','properties','near','with','under','below','upto','up','to','within','budget','ready','possession','move','in','bhk','bedroom','bedrooms','crore','crores','lakh','lakhs','million','dubai','mumbai','mmr','aed','inr','the','and','for','east','west','north','south']);
   const terms=text.split(/[^a-z0-9]+/).filter(word=>word.length>2&&!stopWords.has(word));
   return {text,isDubai,bhk,ready,budget,terms};
 }
@@ -46,12 +46,14 @@ function resultFor(projects,query){
     if(intent.isDubai!==marketDubai)return null;
     const blob=[project.name,project.developers?.name,project.locations?.name,project.address,project.bhk_original,project.status,project.possession_original].filter(Boolean).join(' ').toLowerCase();
     let score=0;
-    intent.terms.forEach(term=>{if(blob.includes(term))score+=8});
+    let matchedTerms=0;
+    intent.terms.forEach(term=>{if(blob.includes(term)){score+=8;matchedTerms+=1}});
     if(project.name?.toLowerCase().includes(intent.text)||project.developers?.name?.toLowerCase().includes(intent.text))score+=36;
     if(intent.bhk&&new RegExp(`\\b${intent.bhk}(?:\\s|[.,&-])*bhk\\b`,'i').test(project.bhk_original||''))score+=20;
     if(intent.ready&&/ready\\s*to\\s*move|\\boc\\b|completed/i.test(`${project.status||''} ${project.possession_original||''}`))score+=18;
     const price=Number(project.min_price);
     if(intent.budget&&price>0){const comparison=marketDubai?price:(price>=100000?price/10000000:price);score+=comparison<=intent.budget?16:-12}
+    if(intent.terms.length&&matchedTerms===0&&!project.name?.toLowerCase().includes(intent.text)&&!project.developers?.name?.toLowerCase().includes(intent.text))return null;
     return {...project,score};
   }).filter(Boolean).filter(project=>project.score>0).sort((a,b)=>b.score-a.score||Number(b.featured)-Number(a.featured)||a.name.localeCompare(b.name)).slice(0,4);
   return {intent,results};
