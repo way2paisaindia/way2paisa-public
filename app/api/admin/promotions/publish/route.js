@@ -256,7 +256,7 @@ export async function POST(request) {
           if (latestError) {
             errors.Website = latestError.message || 'The Website Reel Gallery could not be prepared.';
           } else {
-            const { error: galleryError } = await supabase.from('project_media').insert({project_id:promotion.project_id,image_url:sourceUrl,source_url:sourceUrl,alt_text:(promotion.headline||promotion.projects?.name||'Way2Paisa project video')+' — official social video',media_type:'video',sort_order:(Number(latest?.sort_order)||0)+1,active:true,verified_at:new Date().toISOString(),license_status:'admin-approved social video'});
+            const { error: galleryError } = await supabase.from('project_media').insert({project_id:promotion.project_id,image_url:sourceUrl,source_url:sourceUrl,alt_text:promotion.projects?.name||'Way2Paisa project video',media_type:'video',sort_order:(Number(latest?.sort_order)||0)+1,active:true,verified_at:new Date().toISOString(),license_status:'admin-approved social video'});
             if (galleryError) errors.Website = galleryError.message || 'The published video could not be added to the Website Reel Gallery.';
           }
         }
