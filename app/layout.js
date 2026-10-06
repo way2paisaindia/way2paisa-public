@@ -16,6 +16,13 @@ export const metadata = {
     url: 'https://www.way2paisa.in',
     siteName: 'Way2Paisa FinPro Services',
     type: 'website',
+    images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: 'Way2Paisa FinPro Services' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Way2Paisa FinPro Services | Premium Real Estate & Finance Advisory',
+    description: 'Curated residences and professional finance advisory across Mumbai, MMR and Dubai.',
+    images: ['/opengraph-image'],
   },
   robots: { index: true, follow: true },
   verification: {
