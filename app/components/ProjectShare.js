@@ -18,13 +18,15 @@ const EmailIcon=()=>(
   </svg>
 );
 
-export default function ProjectShare({project}) {
+export default function ProjectShare({project,compact=false}) {
   const [open,setOpen]=useState(false);
   const [copied,setCopied]=useState(false);
   const url=typeof window==='undefined'?'/projects/'+project.slug:window.location.href;
-  const text=[project.name,project.location,project.configurations,project.price,project.possession,project.rera&&'MahaRERA: '+project.rera].filter(Boolean).join(' · ');
+  const shortDescription=String(project.description||'').replace(/\s+/g,' ').trim().slice(0,260);
+  const text=[project.name,[project.location,project.configurations,project.price].filter(Boolean).join(' · '),shortDescription,'Book your site visit today.'].filter(Boolean).join('\n\n');
   async function share(){
     const payload={title:project.name,text,url};
+    if(project.image&&navigator.canShare&&navigator.share){try{const response=await fetch(project.image,{mode:'cors'});const blob=await response.blob();if(blob.type.startsWith('image/')){const extension=blob.type.split('/')[1]?.replace('jpeg','jpg')||'jpg';const file=new File([blob],`${project.slug}.${extension}`,{type:blob.type});const richPayload={...payload,files:[file]};if(navigator.canShare(richPayload)){await navigator.share(richPayload);return}}}catch(e){/* Link preview remains available when an image host blocks browser sharing. */}}
     if(navigator.share){try{await navigator.share(payload);return}catch(e){if(e?.name==='AbortError')return}}
     setOpen(true);
   }
@@ -33,8 +35,8 @@ export default function ProjectShare({project}) {
     setCopied(true); setTimeout(()=>setCopied(false),1800);
   }
   const encoded=encodeURIComponent(text+'\n'+url);
-  return <div className="projectShare">
-    <button type="button" className="shareBtn projectShareMain" onClick={share}><ShareIcon/>Share Project</button>
+  return <div className={'projectShare'+(compact?' projectShareCompact':'')}>
+    <button type="button" className="shareBtn projectShareMain" onClick={share} aria-label="Share project"> <ShareIcon/>{!compact&&'Share Project'}</button>
     {open&&<div className="projectShareFallback" aria-label="Share options">
       <a href={'https://wa.me/?text='+encoded} target="_blank" rel="noopener noreferrer"><WhatsAppIcon/>WhatsApp</a>
       <a href={'mailto:way2paisaindia@gmail.com?subject='+encodeURIComponent(project.name)+'&body='+encoded}><EmailIcon/>Email</a>
