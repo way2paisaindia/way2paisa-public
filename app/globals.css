@@ -230,3 +230,6 @@ footer .footerBrand .logoTagline{display:block!important;color:#ffffff!important
 .heroShareBtn{display:inline-flex;align-items:center;gap:8px;margin-top:18px;padding:10px 14px;border:1px solid rgba(255,255,255,.52);border-radius:9px;background:rgba(4,26,55,.28);color:#fff;font-size:12px;font-weight:800;cursor:pointer}.heroShareBtn svg{width:16px;height:16px}
 
 .heroShareBtn{position:absolute;top:24px;right:5.5%;z-index:5;width:44px;height:44px;margin:0;padding:0;justify-content:center;border:0;border-radius:50%;background:#fff;color:#073b77;box-shadow:0 8px 28px rgba(0,0,0,.25)}.heroShareBtn svg{width:19px;height:19px}.heroShareText{display:none}@media(max-width:680px){.heroShareBtn{top:16px;right:5%;width:42px;height:42px}}
+
+/* Align the homepage share control with the market eyebrow, away from the main heading. */
+.heroShareBtn{top:88px;right:5.5%;pointer-events:auto}.heroShareBtn:active{transform:scale(.96)}@media(max-width:680px){.heroShareBtn{top:62px;right:5%;width:38px;height:38px}.heroShareBtn svg{width:17px;height:17px}}
