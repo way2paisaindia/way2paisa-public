@@ -195,6 +195,20 @@ footer .footerBrand .logoTagline{display:block!important;color:#ffffff!important
 
 .nearbyExplore{margin:0 0 55px;padding:32px;border:1px solid #d8e7f5;border-radius:18px;background:linear-gradient(135deg,#f6fbff,#edf6fd)}.nearbyExplore h2{font-family:Georgia,serif;color:var(--navy);font-size:34px;font-weight:400;letter-spacing:-1px;margin:8px 0 10px}.nearbyExplore p{color:#60768b;line-height:1.65;font-size:14px;margin:0;max-width:700px}.nearbyPlaceGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:24px}.nearbyPlace{display:flex;min-height:118px;padding:17px;background:#fff;border:1px solid #d9e5ef;border-radius:12px;flex-direction:column;justify-content:center;color:var(--navy);transition:transform .18s ease,box-shadow .18s ease}.nearbyPlace:hover{transform:translateY(-2px);box-shadow:0 9px 24px rgba(11,62,110,.11)}.nearbyPlace>span{color:var(--royal);font-size:20px;line-height:1;margin-bottom:12px}.nearbyPlace strong{font-size:14px}.nearbyPlace small{margin-top:7px;color:#5d7d9b;font-size:11px;font-weight:700}@media(max-width:680px){.nearbyExplore{padding:24px}.nearbyExplore h2{font-size:30px}.nearbyPlaceGrid{grid-template-columns:1fr 1fr}.nearbyPlace{min-height:105px;padding:15px}}
 
+
+/* Compact mobile navigation: links move out of the brand lockup into a right-corner menu. */
+.mobileNav{display:none}
+@media(max-width:900px){
+  .nav nav{display:none}
+  .mobileNav{display:block;position:relative;margin-left:auto}
+  .mobileNav summary{display:grid;place-items:center;width:44px;height:44px;border:1px solid #b8cde1;border-radius:10px;background:#fff;color:#073968;font-size:24px;line-height:1;cursor:pointer;list-style:none;box-shadow:0 5px 16px rgba(7,42,84,.1)}
+  .mobileNav summary::-webkit-details-marker{display:none}
+  .mobileNavPanel{position:absolute;right:0;top:calc(100% + 10px);z-index:90;display:grid;min-width:225px;padding:8px;border:1px solid #c8d9e7;border-radius:12px;background:#fff;box-shadow:0 18px 42px rgba(5,36,71,.22)}
+  .mobileNavPanel a{padding:13px 14px;border-radius:8px;color:#173d61;font-size:14px;font-weight:750;text-decoration:none;white-space:nowrap}
+  .mobileNavPanel a:hover{background:#edf6ff;color:#075fa4}
+}
+@media(max-width:680px){.logoLink img{width:190px;max-height:45px}}
+
 /* Clear primary submission calls to action */
 .actionBlue{display:inline-flex;align-items:center;justify-content:center;min-height:50px;margin-top:8px;padding:14px 20px!important;border:0!important;border-radius:9px!important;background:linear-gradient(90deg,#073968,#0878e8)!important;color:#fff!important;font-weight:800!important;letter-spacing:.01em;box-shadow:0 10px 22px rgba(8,91,180,.2)}.actionBlue:hover{background:linear-gradient(90deg,#062e58,#066ccf)!important}.actionBlue:disabled{opacity:.68;cursor:wait}.quickDialog .actionBlue,.financeForm .actionBlue,.visitBooking .actionBlue{width:100%}.visitDateLabel{padding:10px 11px!important;border:1px solid #d1dfeb;border-radius:8px;background:#f8fbfe}.visitDateLabel input[type="date"]{width:100%;cursor:pointer}.visitDateLabel small{line-height:1.4}
 
