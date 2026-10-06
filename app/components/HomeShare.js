@@ -7,7 +7,7 @@ export default function HomeShare(){
  const [copied,setCopied]=useState(false);
  const text='Way2Paisa FinPro Services — curated real-estate opportunities and professional finance advisory across Mumbai, MMR and Dubai.';
  async function share(){
-  const url=window.location.origin+'/?share=way2paisa-v2';
+  const url=window.location.origin+'/share';
   const payload={title:'Way2Paisa FinPro Services',text,url};
   if(navigator.share){try{const response=await fetch(new URL('/opengraph-image',window.location.origin),{cache:'no-store'});const image=await response.blob();const file=new File([image],'way2paisa-real-estate-advisory.png',{type:'image/png'});await navigator.share({...payload,files:[file]});return}catch(e){/* Continue with text/link sharing when this browser or target does not support image files. */}}
   if(navigator.share){try{await navigator.share(payload);return}catch(e){if(e?.name==='AbortError')return}}
