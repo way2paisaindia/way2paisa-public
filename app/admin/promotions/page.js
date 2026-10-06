@@ -127,10 +127,12 @@ export default function PromotionStudio(){
  async function publishSelected(){
   if(mediaKind==='video'&&!videoUrl){setNotice('Upload an approved MP4 video before publishing.');return}
   if(mediaKind!=='video'&&!creativeUrl){setNotice('Add an approved creative before publishing.');return}
-  const compatibleChannels=mediaKind==='video'?selected.filter(x=>x==='Instagram Reel'||x==='Facebook'||x==='YouTube'):selected.filter(x=>x==='Instagram'||x==='Facebook'||x==='Google Business');
-  if(!compatibleChannels.length){setNotice(mediaKind==='video'?'Select Instagram Reel, Facebook and/or YouTube before publishing this video.':'Select Instagram, Facebook and/or Google Business before publishing this image.');return}
+  const compatibleChannels=mediaKind==='video'?selected.filter(x=>x==='Instagram Reel'||x==='Facebook'||x==='YouTube'||x==='Website'):selected.filter(x=>x==='Instagram'||x==='Facebook'||x==='Google Business');
+  const socialVideoChannels=mediaKind==='video'?compatibleChannels.filter(x=>x!=='Website'):compatibleChannels;
+  if(!socialVideoChannels.length){setNotice(mediaKind==='video'?'Select Instagram Reel, Facebook or YouTube as well as Website before publishing this video.':'Select Instagram, Facebook and/or Google Business before publishing this image.');return}
   let id=promotionId;
   if(!id){const saved=await save('draft');if(!saved)return;id=saved.id}
+  else {const {error:updateError}=await db.from('project_promotions').update({caption,headline,creative_brief:brief,platforms:selected}).eq('id',id);if(updateError){setNotice(updateError.message);return}}
   const channels=compatibleChannels;
   if(!window.confirm('Publish this reviewed '+(mediaKind==='video'?'MP4 video':'image')+' and caption to '+channels.join(' and ')+' now? This will create real social posts.'))return;
   setPublishing(true);setNotice('');
