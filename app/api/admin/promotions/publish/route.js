@@ -206,6 +206,7 @@ export async function POST(request) {
     const wantsFacebook = promotion.platforms?.includes('Facebook');
     const wantsYouTube = isVideo && promotion.platforms?.includes('YouTube');
     const wantsGoogleBusiness = !isVideo && promotion.platforms?.includes('Google Business');
+    const wantsWebsite = isVideo && promotion.platforms?.includes('Website');
     if (!wantsInstagram && !wantsFacebook && !wantsYouTube && !wantsGoogleBusiness) {
       return Response.json({ error: isVideo ? 'Select Instagram Reel, Facebook, or YouTube before publishing this video.' : 'Select Instagram, Facebook, or Google Business before publishing this image.' }, { status: 400 });
     }
@@ -242,6 +243,29 @@ export async function POST(request) {
 
     const platformPostUrls = { ...(promotion.platform_post_urls || {}) };
     for (const [platform, result] of Object.entries(results)) platformPostUrls[platform] = result.permalink || result.id;
+    if (wantsWebsite) {
+      const sourceUrl = platformPostUrls.Instagram || platformPostUrls.YouTube || platformPostUrls.Facebook;
+      if (!sourceUrl) {
+        errors.Website = 'Website Reel Gallery needs one successfully published Instagram Reel, YouTube video, or Facebook video.';
+      } else {
+        const { data: existing, error: existingError } = await supabase.from('project_media').select('id').eq('project_id', promotion.project_id).eq('media_type', 'video').eq('source_url', sourceUrl).maybeSingle();
+        if (existingError) {
+          errors.Website = existingError.message || 'The Website Reel Gallery could not be checked.';
+        } else if (!existing) {
+          const { data: latest, error: latestError } = await supabase.from('project_media').select('sort_order').eq('project_id', promotion.project_id).eq('media_type', 'video').order('sort_order', { ascending: false }).limit(1).maybeSingle();
+          if (latestError) {
+            errors.Website = latestError.message || 'The Website Reel Gallery could not be prepared.';
+          } else {
+            const { error: galleryError } = await supabase.from('project_media').insert({project_id:promotion.project_id,image_url:sourceUrl,source_url:sourceUrl,alt_text:(promotion.headline||promotion.projects?.name||'Way2Paisa project video')+' — official social video',media_type:'video',sort_order:(Number(latest?.sort_order)||0)+1,active:true,verified_at:new Date().toISOString(),license_status:'admin-approved social video'});
+            if (galleryError) errors.Website = galleryError.message || 'The published video could not be added to the Website Reel Gallery.';
+          }
+        }
+        if (!errors.Website) {
+          results.Website = { permalink: new URL('/projects/' + promotion.projects.slug, request.url).toString() };
+          platformPostUrls.Website = results.Website.permalink;
+        }
+      }
+    }
     const errorText = Object.entries(errors).map(([platform, message]) => platform + ': ' + message).join(' | ');
     const { error: updateError } = await supabase.from('project_promotions')
       .update({ status: Object.keys(results).length ? 'published' : 'draft', platform_post_urls: platformPostUrls, publish_error: errorText || null, approved_by: user.id, approved_at: new Date().toISOString() })
