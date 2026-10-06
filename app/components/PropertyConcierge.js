@@ -10,8 +10,12 @@ const money=(value,market)=>{
   return crores<1?`₹${(crores*100).toLocaleString('en-IN',{maximumFractionDigits:2})} Lakh+`:`₹${crores.toLocaleString('en-IN',{maximumFractionDigits:2})} Cr+`;
 };
 
+// Keep a precise locality phrase intact. A broad token such as "Andheri" must
+// never cause an Andheri East project to be returned for an Andheri West brief.
+const localityPhrases=['andheri west','andheri east','borivali west','borivali east','goregaon west','goregaon east','malad west','malad east','bandra west','bandra east','vile parle west','vile parle east','lower parel','marine lines','dadar west','dadar east','thane west','thane east','mulund west','mulund east','kandivali west','kandivali east','vikhroli west','vikhroli east','bandra kurla complex','dubai marina','downtown dubai','business bay','palm jumeirah','jebel ali','bur dubai','dubai south','jumeirah village circle','dubai hills','emaar beachfront','maritime city','sobha hartland'];
+
 function budgetFrom(text,isDubai){
-  const match=text.match(/(?:under|below|upto|up to|within|budget(?: of| is)?|around)s*(?:₹|inr\s*|aed\s*)?(\d+(?:\.\d+)?)\s*(cr|crore|crores|lakh|lakhs|m|million)?/i);
+  const match=text.match(/(?:under|below|upto|up to|within|budget(?: of| is)?|around)\s*(?:₹|inr\s*|aed\s*)?(\d+(?:\.\d+)?)\s*(cr|crore|crores|lakh|lakhs|m|million)?/i);
   if(!match)return null;
   const value=Number(match[1]);const unit=(match[2]||'').toLowerCase();
   if(isDubai)return unit==='m'||unit.includes('million')?value*1000000:value;
@@ -27,7 +31,7 @@ function parsedIntent(query){
   const budget=budgetFrom(text,isDubai);
   const stopWords=new Set(['show','find','need','want','looking','homes','home','house','apartment','property','properties','near','with','under','below','upto','up','to','within','budget','ready','possession','move','in','bhk','bedroom','bedrooms','crore','crores','lakh','lakhs','million','dubai','mumbai','mmr','aed','inr','the','and','for','east','west','north','south']);
   const terms=text.split(/[^a-z0-9]+/).filter(word=>word.length>2&&!stopWords.has(word));
-  return {text,isDubai,bhk,ready,budget,terms};
+  return {text,isDubai,bhk,ready,budget,terms,localities:localityPhrases.filter(phrase=>text.includes(phrase))};
 }
 
 function possessionLabel(value){
@@ -45,12 +49,16 @@ function resultFor(projects,query){
     const marketDubai=String(project.market||'').toLowerCase().includes('dubai');
     if(intent.isDubai!==marketDubai)return null;
     const blob=[project.name,project.developers?.name,project.locations?.name,project.address,project.bhk_original,project.status,project.possession_original].filter(Boolean).join(' ').toLowerCase();
+    const locationBlob=[project.locations?.name,project.address].filter(Boolean).join(' ').toLowerCase();
+    const exactLocality=intent.localities.some(phrase=>locationBlob.includes(phrase));
+    if(intent.localities.length&&!exactLocality)return null;
     let score=0;
     let matchedTerms=0;
     intent.terms.forEach(term=>{if(blob.includes(term)){score+=8;matchedTerms+=1}});
+    if(exactLocality)score+=48;
     if(project.name?.toLowerCase().includes(intent.text)||project.developers?.name?.toLowerCase().includes(intent.text))score+=36;
     if(intent.bhk&&new RegExp(`\\b${intent.bhk}(?:\\s|[.,&-])*bhk\\b`,'i').test(project.bhk_original||''))score+=20;
-    if(intent.ready&&/ready\\s*to\\s*move|\\boc\\b|completed/i.test(`${project.status||''} ${project.possession_original||''}`))score+=18;
+    if(intent.ready&&/ready\s*to\s*move|\boc\b|completed/i.test(`${project.status||''} ${project.possession_original||''}`))score+=18;
     const price=Number(project.min_price);
     if(intent.budget&&price>0){const comparison=marketDubai?price:(price>=100000?price/10000000:price);score+=comparison<=intent.budget?16:-12}
     if(intent.terms.length&&matchedTerms===0&&!project.name?.toLowerCase().includes(intent.text)&&!project.developers?.name?.toLowerCase().includes(intent.text))return null;
