@@ -9,6 +9,14 @@ function errorMessage(payload, fallback) {
   return payload?.error?.message || payload?.message || fallback;
 }
 
+function instagramErrorMessage(payload, fallback) {
+  const message = errorMessage(payload, fallback);
+  if (/application request limit reached|rate limit|too many calls/i.test(message)) {
+    return 'Instagram has temporarily rate-limited the Way2Paisa publishing app. Please wait about 60 minutes, then publish this same draft again. Do not create a new draft or repeatedly retry it.';
+  }
+  return message;
+}
+
 function wait(milliseconds) {
   return new Promise(resolve => setTimeout(resolve, milliseconds));
 }
@@ -36,7 +44,7 @@ async function getGoogleAccessToken() {
   return payload.access_token;
 }
 
-async function waitForMediaContainer(graphRoot, containerId, accessToken, maxAttempts = 8) {
+async function waitForMediaContainer(graphRoot, containerId, accessToken, maxAttempts = 6) {
   for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
     const statusResponse = await fetch(graphRoot + '/' + containerId + '?fields=status_code,status&access_token=' + encodeURIComponent(accessToken));
     const statusPayload = await statusResponse.json().catch(() => ({}));
@@ -44,11 +52,11 @@ async function waitForMediaContainer(graphRoot, containerId, accessToken, maxAtt
     console.info('Instagram media container status', { attempt, status, responseOk: statusResponse.ok });
     if (status === 'FINISHED') return { ready: true };
     if (!statusResponse.ok || status === 'ERROR' || status === 'EXPIRED') {
-      return { ready: false, error: errorMessage(statusPayload, 'Instagram could not process this image or video.') };
+      return { ready: false, error: instagramErrorMessage(statusPayload, 'Instagram could not process this image or video.') };
     }
-    await wait(2000);
+    if (attempt < maxAttempts) await wait(5000);
   }
-  return { ready: false, error: 'Instagram is still processing the creative. Please try publishing this draft again in a minute.' };
+  return { ready: false, error: 'Instagram is still processing the creative. Please wait one minute, then publish this same draft again.' };
 }
 
 async function publishInstagram({ promotion, request, isReel }) {
@@ -69,9 +77,9 @@ async function publishInstagram({ promotion, request, isReel }) {
       : { image_url: mediaUrl, caption: promotion.caption, access_token: accessToken }),
   });
   const container = await containerResponse.json().catch(() => ({}));
-  if (!containerResponse.ok || !container.id) throw new Error(errorMessage(container, 'Instagram did not accept this image or video.'));
+  if (!containerResponse.ok || !container.id) throw new Error(instagramErrorMessage(container, 'Instagram did not accept this image or video.'));
 
-  const containerState = await waitForMediaContainer(graphRoot, container.id, accessToken, isReel ? 20 : 8);
+  const containerState = await waitForMediaContainer(graphRoot, container.id, accessToken, isReel ? 6 : 4);
   if (!containerState.ready) throw new Error(containerState.error);
 
   const publishResponse = await fetch(graphBase + '/media_publish', {
@@ -80,7 +88,7 @@ async function publishInstagram({ promotion, request, isReel }) {
     body: new URLSearchParams({ creation_id: container.id, access_token: accessToken }),
   });
   const published = await publishResponse.json().catch(() => ({}));
-  if (!publishResponse.ok || !published.id) throw new Error(errorMessage(published, 'Instagram could not publish this image or video.'));
+  if (!publishResponse.ok || !published.id) throw new Error(instagramErrorMessage(published, 'Instagram could not publish this image or video.'));
 
   const detailsResponse = await fetch(graphRoot + '/' + published.id + '?fields=permalink&access_token=' + encodeURIComponent(accessToken));
   const details = await detailsResponse.json().catch(() => ({}));
