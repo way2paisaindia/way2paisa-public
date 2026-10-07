@@ -233,3 +233,14 @@ footer .footerBrand .logoTagline{display:block!important;color:#ffffff!important
 
 /* Align the homepage share control with the market eyebrow, away from the main heading. */
 .heroShareBtn{top:88px;right:5.5%;pointer-events:auto}.heroShareBtn:active{transform:scale(.96)}@media(max-width:680px){.heroShareBtn{top:62px;right:5%;width:38px;height:38px}.heroShareBtn svg{width:17px;height:17px}}
+
+
+/* Searchable project selectors — Promotion Studio and Reel Gallery */
+.projectPicker{position:relative;width:100%}
+.projectPicker input{width:100%;box-sizing:border-box}
+.projectPickerMenu{position:absolute;z-index:30;top:calc(100% + 5px);left:0;right:0;max-height:288px;overflow:auto;border:1px solid var(--line);border-radius:10px;background:#fff;box-shadow:0 16px 32px rgba(7,37,69,.16);padding:5px}
+.projectPickerMenu button{display:flex!important;flex-direction:column;align-items:flex-start;width:100%;padding:10px 11px!important;background:transparent!important;color:var(--ink)!important;text-align:left;border-radius:7px!important}
+.projectPickerMenu button:hover,.projectPickerMenu button:focus{background:#eef6ff!important}
+.projectPickerMenu button strong{font-size:13px;color:var(--navy)}
+.projectPickerMenu button span,.projectPickerEmpty{font-size:11px;color:#60768b;font-weight:600;margin-top:3px}
+.projectPickerEmpty{padding:12px}
