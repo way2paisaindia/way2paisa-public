@@ -8,27 +8,28 @@ import ListingImage from '../components/ListingImage';
 
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY);
 const wa = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '918850373012';
-const majorZones = ['Western Suburbs','Eastern Suburbs','Central Mumbai','South Mumbai (SoBo)','Thane','Navi Mumbai'];
+const majorZones = ['Western Suburbs','Eastern Suburbs','Central Mumbai','South Mumbai (SoBo)','Thane','Navi Mumbai & Outer MMR'];
 const mumbaiZoneCards=[
  {name:'Western Suburbs',desc:'Bandra · Juhu · Andheri · Goregaon · Malad · Kandivali · Borivali',image:'https://etimg.etb2bimg.com/photo/127831752.cms'},
  {name:'Eastern Suburbs',desc:'Kurla · Chembur · Ghatkopar · Powai · Vikhroli · Bhandup · Mulund',image:'https://images.moneycontrol.com/static-mcnews/2021/07/Mumbai-Powai-aniket-bhattacharya-vCv1OoxEpjc-unsplash-770x433.jpg'},
  {name:'Central Mumbai',desc:'Sion · Matunga · Dadar · Wadala · Parel · Sewri · Prabhadevi',image:'https://www.revv.co.in/blogs/wp-content/uploads/2020/01/siddhivinayak-temple-mumbai.jpg'},
  {name:'South Mumbai (SoBo)',desc:'Worli · Lower Parel · Mahalaxmi · Byculla · Tardeo · Malabar Hill · Colaba',image:'https://assets.gqindia.com/photos/67614eadcfe0eb006c460961/16:9/w_2560,c_limit/Six-Indian-cities-among-100-Best-Food-Cities-in-the-World.jpg'},
  {name:'Thane',desc:'Thane · Pokhran Road · Majiwada · Balkum · Kolshet · Ghodbunder Road',image:'https://media-cdn.tripadvisor.com/media/photo-s/0f/f0/c7/50/glimpses-of-upvan-lake.jpg'},
- {name:'Navi Mumbai',desc:'Airoli · Vashi · Nerul · Seawoods · Belapur · Kharghar · Ulwe · Panvel',image:'https://d3pc1xvrcw35tl.cloudfront.net/images/1200x900/navi-mum222023_202302955947.jpg'}
+ {name:'Navi Mumbai & Outer MMR',desc:'Airoli · Vashi · Nerul · Panvel · Palghar · Boisar · Karjat',image:'https://d3pc1xvrcw35tl.cloudfront.net/images/1200x900/navi-mum222023_202302955947.jpg'}
 ];
 const zoneForProject=p=>{
  const direct=(p.locations?.zone||'').trim();
+ if(direct==='Navi Mumbai')return 'Navi Mumbai & Outer MMR';
  if(majorZones.includes(direct))return direct;
  if(String(p.market||'').toLowerCase()==='dubai')return '';
  const text=[p.locations?.name,p.address].filter(Boolean).join(' ').toLowerCase();
- if(/navi mumbai|vashi|sanpada|airoli|nerul|seawoods|belapur|kharghar|ulwe|panvel/.test(text))return 'Navi Mumbai';
+ if(/navi mumbai|vashi|sanpada|airoli|nerul|seawoods|belapur|kharghar|ulwe|panvel|palghar|boisar|karjat|manor|nalasopara|virar/.test(text))return 'Navi Mumbai & Outer MMR';
  if(/thane|majiwada|balkum|kolshet|ghodbunder|pokhran/.test(text))return 'Thane';
  if(/wadala|sion|matunga|dadar|parel|sewri|prabhadevi/.test(text))return 'Central Mumbai';
  if(/worli|lower parel|mahalaxmi|byculla|tardeo|malabar hill|colaba/.test(text))return 'South Mumbai (SoBo)';
  if(/mulund|bhandup|vikhroli|powai|ghatkopar|chembur|kurla|central suburbs/.test((direct+' '+text).toLowerCase()))return 'Eastern Suburbs';
  if(/andheri|bandra|juhu|goregaon|malad|kandivali|borivali|versova/.test(text))return 'Western Suburbs';
- return '';
+ return 'Navi Mumbai & Outer MMR';
 };
 const dubaiZones=['Downtown Dubai','Dubai Marina','Jumeirah','Deira','Bur Dubai','Jebel Ali'];
 const dubaiZoneCards=[
@@ -42,13 +43,13 @@ const dubaiZoneCards=[
 const dubaiZoneForProject=p=>{
  if(String(p.market||'').toLowerCase()!=='dubai')return '';
  const text=[p.locations?.name,p.address].filter(Boolean).join(' ').toLowerCase();
- if(/sobha hartland|mbr city|downtown|business bay|difc/.test(text))return 'Downtown Dubai';
- if(/marina|jbr|jumeirah lake towers|jlt|palm jumeirah/.test(text))return 'Dubai Marina';
- if(/jumeirah|jvc|umm suqeim|al wasl/.test(text))return 'Jumeirah';
- if(/deira|warsan|academic city|mirdif|creek harbour/.test(text))return 'Deira';
- if(/maritime city|dubailand|majan|dubai land residence|dlrc|bur dubai/.test(text))return 'Bur Dubai';
- if(/jebel ali|dubai south|al furjan|dubai industrial city|dip/.test(text))return 'Jebel Ali';
- return '';
+ if(/sobha hartland|mbr city|downtown|business bay|difc|dubai hills|al jaddaf|ras al khor|meydan|nad al shiba|design district/.test(text))return 'Downtown Dubai';
+ if(/marina|jbr|jumeirah lake towers|jlt|palm jumeirah|dubai harbour|sheikh zayed|al sufouh/.test(text))return 'Dubai Marina';
+ if(/jumeirah|jvc|umm suqeim|al wasl|arjan|motor city|science park|sports city/.test(text))return 'Jumeirah';
+ if(/deira|warsan|academic city|mirdif|creek harbour|silicon oasis/.test(text))return 'Deira';
+ if(/maritime city|dubailand|majan|dubai land residence|dlrc|bur dubai|damac hills|the valley/.test(text))return 'Bur Dubai';
+ if(/jebel ali|dubai south|al furjan|dubai industrial city|dip|expo|production city/.test(text))return 'Jebel Ali';
+ return 'Bur Dubai';
 };
 const isMarketMatch=(project,selectedMarket)=>{
  if(!selectedMarket)return true;
@@ -63,12 +64,13 @@ export default function PropertiesPage(){
  const[projects,setProjects]=useState([]),[locations,setLocations]=useState([]),[developers,setDevelopers]=useState([]),[loading,setLoading]=useState(true),[error,setError]=useState('');
  const[q,setQ]=useState(''),[zone,setZone]=useState(''),[dubaiZone,setDubaiZone]=useState(''),[location,setLocation]=useState(''),[developer,setDeveloper]=useState(''),[configuration,setConfiguration]=useState(''),[budget,setBudget]=useState(''),[status,setStatus]=useState(''),[market,setMarket]=useState(''),[category,setCategory]=useState(''),[sort,setSort]=useState('featured');
  useEffect(()=>{const p=new URLSearchParams(window.location.search);setQ(p.get('q')||'');setZone(p.get('zone')||'');setLocation(p.get('location')||'');setDeveloper(p.get('developer')||'');setConfiguration(p.get('bhk')||p.get('configuration')||'');setBudget(p.get('budget')||'');setMarket(p.get('market')||'');setDubaiZone(p.get('dubaiZone')||'');setCategory(p.get('category')||'')},[]);
- useEffect(()=>{(async()=>{const[{data:p,error:pe},{data:l},{data:d}]=await Promise.all([supabase.from('projects').select('id,name,slug,address,status,min_price,max_price,featured,verified,hero_image_url,market,category,bhk_original,carpet_area_original,price_original,developer_id,location_id,developers(name),locations(name,zone)').eq('active',true).eq('verified',true).limit(500),supabase.from('locations').select('id,name,zone').eq('active',true).order('name'),supabase.from('developers').select('id,name').eq('active',true).order('name')]);if(pe)setError(pe.message);setProjects(p||[]);setLocations(l||[]);setDevelopers(d||[]);setLoading(false)})()},[]);
+ useEffect(()=>{(async()=>{const[{data:p,error:pe},{data:l},{data:d}]=await Promise.all([supabase.from('projects').select('id,name,slug,address,status,min_price,max_price,featured,verified,hero_image_url,market,category,bhk_original,carpet_area_original,price_original,developer_id,location_id,developers(name),locations(name,zone)').eq('active',true).eq('verified',true).limit(2000),supabase.from('locations').select('id,name,zone').eq('active',true).order('name'),supabase.from('developers').select('id,name').eq('active',true).order('name')]);if(pe)setError(pe.message);setProjects(p||[]);setLocations(l||[]);setDevelopers(d||[]);setLoading(false)})()},[]);
  const isDubai=market.toLowerCase()==='dubai';const isMumbai=market.toLowerCase()==='mumbai';
  const locationOptions=useMemo(()=>{
-  const marketLocationIds=new Set(projects.filter(project=>isMarketMatch(project,isDubai?'Dubai':'Mumbai')).map(project=>project.location_id).filter(Boolean));
-  const scopedLocations=locations.filter(location=>marketLocationIds.has(location.id));
-  return !isDubai&&zone?scopedLocations.filter(location=>location.zone===zone):scopedLocations;
+  const scopedProjects=projects.filter(project=>isMarketMatch(project,isDubai?'Dubai':'Mumbai'));
+  const zonedProjects=scopedProjects.filter(project=>isDubai?(!dubaiZone||dubaiZoneForProject(project)===dubaiZone):(!zone||zoneForProject(project)===zone));
+  const marketLocationIds=new Set(zonedProjects.map(project=>project.location_id).filter(Boolean));
+  return locations.filter(location=>marketLocationIds.has(location.id));
  },[locations,projects,zone,isDubai]);
  const unitLabel=category==='commercial_office'?'Office type':category==='retail'?'Retail type':category==='plot'||category==='land'?'Plot type':category==='villa'?'Home type':'Configuration';
  const unitOptions=category==='commercial_office'?['Office Space','Commercial Office']:category==='retail'?['Retail Shop','Shop']:category==='villa'?['3 BHK','4 BHK','5 BHK','5 BHK+']:category==='plot'||category==='land'?['Residential Plot','NA Plot','Land Parcel']:['1 BHK','2 BHK','3 BHK','4 BHK','5 BHK','5 BHK+'];
