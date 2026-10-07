@@ -27,8 +27,8 @@ export async function GET(request) {
   const googleReady = googleConfigured();
   return Response.json({
     connections: {
-      Instagram: Boolean(process.env.INSTAGRAM_ACCESS_TOKEN && process.env.INSTAGRAM_ACCOUNT_ID),
-      'Instagram Reel': Boolean(process.env.INSTAGRAM_ACCESS_TOKEN && process.env.INSTAGRAM_ACCOUNT_ID),
+      Instagram: Boolean(process.env.INSTAGRAM_ACCESS_TOKEN),
+      'Instagram Reel': Boolean(process.env.INSTAGRAM_ACCESS_TOKEN),
       Facebook: Boolean(process.env.FACEBOOK_PAGE_ACCESS_TOKEN && process.env.FACEBOOK_PAGE_ID),
       YouTube: googleReady,
       'Google Business': googleReady && Boolean(process.env.GOOGLE_BUSINESS_LOCATION_NAME),
