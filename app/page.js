@@ -15,7 +15,7 @@ const majorZones=[
  {name:'Central Mumbai',desc:'Sion · Matunga · Dadar · Wadala · Parel · Sewri · Prabhadevi',query:'Central Mumbai',image:'https://www.revv.co.in/blogs/wp-content/uploads/2020/01/siddhivinayak-temple-mumbai.jpg'},
  {name:'South Mumbai (SoBo)',desc:'Worli · Lower Parel · Mahalaxmi · Byculla · Tardeo · Malabar Hill · Colaba',query:'South Mumbai (SoBo)',image:'https://assets.gqindia.com/photos/67614eadcfe0eb006c460961/16:9/w_2560,c_limit/Six-Indian-cities-among-100-Best-Food-Cities-in-the-World.jpg'},
  {name:'Thane',desc:'Thane · Pokhran Road · Majiwada · Balkum · Kolshet · Ghodbunder Road',query:'Thane',image:'https://media-cdn.tripadvisor.com/media/photo-s/0f/f0/c7/50/glimpses-of-upvan-lake.jpg'},
- {name:'Navi Mumbai',desc:'Airoli · Vashi · Nerul · Seawoods · Belapur · Kharghar · Ulwe · Panvel',query:'Navi Mumbai',image:'https://d3pc1xvrcw35tl.cloudfront.net/images/1200x900/navi-mum222023_202302955947.jpg'}
+ {name:'Navi Mumbai & Outer MMR',desc:'Airoli · Vashi · Nerul · Panvel · Palghar · Boisar · Karjat',query:'Navi Mumbai & Outer MMR',image:'https://d3pc1xvrcw35tl.cloudfront.net/images/1200x900/navi-mum222023_202302955947.jpg'}
 ];
 const dubaiZones=[
  {name:'Downtown Dubai',desc:'Downtown · Business Bay · DIFC · MBR City',query:'Downtown Dubai',image:'https://images.unsplash.com/photo-1518684079-3c830dcef090?auto=format&fit=crop&w=1200&q=85'},
@@ -30,33 +30,34 @@ const lenderBrands=[['SBI','sbi.co.in'],['HDFC Bank','hdfcbank.com'],['ICICI Ban
 const norm=s=>(s||'').toLowerCase().replace(/[^a-z0-9]/g,'');
 const zoneForProject=p=>{
  const direct=(p.locations?.zone||'').trim();
+ if(direct==='Navi Mumbai')return 'Navi Mumbai & Outer MMR';
  if(majorZones.some(z=>z.query===direct))return direct;
  if(String(p.market||'').toLowerCase()==='dubai')return '';
  const text=[p.locations?.name,p.address].filter(Boolean).join(' ').toLowerCase();
- if(/navi mumbai|vashi|sanpada|airoli|nerul|seawoods|belapur|kharghar|ulwe|panvel/.test(text))return 'Navi Mumbai';
+ if(/navi mumbai|vashi|sanpada|airoli|nerul|seawoods|belapur|kharghar|ulwe|panvel|palghar|boisar|karjat|manor|nalasopara|virar/.test(text))return 'Navi Mumbai & Outer MMR';
  if(/thane|majiwada|balkum|kolshet|ghodbunder|pokhran/.test(text))return 'Thane';
  if(/wadala|sion|matunga|dadar|parel|sewri|prabhadevi/.test(text))return 'Central Mumbai';
  if(/worli|lower parel|mahalaxmi|byculla|tardeo|malabar hill|colaba/.test(text))return 'South Mumbai (SoBo)';
  if(/mulund|bhandup|vikhroli|powai|ghatkopar|chembur|kurla|central suburbs/.test((direct+' '+text).toLowerCase()))return 'Eastern Suburbs';
  if(/andheri|bandra|juhu|goregaon|malad|kandivali|borivali|versova/.test(text))return 'Western Suburbs';
- return '';
+ return 'Navi Mumbai & Outer MMR';
 };
 const dubaiZoneForProject=p=>{
  if(String(p.market||'').toLowerCase()!=='dubai')return '';
  const text=[p.locations?.name,p.address].filter(Boolean).join(' ').toLowerCase();
- if(/sobha hartland|mbr city|downtown|business bay|difc/.test(text))return 'Downtown Dubai';
- if(/marina|jbr|jumeirah lake towers|jlt|palm jumeirah/.test(text))return 'Dubai Marina';
- if(/jumeirah|jvc|umm suqeim|al wasl/.test(text))return 'Jumeirah';
- if(/deira|warsan|academic city|mirdif|creek harbour/.test(text))return 'Deira';
- if(/maritime city|dubailand|majan|dubai land residence|dlrc|bur dubai/.test(text))return 'Bur Dubai';
- if(/jebel ali|dubai south|al furjan|dubai industrial city|dip/.test(text))return 'Jebel Ali';
- return '';
+ if(/sobha hartland|mbr city|downtown|business bay|difc|dubai hills|al jaddaf|ras al khor|meydan|nad al shiba|design district/.test(text))return 'Downtown Dubai';
+ if(/marina|jbr|jumeirah lake towers|jlt|palm jumeirah|dubai harbour|sheikh zayed|al sufouh/.test(text))return 'Dubai Marina';
+ if(/jumeirah|jvc|umm suqeim|al wasl|arjan|motor city|science park|sports city/.test(text))return 'Jumeirah';
+ if(/deira|warsan|academic city|mirdif|creek harbour|silicon oasis/.test(text))return 'Deira';
+ if(/maritime city|dubailand|majan|dubai land residence|dlrc|bur dubai|damac hills|the valley/.test(text))return 'Bur Dubai';
+ if(/jebel ali|dubai south|al furjan|dubai industrial city|dip|expo|production city/.test(text))return 'Jebel Ali';
+ return 'Bur Dubai';
 };
 const disclaimer='The material and information contained herein is solely for informational and marketing purposes. Way2Paisa FinPro Services is an independent real estate marketing and finance facilitator. Project information, pricing and availability are subject to change by the respective developer/promoter without prior notice. Prospective buyers are advised to independently verify all project details before making any purchase or investment decision. Images are for illustrative purposes only. T&C Apply.';
 export default function Home(){
  const[projects,setProjects]=useState([]),[inventoryOptions,setInventoryOptions]=useState(0),[locations,setLocations]=useState([]),[developers,setDevelopers]=useState([]),[q,setQ]=useState(''),[location,setLocation]=useState(''),[bhk,setBhk]=useState(''),[maxBudget,setMaxBudget]=useState(''),[loading,setLoading]=useState(true),[error,setError]=useState(''),[suggestionsOpen,setSuggestionsOpen]=useState(false),[activeSuggestion,setActiveSuggestion]=useState(-1);
  const searchRef=useRef(null);
- useEffect(()=>{(async()=>{const[{data:p,error:pe},{data:l},{data:d},{data:i,error:ie}]=await Promise.all([supabase.from('projects').select('id,name,slug,address,status,min_price,featured,verified,hero_image_url,market,bhk_original,carpet_area_original,price_original,developer_id,location_id,developers(name,logo_url),locations(name,zone)').eq('active',true).eq('verified',true).order('featured',{ascending:false}).order('updated_at',{ascending:false}).limit(500),supabase.from('locations').select('id,name,zone').eq('active',true).order('name'),supabase.from('developers').select('id,name,logo_url').eq('active',true).order('name'),supabase.from('inventory').select('project_id').eq('active',true).limit(5000)]);if(pe)setError(pe.message);if(ie)setError(ie.message);const activeProjects=p||[];const activeProjectIds=new Set(activeProjects.map(project=>project.id));setProjects(activeProjects);setInventoryOptions((i||[]).filter(item=>activeProjectIds.has(item.project_id)).length);setLocations(l||[]);setDevelopers(d||[]);setLoading(false)})()},[]);
+ useEffect(()=>{(async()=>{const[{data:p,error:pe},{data:l},{data:d},{data:i,error:ie}]=await Promise.all([supabase.from('projects').select('id,name,slug,address,status,min_price,featured,verified,hero_image_url,market,bhk_original,carpet_area_original,price_original,developer_id,location_id,developers(name,logo_url),locations(name,zone)').eq('active',true).eq('verified',true).order('featured',{ascending:false}).order('updated_at',{ascending:false}).limit(2000),supabase.from('locations').select('id,name,zone').eq('active',true).order('name'),supabase.from('developers').select('id,name,logo_url').eq('active',true).order('name'),supabase.from('inventory').select('project_id').eq('active',true).limit(5000)]);if(pe)setError(pe.message);if(ie)setError(ie.message);const activeProjects=p||[];const activeProjectIds=new Set(activeProjects.map(project=>project.id));setProjects(activeProjects);setInventoryOptions((i||[]).filter(item=>activeProjectIds.has(item.project_id)).length);setLocations(l||[]);setDevelopers(d||[]);setLoading(false)})()},[]);
  const mumbaiLocationIds=useMemo(()=>new Set(projects.filter(p=>!String(p.market||'').toLowerCase().includes('dubai')).map(p=>p.location_id).filter(Boolean)),[projects]);
  const filtered=useMemo(()=>{const t=q.trim().toLowerCase();return projects.filter(p=>{const text=[p.name,p.address,p.market,p.bhk_original,p.developers?.name,p.locations?.name].filter(Boolean).join(' ').toLowerCase();return(!t||text.includes(t))&&(!bhk||(p.bhk_original||'').toLowerCase().includes(bhk.toLowerCase()))&&(!location||p.location_id===location||p.locations?.name===location)&&(!maxBudget||(maxBudget==='above'?Number(p.min_price)>10:!p.min_price||Number(p.min_price)<=Number(maxBudget)))})},[projects,q,bhk,location,maxBudget]);
  const zoneCounts=useMemo(()=>projects.reduce((counts,p)=>{const zone=zoneForProject(p);if(zone)counts[zone]=(counts[zone]||0)+1;return counts},{}),[projects]);
