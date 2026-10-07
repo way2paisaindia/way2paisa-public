@@ -118,7 +118,11 @@ async function publishFacebook({ promotion, request, isVideo }) {
 
   const detailsResponse = await fetch('https://graph.facebook.com/' + facebookGraphVersion + '/' + published.id + '?fields=permalink_url&access_token=' + encodeURIComponent(accessToken));
   const details = await detailsResponse.json().catch(() => ({}));
-  return { id: published.id, permalink: details.permalink_url || 'https://www.facebook.com/' + published.id };
+  const permalink = details.permalink_url || '';
+  const absolutePermalink = /^https?:\/\//i.test(permalink)
+    ? permalink
+    : (permalink.startsWith('/') ? 'https://www.facebook.com' + permalink : 'https://www.facebook.com/reel/' + published.id);
+  return { id: published.id, permalink: absolutePermalink };
 }
 
 async function publishYouTube({ promotion }) {
@@ -252,7 +256,7 @@ export async function POST(request) {
     const platformPostUrls = { ...(promotion.platform_post_urls || {}) };
     for (const [platform, result] of Object.entries(results)) platformPostUrls[platform] = result.permalink || result.id;
     if (wantsWebsite) {
-      const sourceUrl = platformPostUrls.Instagram || platformPostUrls.YouTube || platformPostUrls.Facebook;
+      const sourceUrl = platformPostUrls.YouTube || platformPostUrls.Facebook || platformPostUrls.Instagram;
       if (!sourceUrl) {
         errors.Website = 'Website Reel Gallery needs one successfully published Instagram Reel, YouTube video, or Facebook video.';
       } else {
