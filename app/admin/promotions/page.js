@@ -118,7 +118,7 @@ export default function PromotionStudio(){
   if(existing){setAddingGalleryVideo(false);setGalleryNotice('This video is already in the Reel Gallery for this project.');await loadGalleryVideos();return}
   const {data:maxRow,error:maxError}=await db.from('project_media').select('sort_order').eq('project_id',galleryProject.id).eq('media_type','video').order('sort_order',{ascending:false}).limit(1).maybeSingle();
   if(maxError){setAddingGalleryVideo(false);setGalleryNotice(maxError.message);return}
-  const title=galleryTitle.trim()||`${galleryProject.name} — official project video`;
+  const title=galleryTitle.trim()||galleryProject.name;
   const {error}=await db.from('project_media').insert({project_id:galleryProject.id,image_url:source,source_url:source,alt_text:title,media_type:'video',sort_order:(Number(maxRow?.sort_order)||0)+1,active:true,verified_at:new Date().toISOString(),license_status:'admin-approved social video'});
   setAddingGalleryVideo(false);
   if(error){setGalleryNotice(error.message);return}
