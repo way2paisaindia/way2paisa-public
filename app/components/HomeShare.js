@@ -6,9 +6,8 @@ const ShareIcon=()=> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 16
 export default function HomeShare(){
  const [copied,setCopied]=useState(false),[showChoices,setShowChoices]=useState(false);
  const [shareImage,setShareImage]=useState(null);
- const text='Way2Paisa FinPro Services — curated real-estate opportunities and professional finance advisory across Mumbai, MMR and Dubai.';
- // Versioned URL forces WhatsApp to refresh its otherwise persistent link-preview cache.
- const url=typeof window==='undefined'?'https://www.way2paisa.in/share?preview=brand-v2':window.location.origin+'/share?preview=brand-v2';
+ const text='Way2Paisa FinPro Services — Premium real-estate and finance advisory across Mumbai, MMR and Dubai.';
+ const url=typeof window==='undefined'?'https://www.way2paisa.in':window.location.origin;
  const message=`${text}\n${url}`;
  useEffect(()=>{
   let active=true;
@@ -32,5 +31,5 @@ export default function HomeShare(){
   }
   setShowChoices(current=>!current);
  }
- return <span className="footerShareWrap"><button type="button" className="footerShareBtn" onClick={share} aria-label={copied?'Way2Paisa link copied':'Share Way2Paisa'} title={copied?'Link copied':'Share Way2Paisa'}><ShareIcon/></button>{showChoices&&<span className="footerShareChoices" role="menu"><a href={`https://wa.me/?text=${encodeURIComponent(message)}`} target="_blank" rel="noreferrer" role="menuitem">WhatsApp</a><a href={`mailto:?subject=${encodeURIComponent('Way2Paisa FinPro Services')}&body=${encodeURIComponent(message)}`} role="menuitem">Email</a><button type="button" onClick={copy} role="menuitem">Copy Link</button></span>}</span>;
+ return <span className="footerShareWrap"><button type="button" className="footerShareBtn" onClick={share} aria-label={copied?'Way2Paisa link copied':'Share Way2Paisa'} title={copied?'Link copied':'Share Way2Paisa'}><ShareIcon/></button>{showChoices&&<span className="footerShareChoices" role="menu"><a href={`https://wa.me/?text=${encodeURIComponent(message)}`} target="_blank" rel="noreferrer" role="menuitem">WhatsApp</a><a href={`mailto:?subject=${encodeURIComponent('Way2Paisa FinPro Services')}&body=${encodeURIComponent(message)}`} role="menuitem">Email</a><a href="/opengraph-image" download="way2paisa-real-estate.png" role="menuitem">Download Brand Card</a><button type="button" onClick={copy} role="menuitem">Copy Link</button></span>}</span>;
 }
