@@ -7,7 +7,8 @@ export default function HomeShare(){
  const [copied,setCopied]=useState(false),[showChoices,setShowChoices]=useState(false);
  const [shareImage,setShareImage]=useState(null);
  const text='Way2Paisa FinPro Services — curated real-estate opportunities and professional finance advisory across Mumbai, MMR and Dubai.';
- const url=typeof window==='undefined'?'https://www.way2paisa.in/share':window.location.origin+'/share';
+ // Versioned URL forces WhatsApp to refresh its otherwise persistent link-preview cache.
+ const url=typeof window==='undefined'?'https://www.way2paisa.in/share?preview=brand-v2':window.location.origin+'/share?preview=brand-v2';
  const message=`${text}\n${url}`;
  useEffect(()=>{
   let active=true;
