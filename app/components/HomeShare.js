@@ -13,5 +13,5 @@ export default function HomeShare(){
   if(navigator.share){try{await navigator.share(payload);return}catch(e){if(e?.name==='AbortError')return}}
   await navigator.clipboard?.writeText(`${text}\n${url}`);setCopied(true);setTimeout(()=>setCopied(false),1800);
  }
- return <button type="button" className="heroShareBtn" onClick={share} aria-label="Share Way2Paisa"><ShareIcon/><span className="heroShareText">{copied?'Copied':'Share Way2Paisa'}</span></button>;
+ return <button type="button" className="footerShareBtn" onClick={share} aria-label={copied?'Way2Paisa link copied':'Share Way2Paisa'} title={copied?'Link copied':'Share Way2Paisa'}><ShareIcon/></button>;
 }
