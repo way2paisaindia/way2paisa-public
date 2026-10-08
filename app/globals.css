@@ -248,3 +248,7 @@ footer .footerBrand .logoTagline{display:block!important;color:#ffffff!important
 
 /* Footer-only Way2Paisa share icon */
 .socialLinks .footerShareBtn{display:grid;place-items:center;width:28px;height:28px;padding:0;border:0!important;border-radius:0!important;background:transparent!important;color:#fff;cursor:pointer}.socialLinks .footerShareBtn svg{display:block;width:24px;height:24px;transition:transform .18s ease,opacity .18s ease}.socialLinks .footerShareBtn:hover svg{transform:translateY(-2px) scale(1.08);opacity:.9}
+
+
+/* Footer share choices shown only when native sharing is unavailable. */
+.footerShareWrap{position:relative;display:grid;place-items:center}.footerShareChoices{position:absolute;right:0;bottom:calc(100% + 9px);z-index:10;display:grid;min-width:130px;overflow:hidden;border:1px solid #c7d8e7;border-radius:8px;background:#fff;box-shadow:0 12px 28px rgba(3,30,59,.24)}.footerShareChoices a,.footerShareChoices button{display:block!important;width:auto!important;height:auto!important;padding:10px 12px!important;border:0!important;border-radius:0!important;background:#fff!important;color:#0b3a66!important;font:700 12px Inter,Arial,sans-serif!important;text-align:left!important;text-decoration:none!important;white-space:nowrap}.footerShareChoices a:hover,.footerShareChoices button:hover{background:#eef6ff!important}
