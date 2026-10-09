@@ -28,7 +28,7 @@ export default function PromotionStudio(){
   if(!chosenProject)return;
   const lines=[chosenProject.name,chosenProject.locations?.name||chosenProject.market,chosenProject.bhk_original,chosenProject.price_original||'Price on Request',chosenProject.possession_original&&chosenProject.possession_original.replace('|',' · '),chosenProject.rera_number&&'MahaRERA: '+chosenProject.rera_number].filter(Boolean);
   setHeadline(chosenProject.name+' | '+(chosenProject.locations?.name||chosenProject.market||''));
-  setCaption('Discover '+lines.join(' · ')+'. Connect with Way2Paisa for verified details and a personalised site visit.');
+  setCaption('Discover '+lines.join(' · ')+'. Connect with Way2Paisa for verified details and a personalised site visit.\n\n📞 +91 88503 73012\n🌐 https://www.way2paisa.in');
   setBrief('Use only verified listing facts and approved project media. Keep every commercial claim factual.');
   resetCreative();
   setCreativeUrl('/api/admin/promotion-creative?project='+encodeURIComponent(chosenProject.id)+'&v='+Date.now());
