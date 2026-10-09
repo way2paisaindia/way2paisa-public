@@ -5,6 +5,13 @@ const instagramGraphVersion = process.env.INSTAGRAM_GRAPH_API_VERSION || 'v24.0'
 const facebookGraphVersion = process.env.FACEBOOK_GRAPH_API_VERSION || 'v26.0';
 const googleTokenEndpoint = 'https://oauth2.googleapis.com/token';
 
+function googleBusinessLocationName() {
+  const configuredName = String(process.env.GOOGLE_BUSINESS_LOCATION_NAME || '').replace(/^\/+|\/+$/g, '');
+  if (configuredName) return configuredName;
+  const locationId = String(process.env.GOOGLE_BUSINESS_LOCATION_ID || '').replace(/^\/+|\/+$/g, '');
+  return locationId ? `locations/${locationId.replace(/^locations\//, '')}` : '';
+}
+
 function errorMessage(payload, fallback) {
   return payload?.error?.message || payload?.message || fallback;
 }
@@ -160,7 +167,7 @@ async function publishYouTube({ promotion }) {
 }
 
 async function publishGoogleBusiness({ promotion, request }) {
-  const locationName = String(process.env.GOOGLE_BUSINESS_LOCATION_NAME || '').replace(/^\/+|\/+$/g, '');
+  const locationName = googleBusinessLocationName();
   if (!locationName) throw new Error('Google Business is not configured yet. Add the Google Business location name in Vercel first.');
   const accessToken = await getGoogleAccessToken();
   const generatedCreativeUrl = new URL('/api/admin/promotion-creative', request.url);
@@ -173,7 +180,7 @@ async function publishGoogleBusiness({ promotion, request }) {
     summary: String(promotion.caption || '').slice(0, 1500),
     topicType: 'STANDARD',
     callToAction: { actionType: 'LEARN_MORE', url: listingUrl },
-    media: [{ sourceUrl: imageUrl }],
+    media: [{ mediaFormat: 'PHOTO', sourceUrl: imageUrl }],
   };
   const response = await fetch('https://mybusiness.googleapis.com/v4/' + locationName + '/localPosts', {
     method: 'POST',

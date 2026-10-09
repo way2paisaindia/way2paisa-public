@@ -10,6 +10,10 @@ function googleConfigured() {
   );
 }
 
+function googleBusinessLocationConfigured() {
+  return Boolean(process.env.GOOGLE_BUSINESS_LOCATION_NAME || process.env.GOOGLE_BUSINESS_LOCATION_ID);
+}
+
 export async function GET(request) {
   const authorization = request.headers.get('authorization') || '';
   const token = authorization.startsWith('Bearer ') ? authorization.slice(7) : '';
@@ -31,7 +35,7 @@ export async function GET(request) {
       'Instagram Reel': Boolean(process.env.INSTAGRAM_ACCESS_TOKEN),
       Facebook: Boolean(process.env.FACEBOOK_PAGE_ACCESS_TOKEN && process.env.FACEBOOK_PAGE_ID),
       YouTube: googleReady,
-      'Google Business': googleReady && Boolean(process.env.GOOGLE_BUSINESS_LOCATION_NAME),
+      'Google Business': googleReady && googleBusinessLocationConfigured(),
     },
   });
 }
