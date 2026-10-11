@@ -114,6 +114,10 @@ export default function AdminOperations(){
   setProjectMedia(current=>[...current,data]);setNotice('Gallery image added to this listing.');
  }
  async function removeGalleryImage(item){
+  if(editingProject?.active&&editingProject?.verified){
+   if(item.media_type==='hero'||item.image_url===projectForm.hero_image_url){setNotice('Replace and save the project hero before removing this image from a live listing.');return}
+   if(item.media_type==='gallery'&&projectMedia.filter(media=>media.active!==false&&media.media_type==='gallery').length<=3){setNotice('A live listing must keep at least three verified gallery images. Add a replacement before removing this one.');return}
+  }
   const {error}=await db.from('project_media').update({active:false}).eq('id',item.id);
   if(error){setNotice(error.message);return}setProjectMedia(current=>current.filter(media=>media.id!==item.id));setNotice('Image removed from the public website.');
  }
