@@ -1,5 +1,10 @@
 import { createClient } from '@supabase/supabase-js';
 
+// Instagram may take longer than the default function window to finish a media
+// container, especially immediately after an upload. Keep this route alive long
+// enough to poll the same container instead of forcing the admin to recreate it.
+export const maxDuration = 120;
+
 const instagramAccountId = process.env.INSTAGRAM_ACCOUNT_ID || '17841460118476853';
 const instagramGraphVersion = process.env.INSTAGRAM_GRAPH_API_VERSION || 'v24.0';
 const facebookGraphVersion = process.env.FACEBOOK_GRAPH_API_VERSION || 'v26.0';
@@ -51,7 +56,7 @@ async function getGoogleAccessToken() {
   return payload.access_token;
 }
 
-async function waitForMediaContainer(graphRoot, containerId, accessToken, maxAttempts = 6) {
+async function waitForMediaContainer(graphRoot, containerId, accessToken, maxAttempts = 18) {
   for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
     const statusResponse = await fetch(graphRoot + '/' + containerId + '?fields=status_code,status&access_token=' + encodeURIComponent(accessToken));
     const statusPayload = await statusResponse.json().catch(() => ({}));
@@ -59,14 +64,14 @@ async function waitForMediaContainer(graphRoot, containerId, accessToken, maxAtt
     console.info('Instagram media container status', { attempt, status, responseOk: statusResponse.ok });
     if (status === 'FINISHED') return { ready: true };
     if (!statusResponse.ok || status === 'ERROR' || status === 'EXPIRED') {
-      return { ready: false, error: instagramErrorMessage(statusPayload, 'Instagram could not process this image or video.') };
+      return { ready: false, invalidContainer: true, error: instagramErrorMessage(statusPayload, 'Instagram could not process this image or video.') };
     }
     if (attempt < maxAttempts) await wait(5000);
   }
-  return { ready: false, error: 'Instagram is still processing the creative. Please wait one minute, then publish this same draft again.' };
+  return { ready: false, error: 'Instagram is still processing the creative. The same container has been saved; publish this draft again in one minute.' };
 }
 
-async function publishInstagram({ promotion, request, isReel }) {
+async function publishInstagram({ promotion, request, isReel, saveContainer }) {
   const accessToken = process.env.INSTAGRAM_ACCESS_TOKEN;
   if (!accessToken) throw new Error('Instagram publishing is not configured yet.');
 
@@ -76,23 +81,33 @@ async function publishInstagram({ promotion, request, isReel }) {
   const mediaUrl = isReel ? promotion.creative_video_url : (promotion.creative_image_url || generatedCreativeUrl.toString());
   const graphRoot = 'https://graph.instagram.com/' + instagramGraphVersion;
   const graphBase = graphRoot + '/' + instagramAccountId;
-  const containerResponse = await fetch(graphBase + '/media', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: new URLSearchParams(isReel
-      ? { media_type: 'REELS', video_url: mediaUrl, caption: promotion.caption, share_to_feed: 'true', access_token: accessToken }
-      : { image_url: mediaUrl, caption: promotion.caption, access_token: accessToken }),
-  });
-  const container = await containerResponse.json().catch(() => ({}));
-  if (!containerResponse.ok || !container.id) throw new Error(instagramErrorMessage(container, 'Instagram did not accept this image or video.'));
+  const savedUrls = promotion.platform_post_urls || {};
+  let containerId = savedUrls.InstagramContainerMediaUrl === mediaUrl ? savedUrls.InstagramContainer : '';
+  if (!containerId) {
+    const containerResponse = await fetch(graphBase + '/media', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(isReel
+        ? { media_type: 'REELS', video_url: mediaUrl, caption: promotion.caption, share_to_feed: 'true', access_token: accessToken }
+        : { image_url: mediaUrl, caption: promotion.caption, access_token: accessToken }),
+    });
+    const container = await containerResponse.json().catch(() => ({}));
+    if (!containerResponse.ok || !container.id) throw new Error(instagramErrorMessage(container, 'Instagram did not accept this image or video.'));
+    containerId = container.id;
+    await saveContainer(containerId, mediaUrl);
+  }
 
-  const containerState = await waitForMediaContainer(graphRoot, container.id, accessToken, isReel ? 6 : 4);
-  if (!containerState.ready) throw new Error(containerState.error);
+  const containerState = await waitForMediaContainer(graphRoot, containerId, accessToken);
+  if (!containerState.ready) {
+    const error = new Error(containerState.error);
+    error.clearInstagramContainer = Boolean(containerState.invalidContainer);
+    throw error;
+  }
 
   const publishResponse = await fetch(graphBase + '/media_publish', {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: new URLSearchParams({ creation_id: container.id, access_token: accessToken }),
+    body: new URLSearchParams({ creation_id: containerId, access_token: accessToken }),
   });
   const published = await publishResponse.json().catch(() => ({}));
   if (!publishResponse.ok || !published.id) throw new Error(instagramErrorMessage(published, 'Instagram could not publish this image or video.'));
@@ -233,8 +248,25 @@ export async function POST(request) {
     const results = {};
     const errors = {};
     if (wantsInstagram && !promotion.platform_post_urls?.Instagram) {
-      try { results.Instagram = await publishInstagram({ promotion, request, isReel: isVideo }); }
-      catch (error) { errors.Instagram = error.message || 'Instagram could not publish this promotion.'; }
+      try {
+        results.Instagram = await publishInstagram({
+          promotion,
+          request,
+          isReel: isVideo,
+          saveContainer: async (containerId, mediaUrl) => {
+            const pendingUrls = { ...(promotion.platform_post_urls || {}), InstagramContainer: containerId, InstagramContainerMediaUrl: mediaUrl };
+            const { error } = await supabase.from('project_promotions').update({ platform_post_urls: pendingUrls }).eq('id', promotion.id);
+            if (error) throw new Error('Instagram started processing, but its retry state could not be saved. Please publish once more.');
+            promotion.platform_post_urls = pendingUrls;
+          },
+        });
+      } catch (error) {
+        if (error.clearInstagramContainer) {
+          delete promotion.platform_post_urls?.InstagramContainer;
+          delete promotion.platform_post_urls?.InstagramContainerMediaUrl;
+        }
+        errors.Instagram = error.message || 'Instagram could not publish this promotion.';
+      }
     } else if (promotion.platform_post_urls?.Instagram) {
       results.Instagram = { id: promotion.platform_post_urls.Instagram, permalink: promotion.platform_post_urls.Instagram };
     }
@@ -262,6 +294,10 @@ export async function POST(request) {
 
     const platformPostUrls = { ...(promotion.platform_post_urls || {}) };
     for (const [platform, result] of Object.entries(results)) platformPostUrls[platform] = result.permalink || result.id;
+    if (results.Instagram || errors.Instagram?.includes('could not process')) {
+      delete platformPostUrls.InstagramContainer;
+      delete platformPostUrls.InstagramContainerMediaUrl;
+    }
     if (wantsWebsite) {
       const sourceUrl = platformPostUrls.YouTube || platformPostUrls.Facebook || platformPostUrls.Instagram;
       if (!sourceUrl) {
