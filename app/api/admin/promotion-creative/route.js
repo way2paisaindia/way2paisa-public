@@ -3,6 +3,43 @@ import { ImageResponse } from 'next/og';
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 
+function formatCreativePrice(value, market) {
+  const n = Number(value);
+  if (!Number.isFinite(n) || n <= 0) return 'Price on Request';
+  if (String(market || '').toLowerCase() === 'dubai') return 'AED ' + Math.round(n).toLocaleString('en-AE') + ' onwards';
+  const crores = n >= 100000 ? n / 10000000 : n;
+  if (crores < 1) return 'Rs. ' + (crores * 100).toLocaleString('en-IN', { maximumFractionDigits: 2 }) + ' Lakh onwards';
+  return 'Rs. ' + crores.toLocaleString('en-IN', { maximumFractionDigits: 2 }) + ' Cr onwards';
+}
+
+function summarizeConfigurations(values, market) {
+  const dubai = String(market || '').toLowerCase() === 'dubai';
+  const tokens = new Set();
+  for (const value of values || []) {
+    const raw = String(value || '').trim();
+    if (!raw) continue;
+    if (/studio/i.test(raw)) { tokens.add('Studio'); continue; }
+    const jodi = raw.match(/(?:\(([0-9.]+\+[0-9.]+)\)\s*BHK|Jodi\s*([0-9.]+\+[0-9.]+))/i);
+    if (jodi) { tokens.add('Jodi ' + (jodi[1] || jodi[2])); continue; }
+    const match = raw.match(/([0-9]+(?:\.[0-9]+)?)\s*(?:BHK|BR|Bedroom|Bedrooms)/i);
+    if (match) {
+      let token = match[1] + ' ' + (dubai ? 'BR' : 'BHK');
+      if (/townhouse/i.test(raw)) token += ' Townhouse';
+      else if (/villa/i.test(raw)) token += ' Villa';
+      else if (/penthouse/i.test(raw)) token += ' Penthouse';
+      else if (/duplex/i.test(raw)) token += ' Duplex';
+      else if (/study/i.test(raw)) token += ' + Study';
+      tokens.add(token); continue;
+    }
+    if (/office/i.test(raw)) tokens.add('Office');
+    else if (/retail|shop/i.test(raw)) tokens.add('Retail');
+    else if (/plot/i.test(raw)) tokens.add('Plot');
+    else if (/villa/i.test(raw)) tokens.add('Villa');
+  }
+  const rank = token => token === 'Studio' ? 0 : (Number(token.match(/^([0-9]+(?:\.[0-9]+)?)/)?.[1]) || 90);
+  return [...tokens].sort((a, b) => rank(a) - rank(b) || a.localeCompare(b)).join(' | ');
+}
+
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const projectId = searchParams.get('project');
@@ -13,7 +50,7 @@ export async function GET(request) {
   if (!base || !key) return new Response('Creative service is not configured.', { status: 500 });
 
   const query = new URL(base + '/rest/v1/projects');
-  query.searchParams.set('select', 'id,name,slug,hero_image_url,market,bhk_original,price_original,rera_number');
+  query.searchParams.set('select', 'id,name,slug,hero_image_url,market,bhk_original,min_price,rera_number,locations(name)');
   query.searchParams.set('id', 'eq.' + projectId);
   query.searchParams.set('active', 'eq.true');
   query.searchParams.set('verified', 'eq.true');
@@ -24,15 +61,23 @@ export async function GET(request) {
   if (!project) return new Response('Verified project not found.', { status: 404 });
   if (!project.hero_image_url) return new Response('No project image is available.', { status: 422 });
 
+  const inventoryQuery = new URL(base + '/rest/v1/inventory');
+  inventoryQuery.searchParams.set('select', 'configuration');
+  inventoryQuery.searchParams.set('project_id', 'eq.' + project.id);
+  inventoryQuery.searchParams.set('active', 'eq.true');
+  const inventoryResponse = await fetch(inventoryQuery, { headers: { apikey: key, Authorization: 'Bearer ' + key }, cache: 'no-store' });
+  const inventory = inventoryResponse.ok ? await inventoryResponse.json().catch(() => []) : [];
+
   const origin = new URL(request.url).origin;
   // This internal Node route converts each genuine stored project source,
   // including WebP/AVIF, into a JPEG that next/og can render reliably.
   const heroUrl = origin + '/api/admin/promotion-source-image?project=' + encodeURIComponent(project.id);
   const logoUrl = origin + '/way2paisa-logo.png';
-  const price = (project.price_original || 'Price on Request').replace(/₹/g, 'Rs. ');
-  const configuration = project.bhk_original || 'Verified project';
-  const location = project.market || 'Mumbai · MMR';
-  const rera = project.rera_number ? 'MahaRERA: ' + project.rera_number : 'Verified project details';
+  const dubai = String(project.market || '').toLowerCase() === 'dubai';
+  const price = formatCreativePrice(project.min_price, project.market);
+  const configuration = summarizeConfigurations((inventory || []).map(row => row.configuration), project.market) || project.bhk_original || 'Verified project';
+  const location = project.locations?.name || project.market || 'Mumbai · MMR';
+  const rera = project.rera_number ? (dubai ? 'DLD: ' : 'MahaRERA: ') + project.rera_number : 'Verified project details';
 
   return new ImageResponse(
     <div style={{ display: 'flex', width: '100%', height: '100%', background: '#061b36', color: 'white', position: 'relative', overflow: 'hidden', fontFamily: 'sans-serif' }}>
