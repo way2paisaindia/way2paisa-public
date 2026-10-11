@@ -71,11 +71,21 @@ export default function AdminOperations(){
  async function saveProject(event){
   event.preventDefault();if(!projectForm.name.trim()){setNotice('Project name is required.');return}
   setBusy(true);setNotice('');
-  const payload={...projectForm,name:projectForm.name.trim(),slug:slugify(projectForm.slug||projectForm.name),min_price:num(projectForm.min_price),max_price:num(projectForm.max_price),min_carpet_sqft:num(projectForm.min_carpet_sqft),max_carpet_sqft:num(projectForm.max_carpet_sqft),developer_id:projectForm.developer_id||null,location_id:projectForm.location_id||null,possession_date:projectForm.possession_date||null};
+  const wantsLive=Boolean(projectForm.active&&projectForm.verified);
+  const payload={...projectForm,name:projectForm.name.trim(),slug:slugify(projectForm.slug||projectForm.name),min_price:num(projectForm.min_price),max_price:num(projectForm.max_price),min_carpet_sqft:num(projectForm.min_carpet_sqft),max_carpet_sqft:num(projectForm.max_carpet_sqft),developer_id:projectForm.developer_id||null,location_id:projectForm.location_id||null,possession_date:projectForm.possession_date||null,active:wantsLive?false:projectForm.active,verified:wantsLive?false:projectForm.verified};
   delete payload.id;delete payload.developers;delete payload.locations;delete payload.updated_at;
-  const query=editingProject?db.from('projects').update(payload).eq('id',editingProject.id):db.from('projects').insert(payload);
-  const {error}=await query;setBusy(false);
-  if(error){setNotice(error.message);return}setNotice(editingProject?'Listing saved.':'Listing created. Add verified images and inventory before publishing.');await load();setTab('listings');
+  const query=editingProject?db.from('projects').update(payload).eq('id',editingProject.id).select('id').single():db.from('projects').insert(payload).select('id').single();
+  const {data:saved,error}=await query;
+  if(error){setBusy(false);setNotice(error.message);return}
+  if(wantsLive){
+   const projectId=editingProject?.id||saved?.id;
+   const {data:gaps,error:gapError}=await db.rpc('project_enrichment_gaps',{p_project_id:projectId});
+   if(gapError){setBusy(false);setNotice('Listing saved hidden because validation could not complete: '+gapError.message);await load();setTab('listings');return}
+   if(Array.isArray(gaps)&&gaps.length){setBusy(false);setNotice('Listing saved hidden. Complete before publishing: '+gaps.join(', ').replaceAll('_',' ')+'.');await load();setTab('listings');return}
+   const {error:publishError}=await db.from('projects').update({active:true,verified:true}).eq('id',projectId);
+   if(publishError){setBusy(false);setNotice('Listing passed validation but could not be republished: '+publishError.message);await load();setTab('listings');return}
+  }
+  setBusy(false);setNotice(wantsLive?'Listing saved and published after zero-gap validation.':editingProject?'Listing saved.':'Listing created. Add verified images and inventory before publishing.');await load();setTab('listings');
  }
  async function uploadHero(event){
   const file=event.target.files?.[0];event.target.value='';if(!file)return;
