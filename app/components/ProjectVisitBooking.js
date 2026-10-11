@@ -2,7 +2,7 @@
 
 import {useMemo,useState} from 'react';
 
-const slots=['10:00 am','12:00 pm','2:00 pm','4:00 pm','6:00 pm'];
+const slots=[];for(let hour=10;hour<=19;hour+=1){for(const minute of [0,30]){if(hour===19&&minute===30)continue;const h=hour%12||12;slots.push(`${h}:${String(minute).padStart(2,'0')} ${hour>=12?'pm':'am'}`)}}
 const dateValue=date=>{
  const year=date.getFullYear();
  const month=String(date.getMonth()+1).padStart(2,'0');
@@ -22,7 +22,7 @@ export default function ProjectVisitBooking({project}){
  const[date,setDate]=useState(dateBounds.min);
  const[time,setTime]=useState(slots[0]);
  const[appointmentType,setAppointmentType]=useState('Site Visit');
- const[form,setForm]=useState({name:'',phone:'',email:''});
+ const[form,setForm]=useState({name:'',phone:'',email:'',whatsapp_updates:false,email_notifications:false});
  const[state,setState]=useState({busy:false,message:''});
  const change=event=>setForm(current=>({...current,[event.target.name]:event.target.value}));
  async function submit(event){
@@ -41,8 +41,8 @@ export default function ProjectVisitBooking({project}){
    })});
    const result=await response.json();
    if(!response.ok)throw new Error(result.error||'Unable to book the visit.');
-   setState({busy:false,message:`Your ${appointmentType.toLowerCase()} request is confirmed. Our advisor will call to coordinate the next step.`});
-   setForm({name:'',phone:'',email:''});
+   setState({busy:false,message:`Your ${appointmentType.toLowerCase()} request has been received. Our advisor will call to confirm the appointment.`});
+   setForm({name:'',phone:'',email:'',whatsapp_updates:false,email_notifications:false});
   }catch(error){setState({busy:false,message:error.message||'Unable to book the visit. Please try again.'})}
  }
  return <section className="visitBooking" aria-label="Book a project visit or presentation">
@@ -54,6 +54,7 @@ export default function ProjectVisitBooking({project}){
    <label>Your Name<input name="name" value={form.name} onChange={change} required placeholder="Full name"/></label>
    <label>Mobile Number<input name="phone" value={form.phone} onChange={change} required inputMode="tel" placeholder="10-digit mobile number"/></label>
    <label>Email <small>(optional)</small><input name="email" value={form.email} onChange={change} type="email" placeholder="you@example.com"/></label>
+   <label className="check"><input type="checkbox" name="whatsapp_updates" checked={form.whatsapp_updates} onChange={change}/>Get relevant Way2Paisa updates on WhatsApp</label><label className="check"><input type="checkbox" name="email_notifications" checked={form.email_notifications} onChange={change}/>Subscribe to relevant email updates</label>
    <button className="primaryBtn actionBlue visitSubmit" disabled={state.busy}>{state.busy?'Sending…':appointmentType==='Site Visit'?'Request Site Visit':'Request Online Presentation'}</button>
    {state.message&&<p className={state.message.startsWith('Your')?'formSuccess':'formError'} role="status">{state.message}</p>}
   </form>
