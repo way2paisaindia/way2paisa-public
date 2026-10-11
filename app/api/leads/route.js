@@ -126,6 +126,8 @@ export async function POST(request) {
       appointment_type: appointmentType || null,
       appointment_date: appointmentType ? appointmentDate : null,
       appointment_time: appointmentType ? appointmentTime : null,
+      whatsapp_updates: whatsappUpdates,
+      email_notifications: emailNotifications,
     });
     if (leadError) throw leadError;
 
