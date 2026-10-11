@@ -79,11 +79,15 @@ export default function AdminOperations(){
  }
  async function uploadHero(event){
   const file=event.target.files?.[0];event.target.value='';if(!file)return;
+  if(!editingProject){setNotice('Save the listing first, then upload its approved hero image.');return}
   if(!['image/jpeg','image/png','image/webp'].includes(file.type)){setNotice('Use a JPG, PNG or WebP image.');return}
-  setBusy(true);const path='admin/project-images/'+Date.now()+'-'+slugify(file.name);
+  setBusy(true);const path='admin/project-images/'+editingProject.id+'/'+Date.now()+'-'+slugify(file.name);
   const {error}=await db.storage.from('project-media').upload(path,file,{contentType:file.type,upsert:false});
   if(error){setBusy(false);setNotice(error.message);return}
-  const {data}=db.storage.from('project-media').getPublicUrl(path);setProjectForm(current=>({...current,hero_image_url:data.publicUrl}));setBusy(false);setNotice('Hero image uploaded. Save the listing to apply it.');
+  const {data}=db.storage.from('project-media').getPublicUrl(path);const url=data.publicUrl;
+  const {error:mediaError}=await db.from('project_media').insert({project_id:editingProject.id,image_url:url,source_url:url,alt_text:editingProject.name+' hero image',media_type:'hero',sort_order:0,active:true,verified_at:new Date().toISOString(),license_status:'admin-uploaded approved media'});
+  if(mediaError){await db.storage.from('project-media').remove([path]);setBusy(false);setNotice(mediaError.message);return}
+  setProjectForm(current=>({...current,hero_image_url:url}));setBusy(false);setNotice('Approved hero image uploaded and registered. Save the listing to apply it.');
  }
  async function uploadGalleryImage(event){
   const file=event.target.files?.[0];event.target.value='';if(!file)return;
@@ -93,7 +97,7 @@ export default function AdminOperations(){
   const {error:uploadError}=await db.storage.from('project-media').upload(path,file,{contentType:file.type,upsert:false});
   if(uploadError){setMediaBusy(false);setNotice(uploadError.message);return}
   const {data:urlData}=db.storage.from('project-media').getPublicUrl(path);
-  const payload={project_id:editingProject.id,image_url:urlData.publicUrl,alt_text:editingProject.name+' project image',media_type:'image',sort_order:projectMedia.length,active:true,verified_at:new Date().toISOString(),license_status:'admin-uploaded approved media'};
+  const payload={project_id:editingProject.id,image_url:urlData.publicUrl,source_url:urlData.publicUrl,alt_text:editingProject.name+' project image',media_type:'gallery',sort_order:projectMedia.length,active:true,verified_at:new Date().toISOString(),license_status:'admin-uploaded approved media'};
   const {data,error}=await db.from('project_media').insert(payload).select('id,image_url,alt_text,media_type,sort_order,active,created_at').single();
   setMediaBusy(false);
   if(error){await db.storage.from('project-media').remove([path]);setNotice(error.message);return}
@@ -116,8 +120,8 @@ export default function AdminOperations(){
   if(error)setNotice(error.message);else{setNotice('Listing hidden from the public site.');await load()}
  }
  async function addInventory(projectId){
-  const {error}=await db.from('inventory').insert({project_id:projectId,configuration:'',availability:'Available',active:true});
-  if(error)setNotice(error.message);else{setNotice('Inventory row added. Complete its details from the inventory export/import workflow.');await load()}
+  const {error}=await db.from('inventory').insert({project_id:projectId,configuration:'',availability:'Draft — not published',active:false});
+  if(error)setNotice(error.message);else{setNotice('Draft inventory row added. Complete and verify its source before activating it.');await load()}
  }
  async function updateLead(lead,patch){
   const {error}=await db.from('leads').update(patch).eq('id',lead.id);
