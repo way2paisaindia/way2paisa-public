@@ -24,7 +24,7 @@ export default function ProjectVisitBooking({project}){
  const[appointmentType,setAppointmentType]=useState('Site Visit');
  const[form,setForm]=useState({name:'',phone:'',email:'',whatsapp_updates:false,email_notifications:false});
  const[state,setState]=useState({busy:false,message:''});
- const change=event=>setForm(current=>({...current,[event.target.name]:event.target.value}));
+ const change=event=>{const{name,value,type,checked}=event.target;setForm(current=>({...current,[name]:type==='checkbox'?checked:value}))};
  async function submit(event){
   event.preventDefault();
   setState({busy:true,message:''});
