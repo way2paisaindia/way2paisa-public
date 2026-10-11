@@ -11,7 +11,7 @@ export default async function sitemap() {
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-  if (!supabaseUrl || !key) return staticRoutes.map(item => ({ ...item, lastModified: new Date() }));
+  if (!supabaseUrl || !key) return staticRoutes;
 
   try {
     const query = new URL(supabaseUrl + '/rest/v1/projects');
@@ -34,8 +34,8 @@ export default async function sitemap() {
         changeFrequency: 'weekly',
         priority: 0.7,
       }));
-    return [...staticRoutes.map(item => ({ ...item, lastModified: new Date() })), ...projectRoutes];
+    return [...staticRoutes, ...projectRoutes];
   } catch {
-    return staticRoutes.map(item => ({ ...item, lastModified: new Date() }));
+    return staticRoutes;
   }
 }
