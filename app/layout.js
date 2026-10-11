@@ -30,6 +30,33 @@ export const metadata = {
   },
 };
 
+const organizationJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Way2Paisa FinPro Services',
+  url: 'https://www.way2paisa.in',
+  logo: 'https://www.way2paisa.in/way2paisa-logo.png',
+  email: 'way2paisaindia@gmail.com',
+  telephone: '+91 88503 73012',
+  sameAs: [
+    'https://www.instagram.com/way2paisa_/',
+    'https://www.facebook.com/share/18Won2YfMQ/',
+    'https://www.linkedin.com/company/way2paisa-finpro-services/',
+    'https://x.com/way2paisa_',
+  ],
+};
+
+const websiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Way2Paisa FinPro Services',
+  url: 'https://www.way2paisa.in',
+};
+
 export default function RootLayout({ children }) {
-  return <html lang="en"><body>{children}<QuickContact/></body></html>;
+  return <html lang="en"><body>
+    <script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(organizationJsonLd)}}/>
+    <script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(websiteJsonLd)}}/>
+    {children}<QuickContact/>
+  </body></html>;
 }
