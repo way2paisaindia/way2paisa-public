@@ -104,8 +104,16 @@ export default function AdminOperations(){
   if(error){setNotice(error.message);return}setProjectMedia(current=>current.filter(media=>media.id!==item.id));setNotice('Image removed from the public website.');
  }
  async function toggleProject(project){
-  const {error}=await db.from('projects').update({active:!project.active}).eq('id',project.id);
-  if(error)setNotice(error.message);else{setNotice(project.active?'Listing hidden from the public site.':'Listing restored.');await load()}
+  if(!project.active){
+   const {data:gaps,error:gapError}=await db.rpc('project_enrichment_gaps',{p_project_id:project.id});
+   if(gapError){setNotice(gapError.message);return}
+   if(Array.isArray(gaps)&&gaps.length){setNotice('Cannot restore this listing yet. Complete: '+gaps.join(', ').replaceAll('_',' ')+'.');return}
+   const {error}=await db.from('projects').update({active:true,verified:true}).eq('id',project.id);
+   if(error)setNotice(error.message);else{setNotice('Listing restored after zero-gap validation.');await load()}
+   return;
+  }
+  const {error}=await db.from('projects').update({active:false}).eq('id',project.id);
+  if(error)setNotice(error.message);else{setNotice('Listing hidden from the public site.');await load()}
  }
  async function addInventory(projectId){
   const {error}=await db.from('inventory').insert({project_id:projectId,configuration:'',availability:'Available',active:true});
