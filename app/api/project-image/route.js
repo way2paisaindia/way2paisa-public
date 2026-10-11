@@ -37,40 +37,68 @@ export async function GET(request) {
   });
   const projects = await projectResponse.json().catch(() => []);
   const project = Array.isArray(projects) ? projects[0] : null;
-  const source = safeUrl(project?.hero_image_url);
-  if (!source) return new Response('Verified project image not found.', { status: 404 });
+  const mediaQuery = new URL(base + '/rest/v1/project_media');
+  mediaQuery.searchParams.set('select', 'image_url,source_url,media_type,sort_order,verified_at');
+  mediaQuery.searchParams.set('project_id', 'eq.' + projectId);
+  mediaQuery.searchParams.set('active', 'eq.true');
+  mediaQuery.searchParams.set('order', 'sort_order.asc');
+  mediaQuery.searchParams.set('limit', '8');
+  const mediaResponse = await fetch(mediaQuery, {
+    headers: { apikey: key, Authorization: 'Bearer ' + key },
+    cache: 'no-store',
+  });
+  const media = mediaResponse.ok ? await mediaResponse.json().catch(() => []) : [];
 
-  try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 12000);
-    const imageResponse = await fetch(source, {
-      signal: controller.signal,
-      headers: {
-        Accept: 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
-        'User-Agent': 'Mozilla/5.0 (compatible; Way2PaisaMedia/1.0)',
-        ...(safeUrl(project?.overview_source_url) ? { Referer: safeUrl(project.overview_source_url) } : {}),
-      },
-      cache: 'no-store',
-    });
-    clearTimeout(timeout);
-    const declaredSize = Number(imageResponse.headers.get('content-length') || 0);
-    if (!imageResponse.ok || (declaredSize && declaredSize > maxInputBytes)) return new Response('Project image is unavailable.', { status: 422 });
-    const buffer = Buffer.from(await imageResponse.arrayBuffer());
-    if (!buffer.length || buffer.length > maxInputBytes) return new Response('Project image is unavailable.', { status: 422 });
-    const jpeg = await sharp(buffer, { limitInputPixels: 40000000 })
-      .rotate()
-      .resize({ width: 1600, height: 1600, fit: 'inside', withoutEnlargement: true })
-      .jpeg({ quality: 88, mozjpeg: true })
-      .toBuffer();
-    return new Response(jpeg, {
-      headers: {
-        'Content-Type': 'image/jpeg',
-        'Cache-Control': 'public, max-age=3600, s-maxage=604800, stale-while-revalidate=86400',
-        'Content-Length': String(jpeg.length),
-        'X-Content-Type-Options': 'nosniff',
-      },
-    });
-  } catch {
-    return new Response('Project image is unavailable.', { status: 422 });
+  const candidates = [];
+  const seen = new Set();
+  const addCandidate = (url, referer) => {
+    const source = safeUrl(url);
+    if (!source || seen.has(source)) return;
+    seen.add(source);
+    candidates.push({ source, referer: safeUrl(referer) || safeUrl(project?.overview_source_url) || '' });
+  };
+  addCandidate(project?.hero_image_url, project?.overview_source_url);
+  for (const item of media || []) {
+    if (!item?.verified_at || !['hero','gallery'].includes(item.media_type)) continue;
+    addCandidate(item.image_url, item.source_url);
   }
+  if (!candidates.length) return new Response('Verified project image not found.', { status: 404 });
+
+  for (const candidate of candidates) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 9000);
+    try {
+      const imageResponse = await fetch(candidate.source, {
+        signal: controller.signal,
+        headers: {
+          Accept: 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
+          'User-Agent': 'Mozilla/5.0 (compatible; Way2PaisaMedia/1.0)',
+          ...(candidate.referer ? { Referer: candidate.referer } : {}),
+        },
+        cache: 'no-store',
+      });
+      const declaredSize = Number(imageResponse.headers.get('content-length') || 0);
+      if (!imageResponse.ok || (declaredSize && declaredSize > maxInputBytes)) continue;
+      const buffer = Buffer.from(await imageResponse.arrayBuffer());
+      if (!buffer.length || buffer.length > maxInputBytes) continue;
+      const jpeg = await sharp(buffer, { limitInputPixels: 40000000 })
+        .rotate()
+        .resize({ width: 1600, height: 1600, fit: 'inside', withoutEnlargement: true })
+        .jpeg({ quality: 88, mozjpeg: true })
+        .toBuffer();
+      return new Response(jpeg, {
+        headers: {
+          'Content-Type': 'image/jpeg',
+          'Cache-Control': 'public, max-age=3600, s-maxage=604800, stale-while-revalidate=86400',
+          'Content-Length': String(jpeg.length),
+          'X-Content-Type-Options': 'nosniff',
+        },
+      });
+    } catch {
+      // Try the next approved, verified project asset.
+    } finally {
+      clearTimeout(timeout);
+    }
+  }
+  return new Response('Project image is unavailable.', { status: 422 });
 }
