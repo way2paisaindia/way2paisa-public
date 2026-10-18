@@ -18,7 +18,19 @@ function googleBusinessLocationName() {
 }
 
 function errorMessage(payload, fallback) {
-  return payload?.error?.message || payload?.message || fallback;
+  if (typeof payload?.error === 'string') return payload.error_description || payload.error;
+  return payload?.error?.message || payload?.error_description || payload?.message || fallback;
+}
+
+function googleRefreshErrorMessage(payload) {
+  const code = String(payload?.error || '').trim();
+  if (code === 'invalid_grant') {
+    return 'Google publishing needs to be reconnected. The saved Google authorization has expired or was revoked. Re-authorize the Google Business account and replace GOOGLE_OAUTH_REFRESH_TOKEN in Vercel, then try this draft again.';
+  }
+  if (code === 'invalid_client' || code === 'unauthorized_client') {
+    return 'Google publishing credentials are no longer accepted. Check the Google OAuth client ID and client secret in Vercel, then reconnect the Google Business account.';
+  }
+  return errorMessage(payload, 'Google could not refresh the publishing connection.');
 }
 
 function instagramErrorMessage(payload, fallback) {
@@ -52,7 +64,7 @@ async function getGoogleAccessToken() {
     cache: 'no-store',
   });
   const payload = await response.json().catch(() => ({}));
-  if (!response.ok || !payload.access_token) throw new Error(errorMessage(payload, 'Google could not refresh the publishing connection.'));
+  if (!response.ok || !payload.access_token) throw new Error(googleRefreshErrorMessage(payload));
   return payload.access_token;
 }
 
