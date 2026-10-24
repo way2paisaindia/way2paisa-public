@@ -20,7 +20,8 @@ function safeUrl(value) {
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const projectId = searchParams.get('project') || '';
-  if (!projectIdPattern.test(projectId)) return new Response('Invalid project.', { status: 400 });
+  const mediaId = searchParams.get('media') || '';
+  if (!projectIdPattern.test(projectId) || (mediaId && !projectIdPattern.test(mediaId))) return new Response('Invalid project.', { status: 400 });
 
   const base = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
@@ -41,6 +42,11 @@ export async function GET(request) {
   mediaQuery.searchParams.set('select', 'image_url,source_url,media_type,sort_order,verified_at');
   mediaQuery.searchParams.set('project_id', 'eq.' + projectId);
   mediaQuery.searchParams.set('active', 'eq.true');
+  if (mediaId) {
+    mediaQuery.searchParams.set('id', 'eq.' + mediaId);
+    mediaQuery.searchParams.set('verified_at', 'not.is.null');
+    mediaQuery.searchParams.set('media_type', 'in.(hero,gallery)');
+  }
   mediaQuery.searchParams.set('order', 'sort_order.asc');
   mediaQuery.searchParams.set('limit', '8');
   const mediaResponse = await fetch(mediaQuery, {
@@ -57,7 +63,7 @@ export async function GET(request) {
     seen.add(source);
     candidates.push({ source, referer: safeUrl(referer) || safeUrl(project?.overview_source_url) || '' });
   };
-  addCandidate(project?.hero_image_url, project?.overview_source_url);
+  if (!mediaId) addCandidate(project?.hero_image_url, project?.overview_source_url);
   for (const item of media || []) {
     if (!item?.verified_at || !['hero','gallery'].includes(item.media_type)) continue;
     addCandidate(item.image_url, item.source_url);
