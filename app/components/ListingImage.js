@@ -4,11 +4,11 @@ import {useEffect, useState} from 'react';
 
 const fallbackImage = '/way2paisa-mark.jpg';
 
-export default function ListingImage({src, alt, projectId, ...props}) {
+export default function ListingImage({src, alt, projectId, mediaId, ...props}) {
   const [failed, setFailed] = useState(!src);
   const [useDirectSource, setUseDirectSource] = useState(false);
   const displaySrc = projectId && src && !useDirectSource
-    ? `/api/project-image?project=${encodeURIComponent(projectId)}`
+    ? `/api/project-image?project=${encodeURIComponent(projectId)}${mediaId ? `&media=${encodeURIComponent(mediaId)}` : ''}`
     : src;
 
   useEffect(() => {
