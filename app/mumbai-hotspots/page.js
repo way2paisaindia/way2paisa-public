@@ -34,7 +34,7 @@ async function publishedMumbaiProjects(){
   if(!base||!key) return null;
   try {
     const url = new URL(base + '/rest/v1/projects');
-    url.searchParams.set('select','id,category,address,locations(name)');
+    url.searchParams.set('select','id,name,category,address,locations(name)');
     url.searchParams.set('active','eq.true');
     url.searchParams.set('verified','eq.true');
     url.searchParams.set('market','eq.Mumbai');
@@ -51,7 +51,7 @@ export default async function MumbaiHotspotsPage(){
   const totals = (area)=>{
     if (!projects) return null;
     const needle=area.toLocaleLowerCase('en-IN');
-    const matching=projects.filter(project => [project.locations?.name,project.address].filter(Boolean).join(' ').toLocaleLowerCase('en-IN').includes(needle));
+    const matching=projects.filter(project => [project.name,project.locations?.name,project.address].filter(Boolean).join(' ').toLocaleLowerCase('en-IN').includes(needle));
     return {total:matching.length,homes:matching.filter(p=>p.category==='apartment'||p.category==='villa').length,offices:matching.filter(p=>p.category==='commercial_office'||p.category==='retail').length};
   };
   return <main className={styles.page}>
