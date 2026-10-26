@@ -64,7 +64,32 @@ export default function Home(){
  const mumbaiMmrProjectCount=useMemo(()=>Object.values(zoneCounts).reduce((total,count)=>total+count,0),[zoneCounts]);
  const dubaiZoneCounts=useMemo(()=>projects.reduce((counts,p)=>{const zone=dubaiZoneForProject(p);if(zone)counts[zone]=(counts[zone]||0)+1;return counts},{}),[projects]);
  const dubaiProjectCount=useMemo(()=>Object.values(dubaiZoneCounts).reduce((total,count)=>total+count,0),[dubaiZoneCounts]);
- const featuredProjects=useMemo(()=>[...filtered].sort((a,b)=>featuredRank(a.id,featuredSeed)-featuredRank(b.id,featuredSeed)).slice(0,12),[filtered,featuredSeed]);
+ const featuredProjects=useMemo(()=>{
+  // Featured projects are a deliberate, verified editorial selection rather
+  // than an arbitrary sample of every active listing. Keep the curated section
+  // useful to Mumbai homebuyers, Mumbai office investors and Dubai / MMR leads.
+  const ranked=[...filtered].sort((a,b)=>Number(Boolean(b.featured))-Number(Boolean(a.featured))||featuredRank(a.id,featuredSeed)-featuredRank(b.id,featuredSeed));
+  if(q.trim()||bhk||location||maxBudget)return ranked.slice(0,12);
+  const selected=[],used=new Set();
+  const pick=(market,category,count)=>{
+   let added=0;
+   for(const project of ranked){
+    if(added>=count)break;
+    if(project.market!==market||category&&project.category!==category||used.has(project.id))continue;
+    selected.push(project);used.add(project.id);added+=1;
+   }
+  };
+  pick('Mumbai','apartment',5);
+  pick('Dubai',null,3);
+  pick('Mumbai','commercial_office',2);
+  pick('MMR','commercial_office',1);
+  pick('MMR',null,1);
+  for(const project of ranked){
+   if(selected.length>=12)break;
+   if(!used.has(project.id)){selected.push(project);used.add(project.id)}
+  }
+  return selected.sort((a,b)=>featuredRank(a.id,featuredSeed)-featuredRank(b.id,featuredSeed));
+ },[filtered,featuredSeed,q,bhk,location,maxBudget]);
  const propertySuggestions=useMemo(()=>{const term=q.trim().toLowerCase();if(!term)return[];return projects.filter(project=>!String(project.market||'').toLowerCase().includes('dubai')&&project.name?.toLowerCase().includes(term)).sort((a,b)=>{const aStarts=a.name.toLowerCase().startsWith(term),bStarts=b.name.toLowerCase().startsWith(term);return Number(bStarts)-Number(aStarts)||a.name.localeCompare(b.name)}).slice(0,12)},[projects,q]);
  const propertyUrl=()=>{const sp=new URLSearchParams();sp.set('market','Mumbai');if(q)sp.set('q',q);if(location)sp.set('location',location);if(bhk)sp.set('bhk',bhk);if(maxBudget)sp.set('budget',maxBudget);return `/properties${sp.toString()?`?${sp}`:''}`};
  const openProject=project=>{window.location.assign(`/projects/${project.slug}`)};
