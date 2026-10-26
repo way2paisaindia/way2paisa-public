@@ -5,6 +5,7 @@ export default async function sitemap() {
   const staticRoutes = [
     { url: baseUrl, changeFrequency: 'daily', priority: 1 },
     { url: baseUrl + '/properties', changeFrequency: 'daily', priority: 0.9 },
+    { url: baseUrl + '/mumbai-hotspots', changeFrequency: 'weekly', priority: 0.85 },
     { url: baseUrl + '/finance', changeFrequency: 'monthly', priority: 0.7 },
     { url: baseUrl + '/legal', changeFrequency: 'monthly', priority: 0.3 },
   ];
