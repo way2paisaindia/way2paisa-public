@@ -72,6 +72,23 @@ export async function GET(request) {
   // This internal Node route converts each genuine stored project source,
   // including WebP/AVIF, into a JPEG that next/og can render reliably.
   const heroUrl = origin + '/api/admin/promotion-source-image?project=' + encodeURIComponent(project.id);
+  // Only attempt to render a verified project photograph when the Node image
+  // relay returns a real JPEG. Failed external developer images can otherwise
+  // make next/og throw "Unsupported image type: unknown" for an HTML error body.
+  let verifiedHero;
+  try {
+    verifiedHero = await fetch(heroUrl, { cache: 'no-store' });
+  } catch {
+    return new Response('Verified project image is temporarily unavailable. Creative not generated.', {
+      status: 502, headers: { 'Cache-Control': 'no-store' },
+    });
+  }
+  const imageType = verifiedHero.headers.get('content-type') || '';
+  if (!verifiedHero.ok || !/^image\/jpeg(?:;|$)/i.test(imageType)) {
+    return new Response('No renderable verified project image is available. Creative not generated.', {
+      status: 422, headers: { 'Cache-Control': 'no-store' },
+    });
+  }
   const logoUrl = origin + '/way2paisa-logo.png';
   const dubai = String(project.market || '').toLowerCase() === 'dubai';
   const price = formatCreativePrice(project.min_price, project.market);
