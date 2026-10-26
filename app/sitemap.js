@@ -1,4 +1,3 @@
-import {hotspotAreas,areaDetailUrl,projectMatchesArea,loadPublishedMumbaiProjects} from './mumbai-hotspots/areas';
 export const revalidate = 3600;
 
 export default async function sitemap() {
@@ -6,7 +5,6 @@ export default async function sitemap() {
   const staticRoutes = [
     { url: baseUrl, changeFrequency: 'daily', priority: 1 },
     { url: baseUrl + '/properties', changeFrequency: 'daily', priority: 0.9 },
-    { url: baseUrl + '/mumbai-hotspots', changeFrequency: 'weekly', priority: 0.85 },
     { url: baseUrl + '/finance', changeFrequency: 'monthly', priority: 0.7 },
     { url: baseUrl + '/legal', changeFrequency: 'monthly', priority: 0.3 },
   ];
@@ -36,19 +34,7 @@ export default async function sitemap() {
         changeFrequency: 'weekly',
         priority: 0.7,
       }));
-    // Only include neighbourhood pages with enough distinct published
-    // projects to be useful search results. Sparse areas remain accessible
-    // to visitors for enquiries but are noindex until verified stock grows.
-    const mumbai=await loadPublishedMumbaiProjects();
-    const neighbourhoodRoutes=(mumbai||[]).length===0?[]:hotspotAreas
-      .filter(area=>mumbai.filter(project=>projectMatchesArea(project,area)&&project.slug).length>=3)
-      .map(area=>({
-        url:baseUrl+areaDetailUrl(area),
-        lastModified:new Date(),
-        changeFrequency:'weekly',
-        priority:0.65,
-      }));
-    return [...staticRoutes, ...neighbourhoodRoutes, ...projectRoutes];
+    return [...staticRoutes, ...projectRoutes];
   } catch {
     return staticRoutes;
   }
