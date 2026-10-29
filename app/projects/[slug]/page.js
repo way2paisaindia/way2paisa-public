@@ -102,7 +102,7 @@ function inventoryAwareTitle(p,items){
 }
 function publicSeoDescription(p,items){
   const value=String(p?.seo_description||'').replace(/\s+/g,' ').trim();
-  const privateNotes=/(?:\b(?:sourced|sources?|partner|allocation|tracked|reconfirm|scrape|third.party|advertis(?:ed|ing)|broker|internal|unit(?:s)?|feed|book now|supplier|agency)\b|lucretia|al saeb|geissens)/i;
+  const privateNotes=/(?:\b(?:sourced|sources?|partner|allocation|tracked|reconfirm|scrape|third.party|advertis(?:ed|ing)|broker|internal|unit(?:s)?|feed|book now|supplier|agency)\b|lucretia|al saeb|geissens|numbered|(?:partner|third[- ]party)\s+catalogue|not\s+(?:developer[- ]confirmed|verified))/i;
   const generic=/current configurations, pricing and availability/i;
   if(value.length>=45 && value.length<=220 && !privateNotes.test(value) && !generic.test(value) && !seoInventoryChanged(value,p,items)){
     return value;
