@@ -72,6 +72,11 @@ export async function POST(request) {
     const financeProduct = clean(body.financeProduct, 120);
     const employmentType = clean(body.employmentType, 120);
     const landingPage = clean(body.landingPage, 1000);
+    const attribution = body.attribution && typeof body.attribution === 'object' && !Array.isArray(body.attribution) ? body.attribution : {};
+    const safeAttribution = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'landing_path', 'referrer_host']
+      .map(key => [key, clean(attribution[key], 100).replace(/[^a-zA-Z0-9 _./-]/g, '')])
+      .filter(([, value]) => value)
+      .map(([key, value]) => key + ': ' + value).join(' | ');
     const appointmentType = clean(body.appointmentType, 80);
     const appointmentDate = clean(body.appointmentDate, 20);
     const appointmentTime = clean(body.appointmentTime, 20);
@@ -107,6 +112,7 @@ export async function POST(request) {
     const remarks = appointmentType
       ? `${appointmentType}: ${projectName} on ${appointmentDate} at ${appointmentTime} | ${consentDetails}`
       : `${projectName}: ${leadPreference}`;
+    const remarksWithAttribution = safeAttribution ? `${remarks} | Marketing: ${safeAttribution}` : remarks;
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL,
       process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
@@ -122,7 +128,7 @@ export async function POST(request) {
       budget: budget || null,
       preferred_locations: preferredLocations || null,
       landing_page: landingPage || null,
-      remarks,
+      remarks: remarksWithAttribution,
       appointment_type: appointmentType || null,
       appointment_date: appointmentType ? appointmentDate : null,
       appointment_time: appointmentType ? appointmentTime : null,
@@ -135,6 +141,8 @@ export async function POST(request) {
       ? `New ${appointmentType}: ${projectName}`
       : financeProduct ? `New finance enquiry: ${financeProduct}`
       : body.projectId ? `New project enquiry: ${projectName}` : 'New advisory enquiry';
+    let notificationWarning = false;
+    try {
     const emailResponse = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
@@ -170,10 +178,16 @@ export async function POST(request) {
     if (!emailResponse.ok) {
       const detail = await emailResponse.text();
       console.error('Resend lead notification failed', detail);
-      return Response.json({ error: 'Your request was saved, but the team notification could not be sent. Please contact us on WhatsApp.' }, { status: 502 });
+      notificationWarning = true;
     }
 
-    await sendWhatsAppLeadAlert({
+    } catch (notificationError) {
+      console.error('Resend lead notification failed', notificationError);
+      notificationWarning = true;
+    }
+
+    try {
+      await sendWhatsAppLeadAlert({
       name,
       phone,
       email,
@@ -181,7 +195,12 @@ export async function POST(request) {
       preference: leadPreference,
     });
 
-    return Response.json({ ok: true });
+    } catch (notificationError) {
+      console.error('WhatsApp lead notification failed', notificationError);
+      notificationWarning = true;
+    }
+
+    return Response.json({ ok: true, notificationWarning });
   } catch (error) {
     console.error('Lead submission failed', error);
     return Response.json({ error: 'We could not submit your request. Please try again or contact us on WhatsApp.' }, { status: 500 });
