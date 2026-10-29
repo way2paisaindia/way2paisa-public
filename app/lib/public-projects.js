@@ -11,9 +11,9 @@ function summarizeConfigurations(values, market) {
     const raw = String(value || '').trim();
     if (!raw) continue;
     if (/studio/i.test(raw)) { tokens.add('Studio'); continue; }
-    const jodi = raw.match(/(?:\\(([0-9.]+\\+[0-9.]+)\\)\\s*BHK|Jodi\\s*([0-9.]+\\+[0-9.]+))/i);
+    const jodi = raw.match(/(?:\(([0-9.]+\+[0-9.]+)\)\s*BHK|Jodi\s*([0-9.]+\+[0-9.]+))/i);
     if (jodi) { tokens.add('Jodi ' + (jodi[1] || jodi[2])); continue; }
-    const match = raw.match(/([0-9]+(?:\\.[0-9]+)?)\\s*(?:BHK|BR|Bedroom|Bedrooms)/i);
+    const match = raw.match(/([0-9]+(?:\.[0-9]+)?)\s*(?:BHK|BR|Bedroom|Bedrooms)/i);
     if (match) {
       let token = match[1] + ' ' + (dubai ? 'BR' : 'BHK');
       if (/townhouse/i.test(raw)) token += ' Townhouse';
@@ -29,7 +29,7 @@ function summarizeConfigurations(values, market) {
     else if (/plot/i.test(raw)) tokens.add('Plot');
     else if (/villa/i.test(raw)) tokens.add('Villa');
   }
-  const rank = token => token === 'Studio' ? 0 : (Number(token.match(/^([0-9]+(?:\\.[0-9]+)?)/)?.[1]) || 90);
+  const rank = token => token === 'Studio' ? 0 : (Number(token.match(/^([0-9]+(?:\.[0-9]+)?)/)?.[1]) || 90);
   return [...tokens].sort((a, b) => rank(a) - rank(b) || a.localeCompare(b)).join(' | ');
 }
 
