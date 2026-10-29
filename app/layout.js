@@ -3,6 +3,7 @@ import './upgrade.css';
 import './media-watermark.css';
 import './emi.css';
 import QuickContact from './components/QuickContact';
+import AnalyticsTracker from './components/AnalyticsTracker';
 
 export const metadata = {
   metadataBase: new URL('https://www.way2paisa.in'),
@@ -57,6 +58,6 @@ export default function RootLayout({ children }) {
   return <html lang="en"><body>
     <script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(organizationJsonLd)}}/>
     <script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(websiteJsonLd)}}/>
-    {children}<QuickContact/>
+    {children}<QuickContact/><AnalyticsTracker/>
   </body></html>;
 }
