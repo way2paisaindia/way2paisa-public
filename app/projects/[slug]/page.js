@@ -31,8 +31,8 @@ function cleanConfiguration(value){const raw=String(value||'').split(/[;|]/)[0].
 function publicConfigurationLabel(value){return String(value||'').split(/\s+[—–-]\s+/)[0].replace(/\s*\([^)]*\)\s*/g,' ').replace(/\s+/g,' ').trim()}function publicAvailability(value){const raw=String(value||'').trim().toLowerCase();if(/sold\s*out/.test(raw))return'Sold Out';if(/coming\s*soon|pre[-\s]?launch/.test(raw))return'Coming Soon';return'Available'}function publicStatus(value){const raw=String(value||'').toLowerCase();if(/sold\s*out/.test(raw))return'Sold Out';if(/ready|completed|\boc\b|handover|possession ongoing|dld finished/.test(raw))return'Ready to Move';if(/near possession|near completion|finishing|fit-out|topped out|95%/.test(raw))return'Near Possession';if(/pre[-\s]?launch|upcoming/.test(raw))return'Coming Soon';if(/new launch|newly launched/.test(raw))return'New Launch';return'Under Construction'}// Only publish approved, customer-facing SEO copy. Internal partner, unit-reference
 // or sourcing remarks are never used in search snippets.
 function publicSeoDescription(p){
-  const value=String(p?.seo_description||'').replace(/\\s+/g,' ').trim();
-  const privateNotes=/(?:\\b(?:sourced|sources?|partner|allocation|tracked|reconfirm|scrape|third.party|advertis(?:ed|ing)|broker|internal|unit(?:s)?|feed|book now|supplier|agency)\\b|lucretia|al saeb|geissens)/i;
+  const value=String(p?.seo_description||'').replace(/\s+/g,' ').trim();
+  const privateNotes=/(?:\b(?:sourced|sources?|partner|allocation|tracked|reconfirm|scrape|third.party|advertis(?:ed|ing)|broker|internal|unit(?:s)?|feed|book now|supplier|agency)\b|lucretia|al saeb|geissens)/i;
   const generic=/current configurations, pricing and availability/i;
   if(value.length>=45 && value.length<=220 && !privateNotes.test(value) && !generic.test(value)){
     return value;
