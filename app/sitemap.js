@@ -11,7 +11,7 @@ export default async function sitemap() {
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-  if (!supabaseUrl || !key) return staticRoutes;
+  if (!supabaseUrl || !key) throw new Error('Missing configuration for the published project sitemap.');
 
   try {
     const query = new URL(supabaseUrl + '/rest/v1/projects');
@@ -35,7 +35,8 @@ export default async function sitemap() {
         priority: 0.7,
       }));
     return [...staticRoutes, ...projectRoutes];
-  } catch {
-    return staticRoutes;
+  } catch (error) {
+    console.error('Published project sitemap could not be refreshed', error);
+    throw error;
   }
 }

@@ -3,7 +3,7 @@ export default function robots() {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/admin/', '/api/'],
+      disallow: ['/admin', '/api/'],
     },
     sitemap: 'https://www.way2paisa.in/sitemap.xml',
     host: 'https://www.way2paisa.in',
