@@ -1,6 +1,7 @@
 'use client';
 
 import {useMemo,useState} from 'react';
+import {getLeadAttribution,trackSavedLead} from '../lib/lead-attribution';
 
 const slots=[];for(let hour=10;hour<=19;hour+=1){for(const minute of [0,30]){if(hour===19&&minute===30)continue;const h=hour%12||12;slots.push(`${h}:${String(minute).padStart(2,'0')} ${hour>=12?'pm':'am'}`)}}
 const dateValue=date=>{
@@ -38,9 +39,11 @@ export default function ProjectVisitBooking({project}){
     appointmentTime:time,
     source:`Website - ${appointmentType} Booking`,
     landingPage:window.location.href,
+    attribution:getLeadAttribution(),
    })});
    const result=await response.json();
    if(!response.ok)throw new Error(result.error||'Unable to book the visit.');
+   trackSavedLead('site_visit');
    setState({busy:false,message:`Your ${appointmentType.toLowerCase()} request has been received. Our advisor will call to confirm the appointment.`});
    setForm({name:'',phone:'',email:'',whatsapp_updates:false,email_notifications:false});
   }catch(error){setState({busy:false,message:error.message||'Unable to book the visit. Please try again.'})}
