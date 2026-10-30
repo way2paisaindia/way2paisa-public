@@ -1,4 +1,5 @@
-export const revalidate = 3600;
+// Match the public catalogue cache so newly published projects are discoverable promptly.
+export const revalidate = 300;
 
 const baseUrl = 'https://www.way2paisa.in';
 const pageSize = 1000;
@@ -20,7 +21,7 @@ async function fetchAllPublicRows(table, columns, filters, supabaseUrl, key) {
 
     const response = await fetch(query, {
       headers: { apikey: key, Authorization: 'Bearer ' + key },
-      next: { revalidate: 3600 },
+      next: { revalidate: 300 },
     });
     if (!response.ok) {
       throw new Error('Project sitemap source unavailable: ' + table + ' (HTTP ' + response.status + ')');
