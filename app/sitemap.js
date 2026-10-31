@@ -2,7 +2,7 @@
 export const revalidate = 300;
 
 const baseUrl = 'https://www.way2paisa.in';
-const pageSize = 1000;
+const pageSize = 500;
 
 // Supabase can cap the number of rows returned by a PostgREST request.
 // Always page through results: silently dropping published project URLs is unsafe.
@@ -53,7 +53,7 @@ export default async function sitemap() {
 
   try {
     const [projects, inventory] = await Promise.all([
-      fetchAllPublicRows('projects', 'id,slug,updated_at', { active: 'eq.true', verified: 'eq.true' }, supabaseUrl, key),
+      fetchAllPublicRows('projects', 'id,slug,updated_at', { active: 'eq.true', verified: 'eq.true', enrichment_status: 'eq.complete' }, supabaseUrl, key),
       fetchAllPublicRows('inventory', 'id,project_id,updated_at', { active: 'eq.true' }, supabaseUrl, key),
     ]);
 
