@@ -45,7 +45,7 @@ async function loadAllActiveInventory(db) {
   for (let page = 0; page < maxPages; page++) {
     const start = page * pageSize;
     const res = await db.from('inventory')
-      .select('id,project_id,configuration', { count: page === 0 ? 'exact' : undefined })
+      .select('id,project_id,configuration,price,price_max', { count: page === 0 ? 'exact' : undefined })
       .eq('active', true)
       .order('id', { ascending: true })
       .range(start, start + pageSize - 1);
@@ -123,13 +123,33 @@ export async function loadPublicProjects() {
       if (res.error) throw res.error;
     }
     const configurations = new Map();
+    const offerGroups = new Map();
+    const projectMarkets = new Map((projectsRes.data || []).map(p => [p.id, p.market]));
     for (const item of inventoryRes.data || []) {
-      if (!item.project_id || !item.configuration) continue;
+      if (!item.project_id || !item.configuration || !projectMarkets.has(item.project_id)) continue;
       if (!configurations.has(item.project_id)) configurations.set(item.project_id, []);
       configurations.get(item.project_id).push(item.configuration);
+      const label = summarizeConfigurations([item.configuration], projectMarkets.get(item.project_id));
+      const minimum = Number(item.price);
+      const rawMaximum = Number(item.price_max);
+      const maximum = Number.isFinite(rawMaximum) && rawMaximum >= minimum ? rawMaximum : minimum;
+      if (!label || !Number.isFinite(minimum) || minimum <= 0 || !Number.isFinite(maximum)) continue;
+      if (!offerGroups.has(item.project_id)) offerGroups.set(item.project_id, new Map());
+      const groups = offerGroups.get(item.project_id);
+      if (!groups.has(label)) groups.set(label, { configuration: label, minimum, maximum });
+      else {
+        const group = groups.get(label);
+        group.minimum = Math.min(group.minimum, minimum);
+        group.maximum = Math.max(group.maximum, maximum);
+      }
     }
     return {
-      projects: (projectsRes.data || []).filter(p => p.slug).map(p => ({ ...p, live_configuration_summary: summarizeConfigurations(configurations.get(p.id), p.market) })),
+      projects: (projectsRes.data || []).filter(p => p.slug).map(p => ({
+        ...p,
+        live_configuration_summary: summarizeConfigurations(configurations.get(p.id), p.market),
+        // Public catalogue receives only configuration-level price ranges; no unit IDs or source notes.
+        live_unit_offers: [...(offerGroups.get(p.id)?.values() || [])]
+      })),
       locations: locationsRes.data || [],
       developers: developersRes.data || [],
       inventoryOptions: Number(inventoryRes.count) || 0,
