@@ -33,6 +33,40 @@ function summarizeConfigurations(values, market) {
   return [...tokens].sort((a, b) => rank(a) - rank(b) || a.localeCompare(b)).join(' | ');
 }
 
+// Supabase/PostgREST may enforce a per-response max-rows cap even when a
+// larger .limit() is requested. Page all active units so every configuration
+// participates in the public search and bedroom filters.
+async function loadAllActiveInventory(db) {
+  const pageSize = 500;
+  const maxPages = 40;
+  const rows = [];
+  let expectedCount = null;
+
+  for (let page = 0; page < maxPages; page++) {
+    const start = page * pageSize;
+    const res = await db.from('inventory')
+      .select('id,project_id,configuration', { count: page === 0 ? 'exact' : undefined })
+      .eq('active', true)
+      .order('id', { ascending: true })
+      .range(start, start + pageSize - 1);
+    if (res.error) throw res.error;
+    if (!Array.isArray(res.data)) throw new Error('Invalid inventory response');
+    if (page === 0 && Number.isInteger(res.count)) expectedCount = res.count;
+    rows.push(...res.data);
+
+    if (expectedCount !== null && rows.length === expectedCount) {
+      return { data: rows, count: expectedCount, error: null };
+    }
+    if (res.data.length < pageSize) {
+      if (expectedCount !== null && rows.length !== expectedCount) {
+        throw new Error('Inventory pagination returned fewer rows than expected');
+      }
+      return { data: rows, count: rows.length, error: null };
+    }
+  }
+  throw new Error('Inventory pagination exceeded its safety limit');
+}
+
 export async function loadPublicProjects() {
   const empty = { projects: [], locations: [], developers: [], inventoryOptions: 0, error: 'The property catalogue is temporarily unavailable. Please try again.' };
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -47,7 +81,7 @@ export async function loadPublicProjects() {
       db.from('projects').select(projectColumns).eq('active', true).eq('verified', true).order('featured', { ascending: false }).order('updated_at', { ascending: false }).limit(2000),
       db.from('locations').select('id,name,zone').eq('active', true).order('name'),
       db.from('developers').select('id,name,logo_url').eq('active', true).order('name'),
-      db.from('inventory').select('project_id,configuration', { count: 'exact' }).eq('active', true).limit(5000)
+      loadAllActiveInventory(db)
     ]);
     for (const res of [projectsRes, locationsRes, developersRes, inventoryRes]) {
       if (res.error) throw res.error;
