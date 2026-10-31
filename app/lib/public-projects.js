@@ -45,7 +45,7 @@ async function loadAllActiveInventory(db) {
   for (let page = 0; page < maxPages; page++) {
     const start = page * pageSize;
     const res = await db.from('inventory')
-      .select('id,project_id,configuration,price,price_max', { count: page === 0 ? 'exact' : undefined })
+      .select('id,project_id,configuration,price,price_max,carpet_area_sqft,carpet_area_max_sqft', { count: page === 0 ? 'exact' : undefined })
       .eq('active', true)
       .order('id', { ascending: true })
       .range(start, start + pageSize - 1);
@@ -136,11 +136,22 @@ export async function loadPublicProjects() {
       if (!label || !Number.isFinite(minimum) || minimum <= 0 || !Number.isFinite(maximum)) continue;
       if (!offerGroups.has(item.project_id)) offerGroups.set(item.project_id, new Map());
       const groups = offerGroups.get(item.project_id);
-      if (!groups.has(label)) groups.set(label, { configuration: label, minimum, maximum });
+      const areaMinimum = Number(item.carpet_area_sqft);
+      const areaMaximum = Number(item.carpet_area_max_sqft ?? item.carpet_area_sqft);
+      const hasValidArea = Number.isFinite(areaMinimum) && areaMinimum > 0
+        && Number.isFinite(areaMaximum) && areaMaximum >= areaMinimum;
+      if (!groups.has(label)) groups.set(label, {
+        configuration: label, minimum, maximum,
+        ...(hasValidArea ? { areaMinimum, areaMaximum } : {})
+      });
       else {
         const group = groups.get(label);
         group.minimum = Math.min(group.minimum, minimum);
         group.maximum = Math.max(group.maximum, maximum);
+        if (hasValidArea) {
+          group.areaMinimum = Math.min(Number.isFinite(group.areaMinimum) ? group.areaMinimum : areaMinimum, areaMinimum);
+          group.areaMaximum = Math.max(Number.isFinite(group.areaMaximum) ? group.areaMaximum : areaMaximum, areaMaximum);
+        }
       }
     }
     return {
