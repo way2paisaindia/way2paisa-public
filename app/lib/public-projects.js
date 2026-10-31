@@ -67,6 +67,42 @@ async function loadAllActiveInventory(db) {
   throw new Error('Inventory pagination exceeded its safety limit');
 }
 
+// Page every fully published project rather than trusting a single limit(2000).
+// This keeps all projects discoverable after the catalogue crosses 1,000 records.
+async function loadAllPublishedProjects(db) {
+  const pageSize = 500;
+  const maxPages = 50;
+  const rows = [];
+  let expectedCount = null;
+  for (let page = 0; page < maxPages; page++) {
+    const res = await db.from('projects')
+      .select(projectColumns + ',updated_at', { count: page === 0 ? 'exact' : undefined })
+      .eq('active', true)
+      .eq('verified', true)
+      .eq('enrichment_status', 'complete')
+      .order('id', { ascending: true })
+      .range(page * pageSize, (page + 1) * pageSize - 1);
+    if (res.error) throw res.error;
+    if (!Array.isArray(res.data)) throw new Error('Invalid published project response');
+    if (page === 0 && Number.isInteger(res.count)) expectedCount = res.count;
+    rows.push(...res.data);
+    if (expectedCount !== null && rows.length === expectedCount) {
+      rows.sort((a, b) => (Number(b.featured) - Number(a.featured))
+        || (Date.parse(b.updated_at || '') || 0) - (Date.parse(a.updated_at || '') || 0));
+      return { data: rows, count: rows.length, error: null };
+    }
+    if (res.data.length < pageSize) {
+      if (expectedCount !== null && rows.length !== expectedCount) {
+        throw new Error('Published project pagination returned fewer rows than expected');
+      }
+      rows.sort((a, b) => (Number(b.featured) - Number(a.featured))
+        || (Date.parse(b.updated_at || '') || 0) - (Date.parse(a.updated_at || '') || 0));
+      return { data: rows, count: rows.length, error: null };
+    }
+  }
+  throw new Error('Published project pagination exceeded its safety limit');
+}
+
 export async function loadPublicProjects() {
   const empty = { projects: [], locations: [], developers: [], inventoryOptions: 0, error: 'The property catalogue is temporarily unavailable. Please try again.' };
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -78,7 +114,7 @@ export async function loadPublicProjects() {
   try {
     const db = createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
     const [projectsRes, locationsRes, developersRes, inventoryRes] = await Promise.all([
-      db.from('projects').select(projectColumns).eq('active', true).eq('verified', true).order('featured', { ascending: false }).order('updated_at', { ascending: false }).limit(2000),
+      loadAllPublishedProjects(db),
       db.from('locations').select('id,name,zone').eq('active', true).order('name'),
       db.from('developers').select('id,name,logo_url').eq('active', true).order('name'),
       loadAllActiveInventory(db)
