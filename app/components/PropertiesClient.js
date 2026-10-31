@@ -60,6 +60,22 @@ const statusGroup=value=>{const text=String(value||'').toLowerCase();if(/near|fi
 const dubaiBudgets = [['1000000','Up to AED 1M'],['2000000','Up to AED 2M'],['3000000','Up to AED 3M'],['5000000','Up to AED 5M'],['10000000','Up to AED 10M'],['above','Above AED 10M']];
 const indiaBudgets = [['2','Up to ₹2 Cr'],['3','Up to ₹3 Cr'],['5','Up to ₹5 Cr'],['10','Up to ₹10 Cr'],['20','Up to ₹20 Cr'],['above','Above ₹10 Cr']];
 
+// Match a buyer's budget against the full published project price range.
+// A luxury project may start below the threshold but offer larger residences above it.
+function matchesProjectBudget(project, selected, isDubai) {
+ if (!selected) return true;
+ const minimum=Number(project?.min_price);
+ const maximum=Number(project?.max_price);
+ if (!Number.isFinite(minimum)||minimum<=0) return false;
+ if (selected==='above') {
+  const threshold=isDubai?10000000:10;
+  const highest=Number.isFinite(maximum)&&maximum>0?maximum:minimum;
+  return highest>threshold;
+ }
+ const ceiling=Number(selected);
+ return Number.isFinite(ceiling)&&ceiling>0&&minimum<=ceiling;
+}
+
 export default function PropertiesClient({initialData,initialFilters}){
  const[projects]=useState(initialData.projects),[locations]=useState(initialData.locations),[developers]=useState(initialData.developers),[loading]=useState(false),[error]=useState(initialData.error);
  const[visibleCount,setVisibleCount]=useState(48);
@@ -75,7 +91,7 @@ export default function PropertiesClient({initialData,initialFilters}){
  },[locations,projects,zone,dubaiZone,isDubai]);
  const unitLabel=category==='commercial_office'?'Office type':category==='retail'?'Retail type':category==='plot'||category==='land'?'Plot type':category==='villa'?'Home type':'Configuration';
  const unitOptions=category==='commercial_office'?['Office','Retail']:category==='retail'?['Retail']:category==='villa'?(isDubai?['3 BR','4 BR','5 BR','5 BR+']:['3 BHK','4 BHK','5 BHK','5 BHK+']):category==='plot'||category==='land'?['Plot']:isDubai?['Studio','1 BR','2 BR','3 BR','4 BR','5 BR','5 BR+']:['1 BHK','2 BHK','3 BHK','4 BHK','5 BHK','5 BHK+'];
- const filtered=useMemo(()=>{let list=projects.filter(p=>{const text=[p.name,p.market,p.live_configuration_summary||p.bhk_original,p.category,p.developers?.name,p.locations?.name,p.locations?.zone,p.address].filter(Boolean).join(' ').toLowerCase();const marketOk=isMarketMatch(p,market);const raw=Number(p.min_price);const budgetOk=!budget||!raw||(isDubai?(budget==='above'?raw>10000000:raw<=Number(budget)):(budget==='above'?raw>10:raw<=Number(budget)));return marketOk&&(!category||p.category===category)&&(!q||text.includes(q.toLowerCase()))&&(!zone||zoneForProject(p)===zone)&&(!dubaiZone||dubaiZoneForProject(p)===dubaiZone)&&(!location||p.location_id===location)&&(!developer||p.developer_id===developer)&&configurationMatches(p.live_configuration_summary||p.bhk_original,configuration)&&budgetOk&&(!status||statusGroup(p.status)===status)});if(sort==='priceAsc')list.sort((a,b)=>(Number(a.min_price)||999999999)-(Number(b.min_price)||999999999));else if(sort==='priceDesc')list.sort((a,b)=>(Number(b.min_price)||0)-(Number(a.min_price)||0));else if(sort==='name')list.sort((a,b)=>a.name.localeCompare(b.name));else list.sort((a,b)=>(Number(b.featured)-Number(a.featured))||(Number(b.verified)-Number(a.verified)));return list},[projects,q,zone,location,developer,configuration,budget,status,market,category,sort,isDubai]);
+ const filtered=useMemo(()=>{let list=projects.filter(p=>{const text=[p.name,p.market,p.live_configuration_summary||p.bhk_original,p.category,p.developers?.name,p.locations?.name,p.locations?.zone,p.address].filter(Boolean).join(' ').toLowerCase();const marketOk=isMarketMatch(p,market);const budgetOk=matchesProjectBudget(p,budget,isDubai);return marketOk&&(!category||p.category===category)&&(!q||text.includes(q.toLowerCase()))&&(!zone||zoneForProject(p)===zone)&&(!dubaiZone||dubaiZoneForProject(p)===dubaiZone)&&(!location||p.location_id===location)&&(!developer||p.developer_id===developer)&&configurationMatches(p.live_configuration_summary||p.bhk_original,configuration)&&budgetOk&&(!status||statusGroup(p.status)===status)});if(sort==='priceAsc')list.sort((a,b)=>(Number(a.min_price)||999999999)-(Number(b.min_price)||999999999));else if(sort==='priceDesc')list.sort((a,b)=>(Number(b.min_price)||0)-(Number(a.min_price)||0));else if(sort==='name')list.sort((a,b)=>a.name.localeCompare(b.name));else list.sort((a,b)=>(Number(b.featured)-Number(a.featured))||(Number(b.verified)-Number(a.verified)));return list},[projects,q,zone,location,developer,configuration,budget,status,market,category,sort,isDubai]);
  const marketDevelopers=useMemo(()=>{const allowedIds=new Set(projects.filter(p=>isMarketMatch(p,market)).map(p=>p.developer_id).filter(Boolean));return developers.filter(d=>allowedIds.has(d.id))},[projects,developers,market]);
  const availableCategories=useMemo(()=>{const allowed=new Set(projects.filter(p=>isMarketMatch(p,market)).map(p=>p.category).filter(Boolean));return categories.filter(([value])=>allowed.has(value))},[projects,market]);
  const statuses=useMemo(()=>{const available=new Set(projects.filter(p=>isMarketMatch(p,market)&&(!category||p.category===category)).map(p=>statusGroup(p.status)).filter(Boolean));return statusGroups.filter(([value])=>available.has(value))},[projects,market,category]);const clear=()=>{setQ('');setZone('');setDubaiZone('');setLocation('');setDeveloper('');setConfiguration('');setBudget('');setStatus('');setMarket('Mumbai');setCategory('')};
