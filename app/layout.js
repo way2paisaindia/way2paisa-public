@@ -11,6 +11,12 @@ export const metadata = {
   description: 'Way2Paisa FinPro Services offers curated new residential projects and expert real estate and finance advisory across Mumbai, MMR and Dubai.',
   keywords: ['Way2Paisa FinPro Services', 'Way2Paisa', 'Mumbai real estate advisory', 'home loans', 'new projects Mumbai'],
   alternates: { canonical: '/' },
+  // The current brand mark is a square 100x100 JPEG supported by Google Search.
+  // Keep the URL stable so browser tabs and Google can discover the same icon.
+  icons: {
+    icon: [{ url: '/way2paisa-mark.jpg', type: 'image/jpeg', sizes: '100x100' }],
+    shortcut: '/way2paisa-mark.jpg',
+  },
   openGraph: {
     title: 'Way2Paisa FinPro Services',
     description: 'Premium real estate and finance advisory across Mumbai, MMR and Dubai.',
