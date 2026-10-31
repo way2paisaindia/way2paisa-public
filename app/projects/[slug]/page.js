@@ -13,6 +13,13 @@ import EMICalculator from '../../components/EMICalculator';
 import ProjectVisitBooking from '../../components/ProjectVisitBooking';
 import NearbyPlaces from '../../components/NearbyPlaces';
 import ProjectVideoGallery from '../../components/ProjectVideoGallery';
+// Public, verified project data can be cached briefly to avoid repeated database
+// queries on every Googlebot or visitor request. This does not cache lead form
+// submissions: those are handled separately by client-side API calls.
+// Keep freshness aligned with the homepage, catalogue and sitemap.
+export const revalidate = 300;
+export const fetchCache = 'default-cache';
+
 const wa=process.env.NEXT_PUBLIC_WHATSAPP_NUMBER||'918850373012';
 function client(){return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL,process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY)}
 async function getProject(slug){const supabase=client();const{data:project}=await supabase.from('projects').select('*,developers(name,logo_url,description),locations(name,zone,description)').eq('slug',slug).eq('active',true).eq('verified',true).eq('enrichment_status','complete').maybeSingle();if(!project)return null;const[{data:inventory},{data:media},{data:recommendationRows}]=await Promise.all([supabase.from('inventory').select('id,configuration,carpet_area_sqft,carpet_area_max_sqft,plot_area_sqft,plot_area_max_sqft,built_up_area_sqft,built_up_area_max_sqft,price,price_max,availability,source_type,source_url,parking,last_verified,updated_at').eq('project_id',project.id).eq('active',true).order('price',{ascending:true}),supabase.from('project_media').select('id,image_url,alt_text,media_type,configuration,source_url,sort_order,verified_at').eq('project_id',project.id).eq('active',true).order('sort_order'),supabase.from('project_recommendations').select('recommended_project_id,distance_km,recommendation_score,reasons').eq('source_project_id',project.id).eq('active',true).order('recommendation_score',{ascending:false}).limit(6)]);let recommendations=[];if(recommendationRows?.length){const ids=recommendationRows.map(x=>x.recommended_project_id);const{data:nearby}=await supabase.from('projects').select('id,name,slug,hero_image_url,bhk_original,status,min_price,price_original,possession_date,possession_original,market,locations(name)').in('id',ids).eq('active',true).eq('verified',true);const byId=new Map((nearby||[]).map(x=>[x.id,x]));recommendations=recommendationRows.map(row=>{const target=byId.get(row.recommended_project_id);return target?{...target,distance_km:row.distance_km,recommendation_score:row.recommendation_score,reasons:row.reasons||[]}:null}).filter(Boolean)}return{project,inventory:inventory||[],media:media||[],recommendations}}
