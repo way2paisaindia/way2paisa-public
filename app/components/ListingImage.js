@@ -10,8 +10,14 @@ export default function ListingImage({src, alt, projectId, mediaId, ...props}) {
   // Emaar CMS images cannot currently be fetched by the server-side image
   // proxy. Publish their verified original URL directly in HTML so the
   // browser and Googlebot can request the developer's image themselves.
-  const useOriginalEmaarImage = String(src || '').toLowerCase().startsWith('https://uae-cms.emaar.com/');
-  const displaySrc = projectId && src && !useDirectSource && !useOriginalEmaarImage
+  const originalUrl = String(src || '').toLowerCase();
+  const useOriginalEmaarImage = originalUrl.startsWith('https://uae-cms.emaar.com/');
+  // Unstyled full-resolution Mahindra assets are safer to expose directly:
+  // an earlier styled thumbnail returned a 1-pixel placeholder that the
+  // image proxy/CDN could cache as a successful JPEG.
+  const useOriginalMahindraImage = originalUrl.startsWith('https://cms.mahindralifespaces.com/web/sites/default/files/')
+    && !originalUrl.includes('/styles/');
+  const displaySrc = projectId && src && !useDirectSource && !useOriginalEmaarImage && !useOriginalMahindraImage
     ? `/api/project-image?project=${encodeURIComponent(projectId)}${mediaId ? `&media=${encodeURIComponent(mediaId)}` : ''}`
     : src;
 
