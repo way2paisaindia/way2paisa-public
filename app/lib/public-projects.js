@@ -39,32 +39,62 @@ function summarizeConfigurations(values, market) {
 async function loadAllActiveInventory(db) {
   const pageSize = 500;
   const maxPages = 40;
-  const rows = [];
-  let expectedCount = null;
+  const maxAttempts = 3;
 
-  for (let page = 0; page < maxPages; page++) {
-    const start = page * pageSize;
-    const res = await db.from('inventory')
-      .select('id,project_id,configuration,price,price_max,carpet_area_sqft,carpet_area_max_sqft', { count: page === 0 ? 'exact' : undefined })
-      .eq('active', true)
-      .order('id', { ascending: true })
-      .range(start, start + pageSize - 1);
-    if (res.error) throw res.error;
-    if (!Array.isArray(res.data)) throw new Error('Invalid inventory response');
-    if (page === 0 && Number.isInteger(res.count)) expectedCount = res.count;
-    rows.push(...res.data);
+  // Pagination can overlap an admin inventory update. Offset pages may then
+  // skip records, and an exact count taken at the start can become outdated.
+  // Use a stable ID cursor and recheck counts before giving up or returning
+  // an incomplete inventory set to the public catalogue.
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    const rows = [];
+    const seenIds = new Set();
+    let firstCount = null;
+    let lastId = null;
+    let complete = false;
 
-    if (expectedCount !== null && rows.length === expectedCount) {
-      return { data: rows, count: expectedCount, error: null };
-    }
-    if (res.data.length < pageSize) {
-      if (expectedCount !== null && rows.length !== expectedCount) {
-        throw new Error('Inventory pagination returned fewer rows than expected');
+    for (let page = 0; page < maxPages; page++) {
+      let query = db.from('inventory')
+        .select('id,project_id,configuration,price,price_max,carpet_area_sqft,carpet_area_max_sqft', { count: page === 0 ? 'exact' : undefined })
+        .eq('active', true)
+        .order('id', { ascending: true })
+        .limit(pageSize);
+      if (lastId !== null) query = query.gt('id', lastId);
+      const res = await query;
+      if (res.error) throw res.error;
+      if (!Array.isArray(res.data)) throw new Error('Invalid inventory response');
+      if (page === 0 && Number.isInteger(res.count)) firstCount = res.count;
+
+      for (const item of res.data) {
+        if (!item.id || seenIds.has(item.id)) {
+          throw new Error('Inventory pagination returned a duplicate or invalid ID');
+        }
+        seenIds.add(item.id);
+        rows.push(item);
       }
+      if (res.data.length < pageSize) {
+        complete = true;
+        break;
+      }
+      lastId = res.data[res.data.length - 1].id;
+    }
+    if (!complete) throw new Error('Inventory pagination exceeded its safety limit');
+
+    let latestCount = firstCount;
+    if (firstCount !== null && rows.length !== firstCount) {
+      // The active-row count may change while a new project is being published.
+      // Accept only when a fresh independent exact count confirms completeness.
+      const latest = await db.from('inventory').select('id', { count: 'exact', head: true }).eq('active', true);
+      if (latest.error) throw latest.error;
+      latestCount = Number.isInteger(latest.count) ? latest.count : null;
+    }
+    if (latestCount === null || rows.length === latestCount) {
       return { data: rows, count: rows.length, error: null };
     }
+    console.warn('Inventory changed during public catalogue pagination; retrying complete read', {
+      attempt: attempt + 1, startCount: firstCount, fetched: rows.length, latestCount
+    });
   }
-  throw new Error('Inventory pagination exceeded its safety limit');
+  throw new Error('Inventory pagination remained inconsistent after three full attempts');
 }
 
 // Page every fully published project rather than trusting a single limit(2000).
