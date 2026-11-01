@@ -10,7 +10,7 @@ export default function ListingImage({src, alt, projectId, mediaId, ...props}) {
   // Emaar CMS images cannot currently be fetched by the server-side image
   // proxy. Publish their verified original URL directly in HTML so the
   // browser and Googlebot can request the developer's image themselves.
-  const useOriginalEmaarImage = /^https?:\\/\\/uae-cms\\.emaar\\.com\\//i.test(String(src || ''));
+  const useOriginalEmaarImage = String(src || '').toLowerCase().startsWith('https://uae-cms.emaar.com/');
   const displaySrc = projectId && src && !useDirectSource && !useOriginalEmaarImage
     ? `/api/project-image?project=${encodeURIComponent(projectId)}${mediaId ? `&media=${encodeURIComponent(mediaId)}` : ''}`
     : src;
