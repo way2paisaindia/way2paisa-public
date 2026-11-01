@@ -234,8 +234,12 @@ function inventoryAwareTitle(p,items){
 function publicSeoDescription(p,items){
   const value=String(p?.seo_description||'').replace(/\s+/g,' ').trim();
   const privateNotes=/(?:\b(?:sourced|sources?|partner|allocation|tracked|reconfirm|scrape|third.party|advertis(?:ed|ing)|broker|internal|unit(?:s)?|feed|book now|supplier|agency)\b|lucretia|al saeb|geissens|numbered|(?:partner|third[- ]party)\s+catalogue|not\s+(?:developer[- ]confirmed|verified))/i;
+  // Published SEO metadata must never expose internal allocation/source shorthand.
+  // If older records contain such text, render a buyer-readable description
+  // derived from the currently active inventory instead.
+  const internalInventoryShorthand=/(?:\bcurrent\s+exact\b|\b(?:live\s+)?entry\s+row\b|\bfirst[- ]sale\b|\bphase[- ]specific\s+(?:inventory|stock)\b|\bcurrent\s+(?:developer\s+)?(?:stock|allocation)\b)/i;
   const generic=/current configurations, pricing and availability/i;
-  if(value.length>=45 && value.length<=220 && !privateNotes.test(value) && !generic.test(value) && !seoInventoryChanged(value,p,items)){
+  if(value.length>=45 && value.length<=220 && !privateNotes.test(value) && !internalInventoryShorthand.test(value) && !generic.test(value) && !seoInventoryChanged(value,p,items)){
     return value;
   }
   return seoInventoryDescription(p,items);
