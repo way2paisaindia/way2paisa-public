@@ -4,11 +4,12 @@ export const revalidate = 300;
 const baseUrl = 'https://www.way2paisa.in';
 const pageSize = 500;
 
-// Supabase can cap the number of rows returned by a PostgREST request.
-// Always page through results: silently dropping published project URLs is unsafe.
+// Stable ID/keyset pagination avoids offset drift while inventory or project
+// records change during a sitemap refresh. Never silently omit published URLs.
 async function fetchAllPublicRows(table, columns, filters, supabaseUrl, key) {
   const rows = [];
   const maxPages = 30;
+  let cursor = null;
   for (let page = 0; page < maxPages; page++) {
     const query = new URL(supabaseUrl + '/rest/v1/' + table);
     query.searchParams.set('select', columns);
@@ -17,7 +18,7 @@ async function fetchAllPublicRows(table, columns, filters, supabaseUrl, key) {
     }
     query.searchParams.set('order', 'id.asc');
     query.searchParams.set('limit', String(pageSize));
-    query.searchParams.set('offset', String(page * pageSize));
+    if (cursor !== null) query.searchParams.set('id', 'gt.' + cursor);
 
     const response = await fetch(query, {
       headers: { apikey: key, Authorization: 'Bearer ' + key },
@@ -28,8 +29,16 @@ async function fetchAllPublicRows(table, columns, filters, supabaseUrl, key) {
     }
     const batch = await response.json();
     if (!Array.isArray(batch)) throw new Error('Unexpected sitemap data: ' + table);
+    if (batch.length && cursor !== null && batch[0].id <= cursor) {
+      throw new Error('Sitemap pagination cursor did not advance for ' + table);
+    }
     rows.push(...batch);
     if (batch.length < pageSize) return rows;
+    const lastId = batch[batch.length - 1]?.id;
+    if (!lastId || lastId === cursor) {
+      throw new Error('Sitemap pagination cursor did not advance for ' + table);
+    }
+    cursor = lastId;
   }
   throw new Error('Sitemap pagination safety limit reached for ' + table);
 }
