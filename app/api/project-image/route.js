@@ -61,23 +61,7 @@ export async function GET(request) {
     const source = safeUrl(url);
     if (!source || seen.has(source)) return;
     seen.add(source);
-    const approvedReferer = safeUrl(referer) || safeUrl(project?.overview_source_url) || '';
-    // Emaar's CMS image host sometimes refuses server-side image requests.
-    // Its official site exposes an image optimization endpoint for the same
-    // approved asset. Try that first, retaining the original URL as fallback.
-    const sourceUrl = new URL(source);
-    if (sourceUrl.hostname === 'uae-cms.emaar.com' && sourceUrl.pathname.startsWith('/uploads/')) {
-      const optimized = new URL('https://www.emaar.com/_next/image');
-      optimized.searchParams.set('url', source);
-      optimized.searchParams.set('w', '1200');
-      optimized.searchParams.set('q', '100');
-      const optimizedSource = optimized.toString();
-      if (!seen.has(optimizedSource)) {
-        seen.add(optimizedSource);
-        candidates.push({ source: optimizedSource, referer: approvedReferer });
-      }
-    }
-    candidates.push({ source, referer: approvedReferer });
+    candidates.push({ source, referer: safeUrl(referer) || safeUrl(project?.overview_source_url) || '' });
   };
   if (!mediaId) addCandidate(project?.hero_image_url, project?.overview_source_url);
   for (const item of media || []) {
