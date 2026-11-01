@@ -7,7 +7,11 @@ const fallbackImage = '/way2paisa-mark.jpg';
 export default function ListingImage({src, alt, projectId, mediaId, ...props}) {
   const [failed, setFailed] = useState(!src);
   const [useDirectSource, setUseDirectSource] = useState(false);
-  const displaySrc = projectId && src && !useDirectSource
+  // Emaar CMS images cannot currently be fetched by the server-side image
+  // proxy. Publish their verified original URL directly in HTML so the
+  // browser and Googlebot can request the developer's image themselves.
+  const useOriginalEmaarImage = /^https?:\\/\\/uae-cms\\.emaar\\.com\\//i.test(String(src || ''));
+  const displaySrc = projectId && src && !useDirectSource && !useOriginalEmaarImage
     ? `/api/project-image?project=${encodeURIComponent(projectId)}${mediaId ? `&media=${encodeURIComponent(mediaId)}` : ''}`
     : src;
 
