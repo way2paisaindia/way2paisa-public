@@ -32,7 +32,11 @@ export default function ListingImage({src, alt, projectId, mediaId, ...props}) {
       src={failed ? fallbackImage : displaySrc}
       alt={failed ? 'Way2Paisa verified property' : alt}
       onError={() => {
-        if (!failed && projectId && !useDirectSource) {
+        // Retry the original source only when the failed URL was the
+        // project-image proxy. For direct Emaar/Mahindra images the next
+        // URL would be identical, leaving a broken image indefinitely.
+        if (!failed && projectId && !useDirectSource
+          && !useOriginalEmaarImage && !useOriginalMahindraImage) {
           setUseDirectSource(true);
           return;
         }
