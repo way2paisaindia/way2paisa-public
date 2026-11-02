@@ -32,12 +32,16 @@ export async function GET(request) {
   projectQuery.searchParams.set('id', 'eq.' + projectId);
   projectQuery.searchParams.set('active', 'eq.true');
   projectQuery.searchParams.set('verified', 'eq.true');
+  projectQuery.searchParams.set('enrichment_status', 'eq.complete');
   const projectResponse = await fetch(projectQuery, {
     headers: { apikey: key, Authorization: 'Bearer ' + key },
     cache: 'no-store',
   });
   const projects = await projectResponse.json().catch(() => []);
   const project = Array.isArray(projects) ? projects[0] : null;
+  // Never retrieve or proxy media for unpublished or inaccessible projects.
+  if (!projectResponse.ok) return new Response('Image service temporarily unavailable.', { status: 503 });
+  if (!project) return new Response('Published project not found.', { status: 404 });
   const mediaQuery = new URL(base + '/rest/v1/project_media');
   mediaQuery.searchParams.set('select', 'image_url,source_url,media_type,sort_order,verified_at');
   mediaQuery.searchParams.set('project_id', 'eq.' + projectId);
