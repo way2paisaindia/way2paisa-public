@@ -51,12 +51,14 @@ async function sendWhatsAppLeadAlert({ name, phone, email, projectName, preferen
     }),
   });
 
-  const responseBody = await response.text();
+  // Never log the provider's response body, which may contain message
+  // identifiers or recipient information. Failure must propagate to the
+  // caller so the saved lead can be flagged for manual follow-up.
   if (!response.ok) {
-    console.error('MSG91 WhatsApp lead notification failed', responseBody);
-    return;
+    console.error('MSG91 WhatsApp lead notification rejected', response.status);
+    throw new Error('MSG91 WhatsApp notification rejected (HTTP ' + response.status + ')');
   }
-  console.info('MSG91 WhatsApp lead notification accepted', responseBody);
+  console.info('MSG91 WhatsApp lead notification accepted', response.status);
 }
 
 export async function POST(request) {
