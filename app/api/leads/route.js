@@ -89,6 +89,12 @@ export async function POST(request) {
     if (!name || !phone) {
       return Response.json({ error: 'Please complete your name and mobile number.' }, { status: 400 });
     }
+    // Accept international formats while rejecting unusable contact numbers.
+    // This server-side check complements the required browser form field.
+    const phoneDigits = phone.replace(/\D/g, '');
+    if (!/^[+\d\s().-]+$/.test(phone) || phoneDigits.length < 8 || phoneDigits.length > 15 || /^(\d)\1+$/.test(phoneDigits)) {
+      return Response.json({ error: 'Please enter a valid contact number, including country code if applicable.' }, { status: 400 });
+    }
     if (email && !/^\S+@\S+\.\S+$/.test(email)) {
       return Response.json({ error: 'Please enter a valid email address.' }, { status: 400 });
     }
