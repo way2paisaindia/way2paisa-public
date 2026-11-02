@@ -88,7 +88,19 @@ function validAppointmentTime(value) {
 
 export async function POST(request) {
   try {
-    const body = await request.json();
+    let body;
+    try {
+      body = await request.json();
+    } catch {
+      return Response.json({ error: 'Please submit valid enquiry details.' }, { status: 400 });
+    }
+    if (!body || typeof body !== 'object' || Array.isArray(body)) {
+      return Response.json({ error: 'Please submit valid enquiry details.' }, { status: 400 });
+    }
+    const projectId = clean(body.projectId, 64);
+    if (projectId && !/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(projectId)) {
+      return Response.json({ error: 'This project reference is invalid. Please reload the listing and try again.' }, { status: 400 });
+    }
     const name = clean(body.name, 120);
     const phone = clean(body.phone, 40);
     const email = clean(body.email, 160);
@@ -157,8 +169,8 @@ export async function POST(request) {
       name,
       phone,
       email: email || null,
-      project_id: body.projectId || null,
-      source: clean(body.source, 100) || (appointmentType ? 'Website - Appointment' : body.projectId ? 'Website - Project Detail' : 'Website - Advisory enquiry'),
+      project_id: projectId || null,
+      source: clean(body.source, 100) || (appointmentType ? 'Website - Appointment' : projectId ? 'Website - Project Detail' : 'Website - Advisory enquiry'),
       campaign: projectName,
       preferred_bhk: preferredBhk || null,
       budget: budget || null,
@@ -176,7 +188,7 @@ export async function POST(request) {
     const subject = appointmentType
       ? `New ${appointmentType}: ${projectName}`
       : financeProduct ? `New finance enquiry: ${financeProduct}`
-      : body.projectId ? `New project enquiry: ${projectName}` : 'New advisory enquiry';
+      : projectId ? `New project enquiry: ${projectName}` : 'New advisory enquiry';
     let notificationWarning = false;
     try {
     const emailResponse = await fetch('https://api.resend.com/emails', {
