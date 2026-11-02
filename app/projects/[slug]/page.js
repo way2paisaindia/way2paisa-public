@@ -117,6 +117,33 @@ if (project.category === 'commercial_office' && recommendations.length < 3) {
     }
   }
 }
+// A sparse MMR villa/commercial category may have fewer than three local
+// matches. Fill from verified peers in that category before expanding
+// MMR commercial office results into the wider Mumbai market. These are
+// regional alternatives, never fictitious nearby-distance recommendations.
+if (recommendations.length < 3 && project.market === 'MMR' && ['villa','commercial_office'].includes(project.category)) {
+  const selected = new Set([project.id, ...recommendations.map(item => item.id)]);
+  const relatedFields = 'id,name,slug,hero_image_url,bhk_original,status,min_price,price_original,possession_date,possession_original,market,locations(name)';
+  const addVerifiedPeers = async (market, reason) => {
+    if (recommendations.length >= 3) return;
+    const {data:peers,error} = await supabase.from('projects').select(relatedFields)
+      .eq('active',true).eq('verified',true).eq('enrichment_status','complete')
+      .eq('category',project.category).eq('market',market)
+      .neq('id',project.id).order('featured',{ascending:false}).limit(24);
+    if (error) return;
+    for (const peer of peers || []) {
+      if (recommendations.length >= 3) break;
+      if (!peer.slug || selected.has(peer.id)) continue;
+      selected.add(peer.id);
+      recommendations.push({...peer,distance_km:null,reasons:[reason]});
+      recommendationBasis='mixed';
+    }
+  };
+  await addVerifiedPeers('MMR','Another verified '+(project.category === 'villa'?'villa':'office')+' project in MMR');
+  if (project.category === 'commercial_office') {
+    await addVerifiedPeers('Mumbai','Another verified office project in the wider Mumbai region');
+  }
+}
 return{project,inventory:inventory||[],media:media||[],recommendations,recommendationBasis}}
 // Emaar's retired CMS upload URLs return 404 in production image-relay checks.
 // Keep the developer URL on the listing for legitimate browser attempts,
