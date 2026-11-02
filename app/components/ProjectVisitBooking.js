@@ -2,26 +2,13 @@
 
 import {useMemo,useState} from 'react';
 import {getLeadAttribution,trackSavedLead} from '../lib/lead-attribution';
+import {appointmentDateBounds} from '../lib/project-appointment-date';
 
 const slots=[];for(let hour=10;hour<=19;hour+=1){for(const minute of [0,30]){if(hour===19&&minute===30)continue;const h=hour%12||12;slots.push(`${h}:${String(minute).padStart(2,'0')} ${hour>=12?'pm':'am'}`)}}
-const dateValue=date=>{
- const year=date.getFullYear();
- const month=String(date.getMonth()+1).padStart(2,'0');
- const day=String(date.getDate()).padStart(2,'0');
- return `${year}-${month}-${day}`;
-};
-
 export default function ProjectVisitBooking({project}){
  const appointmentTimeZone=String(project.market||'').toLowerCase().includes('dubai')?'Asia/Dubai':'Asia/Kolkata';
  const appointmentZoneLabel=appointmentTimeZone==='Asia/Dubai'?'Dubai time (GST, UTC+4)':'India Standard Time (IST, UTC+5:30)';
- const dateBounds=useMemo(()=>{
-  const first=new Date();
-  first.setHours(12,0,0,0);
-  first.setDate(first.getDate()+1);
-  const last=new Date(first);
-  last.setDate(last.getDate()+59);
-  return{min:dateValue(first),max:dateValue(last)};
- },[]);
+ const dateBounds=useMemo(()=>appointmentDateBounds(appointmentTimeZone,true),[appointmentTimeZone]);
  const[date,setDate]=useState(dateBounds.min);
  const[time,setTime]=useState(slots[0]);
  const[appointmentType,setAppointmentType]=useState('Site Visit');
