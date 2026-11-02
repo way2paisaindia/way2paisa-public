@@ -61,6 +61,31 @@ async function sendWhatsAppLeadAlert({ name, phone, email, projectName, preferen
   console.info('MSG91 WhatsApp lead notification accepted', response.status);
 }
 
+// Keep both website booking formats valid: 10:00–19:00 and 10:00 am–7:00 pm.
+// Allow a one-day timezone cushion for overseas visitors, but reject impossible
+// calendar dates and excessively distant appointments before saving a lead.
+function validAppointmentDate(value) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const [year, month, day] = value.split('-').map(Number);
+  const dateMs = Date.UTC(year, month - 1, day);
+  if (!Number.isFinite(dateMs) || new Date(dateMs).toISOString().slice(0, 10) !== value) return false;
+  const now = new Date();
+  const todayMs = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+  return dateMs >= todayMs - 86400000 && dateMs <= todayMs + 180 * 86400000;
+}
+
+function validAppointmentTime(value) {
+  const match = /^(\d{1,2}):([0-5]\d)(?:\s*(am|pm))?$/i.exec(value);
+  if (!match) return false;
+  let hour = Number(match[1]);
+  const minute = Number(match[2]);
+  if (match[3]) {
+    if (hour < 1 || hour > 12) return false;
+    hour = hour % 12 + (match[3].toLowerCase() === 'pm' ? 12 : 0);
+  }
+  return hour >= 10 && hour <= 19 && (minute === 0 || minute === 30) && !(hour === 19 && minute > 0);
+}
+
 export async function POST(request) {
   try {
     const body = await request.json();
@@ -100,6 +125,9 @@ export async function POST(request) {
     }
     if (appointmentType && (!appointmentDate || !appointmentTime)) {
       return Response.json({ error: 'Please select an appointment date and time.' }, { status: 400 });
+    }
+    if (appointmentType && (!validAppointmentDate(appointmentDate) || !validAppointmentTime(appointmentTime))) {
+      return Response.json({ error: 'Please choose a valid appointment date and time between 10:00 AM and 7:00 PM.' }, { status: 400 });
     }
 
     const enquiryPreference = appointmentType
