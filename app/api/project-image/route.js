@@ -87,6 +87,10 @@ export async function GET(request) {
       if (!imageResponse.ok || (declaredSize && declaredSize > maxInputBytes)) continue;
       const buffer = Buffer.from(await imageResponse.arrayBuffer());
       if (!buffer.length || buffer.length > maxInputBytes) continue;
+      // A remote source can answer HTTP 200 with a 1x1 placeholder.
+      // Reject tiny images rather than caching them as valid project photos.
+      const imageMeta = await sharp(buffer, { limitInputPixels: 40000000 }).metadata();
+      if (!imageMeta.width || !imageMeta.height || imageMeta.width < 64 || imageMeta.height < 64) continue;
       const jpeg = await sharp(buffer, { limitInputPixels: 40000000 })
         .rotate()
         .resize({ width: 1600, height: 1600, fit: 'inside', withoutEnlargement: true })
