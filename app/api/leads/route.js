@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import {appointmentDateBounds} from '../../lib/project-appointment-date';
 
 const notificationTo = 'way2paisaindia@gmail.com';
 const notificationFrom = 'Way2Paisa Enquiries <onboarding@resend.dev>';
@@ -61,17 +62,15 @@ async function sendWhatsAppLeadAlert({ name, phone, email, projectName, preferen
   console.info('MSG91 WhatsApp lead notification accepted', response.status);
 }
 
-// Keep both website booking formats valid: 10:00–19:00 and 10:00 am–7:00 pm.
-// Allow a one-day timezone cushion for overseas visitors, but reject impossible
-// calendar dates and excessively distant appointments before saving a lead.
-function validAppointmentDate(value) {
+// Enforce the same 60-day, project-local calendar offered by the booking forms.
+// The website uses India time for Mumbai/MMR projects and Dubai time for Dubai.
+function validAppointmentDate(value, timeZone) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
   const [year, month, day] = value.split('-').map(Number);
   const dateMs = Date.UTC(year, month - 1, day);
   if (!Number.isFinite(dateMs) || new Date(dateMs).toISOString().slice(0, 10) !== value) return false;
-  const now = new Date();
-  const todayMs = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
-  return dateMs >= todayMs - 86400000 && dateMs <= todayMs + 180 * 86400000;
+  const {min, max} = appointmentDateBounds(timeZone);
+  return value >= min && value <= max;
 }
 
 function validAppointmentTime(value) {
@@ -145,8 +144,8 @@ export async function POST(request) {
     if (appointmentType && (!appointmentDate || !appointmentTime)) {
       return Response.json({ error: 'Please select an appointment date and time.' }, { status: 400 });
     }
-    if (appointmentType && (!validAppointmentDate(appointmentDate) || !validAppointmentTime(appointmentTime))) {
-      return Response.json({ error: 'Please choose a valid appointment date and time between 10:00 AM and 7:00 PM.' }, { status: 400 });
+    if (appointmentType && (!validAppointmentDate(appointmentDate, requestedTimeZone) || !validAppointmentTime(appointmentTime))) {
+      return Response.json({ error: 'Please choose a date within the next 60 days and a time between 10:00 AM and 7:00 PM in the project's local time zone.' }, { status: 400 });
     }
 
     const enquiryPreference = appointmentType
