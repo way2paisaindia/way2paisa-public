@@ -51,12 +51,12 @@ export default function ProjectVisitBooking({project}){
  return <section className="visitBooking" aria-label="Book a project visit or presentation">
   <span className="kicker">PRIVATE APPOINTMENT</span><h3>Book a Visit or Online Presentation</h3><p>Choose your preferred format, date and time. We will confirm developer access or send the presentation link.</p>
   <form onSubmit={submit}>
-   <div className="visitTypeGrid" aria-label="Appointment format"><button type="button" className={appointmentType==='Site Visit'?'selected':''} onClick={()=>setAppointmentType('Site Visit')}>🏙️ Site Visit</button><button type="button" className={appointmentType==='Online Presentation'?'selected':''} onClick={()=>setAppointmentType('Online Presentation')}>💻 Online Presentation</button></div>
+   <div className="visitTypeGrid" aria-label="Appointment format"><button type="button" aria-pressed={appointmentType==='Site Visit'} className={appointmentType==='Site Visit'?'selected':''} onClick={()=>setAppointmentType('Site Visit')}>🏙️ Site Visit</button><button type="button" aria-pressed={appointmentType==='Online Presentation'} className={appointmentType==='Online Presentation'?'selected':''} onClick={()=>setAppointmentType('Online Presentation')}>💻 Online Presentation</button></div>
    <label className="visitDateLabel">Preferred Date<input type="date" required min={dateBounds.min} max={dateBounds.max} value={date} onChange={event=>setDate(event.target.value)}/><small>Choose any date in the next 60 days. We will confirm the appointment with you.</small></label>
    <label>Preferred Time<select value={time} onChange={event=>setTime(event.target.value)}>{slots.map(slot=><option key={slot}>{slot}</option>)}</select></label>
-   <label>Your Name<input name="name" value={form.name} onChange={change} required placeholder="Full name"/></label>
-   <label>Mobile Number<input name="phone" value={form.phone} onChange={change} required inputMode="tel" placeholder="10-digit mobile number"/></label>
-   <label>Email <small>(optional)</small><input name="email" value={form.email} onChange={change} type="email" placeholder="you@example.com"/></label>
+   <label>Your Name<input name="name" autoComplete="name" value={form.name} onChange={change} required placeholder="Full name"/></label>
+   <label>Mobile Number<input name="phone" value={form.phone} onChange={change} required type="tel" autoComplete="tel" inputMode="tel" placeholder="Mobile or international number"/></label>
+   <label>Email <small>(optional)</small><input name="email" autoComplete="email" value={form.email} onChange={change} type="email" placeholder="you@example.com"/></label>
    <label className="check"><input type="checkbox" name="whatsapp_updates" checked={form.whatsapp_updates} onChange={change}/>Get relevant Way2Paisa updates on WhatsApp</label><label className="check"><input type="checkbox" name="email_notifications" checked={form.email_notifications} onChange={change}/>Subscribe to relevant email updates</label>
    <button className="primaryBtn actionBlue visitSubmit" disabled={state.busy}>{state.busy?'Sending…':appointmentType==='Site Visit'?'Request Site Visit':'Request Online Presentation'}</button>
    {state.message&&<p className={state.message.startsWith('Your')?'formSuccess':'formError'} role="status">{state.message}</p>}
