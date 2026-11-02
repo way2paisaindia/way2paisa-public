@@ -119,6 +119,13 @@ export async function POST(request) {
     const appointmentType = clean(body.appointmentType, 80);
     const appointmentDate = clean(body.appointmentDate, 20);
     const appointmentTime = clean(body.appointmentTime, 20);
+    const requestedTimeZone = clean(body.appointmentTimeZone, 40);
+    const appointmentZoneLabel = requestedTimeZone === 'Asia/Dubai'
+      ? 'Dubai time (GST, UTC+4)'
+      : requestedTimeZone === 'Asia/Kolkata'
+        ? 'India Standard Time (IST, UTC+5:30)'
+        : '';
+    const zoneSuffix = appointmentType && appointmentZoneLabel ? ' (' + appointmentZoneLabel + ')' : '';
     const whatsappUpdates = body.whatsapp_updates === true;
     const emailNotifications = body.email_notifications === true;
     const consentDetails = `WhatsApp updates: ${whatsappUpdates ? 'Yes' : 'No'} | Email updates: ${emailNotifications ? 'Yes' : 'No'}`;
@@ -143,7 +150,7 @@ export async function POST(request) {
     }
 
     const enquiryPreference = appointmentType
-      ? `${appointmentType} | ${appointmentDate} | ${appointmentTime}`
+      ? `${appointmentType} | ${appointmentDate} | ${appointmentTime}${zoneSuffix}`
       : financeProduct
       ? [
           `Finance product: ${financeProduct}`,
@@ -158,7 +165,7 @@ export async function POST(request) {
         ].filter(Boolean).join(' | ') || 'Advisory enquiry';
     const leadPreference = `${enquiryPreference} | ${consentDetails}`;
     const remarks = appointmentType
-      ? `${appointmentType}: ${projectName} on ${appointmentDate} at ${appointmentTime} | ${consentDetails}`
+      ? `${appointmentType}: ${projectName} on ${appointmentDate} at ${appointmentTime}${zoneSuffix} | ${consentDetails}`
       : `${projectName}: ${leadPreference}`;
     const remarksWithAttribution = safeAttribution ? `${remarks} | Marketing: ${safeAttribution}` : remarks;
     const supabase = createClient(
@@ -218,7 +225,7 @@ export async function POST(request) {
           `Email updates consent: ${emailNotifications ? 'Yes' : 'No'}`,
           `Appointment: ${text(appointmentType)}`,
           `Date: ${text(appointmentDate)}`,
-          `Time: ${text(appointmentTime)}`,
+          `Time: ${text(appointmentTime)}${zoneSuffix}`,
           `Page: ${text(landingPage)}`,
         ].join('\n'),
       }),
