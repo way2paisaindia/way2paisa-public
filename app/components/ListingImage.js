@@ -2,19 +2,25 @@
 
 import {useEffect, useState} from 'react';
 
-// Preserve original developer photography whenever it loads. Only verified
-// photos from the same project may be attempted as image fallbacks.
+// Preserve valid project photography. The legacy Emaar CMS upload URLs return
+// HTTP 404 in production. Avoid repeated network requests for those known-bad
+// links until verified replacements have been added to the project record.
+function isUnavailableEmaarCmsSource(url) {
+  return /^https:\/\/uae-cms\.emaar\.com\/uploads\//i.test(String(url || ''));
+}
 export default function ListingImage({src, alt, projectId, mediaId, fallbackSources = [], ...props}) {
-  const [failed, setFailed] = useState(!src);
-  const [useDirectSource, setUseDirectSource] = useState(false);
-  const [alternateIndex, setAlternateIndex] = useState(-1);
   const originalUrl = String(src || '').toLowerCase();
+  const unavailableOriginal = isUnavailableEmaarCmsSource(src);
   const useOriginalEmaarImage = originalUrl.startsWith('https://uae-cms.emaar.com/');
   const useOriginalMahindraImage = originalUrl.startsWith('https://cms.mahindralifespaces.com/web/sites/default/files/')
     && !originalUrl.includes('/styles/');
   const alternatives = Array.isArray(fallbackSources)
-    ? [...new Set(fallbackSources.filter(url => typeof url === 'string' && url.startsWith('https://') && url !== src))].slice(0, 3)
+    ? [...new Set(fallbackSources.filter(url => typeof url === 'string' && url.startsWith('https://') && url !== src && !isUnavailableEmaarCmsSource(url)))].slice(0, 3)
     : [];
+  const initialAlternative = unavailableOriginal && alternatives.length ? 0 : -1;
+  const [failed, setFailed] = useState(!src || (unavailableOriginal && !alternatives.length));
+  const [useDirectSource, setUseDirectSource] = useState(false);
+  const [alternateIndex, setAlternateIndex] = useState(initialAlternative);
   const selectedSource = alternateIndex >= 0 ? alternatives[alternateIndex] : src;
   const shouldProxy = projectId && src && !useDirectSource && alternateIndex < 0
     && !useOriginalEmaarImage && !useOriginalMahindraImage;
@@ -23,9 +29,9 @@ export default function ListingImage({src, alt, projectId, mediaId, fallbackSour
     : selectedSource;
 
   useEffect(() => {
-    setFailed(!src);
+    setFailed(!src || (unavailableOriginal && !alternatives.length));
     setUseDirectSource(false);
-    setAlternateIndex(-1);
+    setAlternateIndex(initialAlternative);
   }, [src]);
 
   if (failed) {
