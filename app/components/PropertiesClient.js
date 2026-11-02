@@ -142,7 +142,7 @@ function cardArea(project,configuration){
  const format=value=>value.toLocaleString('en-IN',{maximumFractionDigits:2});
  if(Number.isFinite(min)&&min>0){const high=Number.isFinite(max)&&max>=min?max:min;return high>min?`${format(min)}–${format(high)}${suffix}`:`${format(min)}${suffix}`}
  const text=String(project?.carpet_area_original||'').trim();
- const areas=[...text.matchAll(/(\\d[\\d,]*(?:\\.\\d+)?)\\s*sq\\.?\\s*ft\\.?/gi)].map(m=>Number(m[1].replace(/,/g,''))).filter(Number.isFinite);
+ const areas=[...text.matchAll(/(\d[\d,]*(?:\.\d+)?)\s*sq\.?\s*ft\.?/gi)].map(m=>Number(m[1].replace(/,/g,''))).filter(Number.isFinite);
  if(areas.length>=2){const low=Math.min(...areas),high=Math.max(...areas);return `${format(low)}–${format(high)}${suffix}`}
  if(areas.length===1)return `${format(areas[0])}${suffix}`;
  return '';
