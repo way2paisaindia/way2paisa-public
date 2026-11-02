@@ -70,6 +70,7 @@ export async function GET(request) {
   }
   if (!candidates.length) return new Response('Verified project image not found.', { status: 404 });
 
+  const failureReasons = [];
   for (const candidate of candidates) {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 9000);
@@ -84,13 +85,22 @@ export async function GET(request) {
         cache: 'no-store',
       });
       const declaredSize = Number(imageResponse.headers.get('content-length') || 0);
-      if (!imageResponse.ok || (declaredSize && declaredSize > maxInputBytes)) continue;
+      if (!imageResponse.ok || (declaredSize && declaredSize > maxInputBytes)) {
+        failureReasons.push(`${new URL(candidate.source).hostname}: HTTP ${imageResponse.status}${declaredSize > maxInputBytes ? ' / too large' : ''}`);
+        continue;
+      }
       const buffer = Buffer.from(await imageResponse.arrayBuffer());
-      if (!buffer.length || buffer.length > maxInputBytes) continue;
+      if (!buffer.length || buffer.length > maxInputBytes) {
+        failureReasons.push(`${new URL(candidate.source).hostname}: empty or oversized response`);
+        continue;
+      }
       // A remote source can answer HTTP 200 with a 1x1 placeholder.
       // Reject tiny images rather than caching them as valid project photos.
       const imageMeta = await sharp(buffer, { limitInputPixels: 40000000 }).metadata();
-      if (!imageMeta.width || !imageMeta.height || imageMeta.width < 64 || imageMeta.height < 64) continue;
+      if (!imageMeta.width || !imageMeta.height || imageMeta.width < 64 || imageMeta.height < 64) {
+        failureReasons.push(`${new URL(candidate.source).hostname}: invalid or tiny image`);
+        continue;
+      }
       const jpeg = await sharp(buffer, { limitInputPixels: 40000000 })
         .rotate()
         .resize({ width: 1600, height: 1600, fit: 'inside', withoutEnlargement: true })
@@ -104,11 +114,15 @@ export async function GET(request) {
           'X-Content-Type-Options': 'nosniff',
         },
       });
-    } catch {
+    } catch (error) {
+      failureReasons.push(`${new URL(candidate.source).hostname}: ${error?.name || 'fetch-or-decode-error'}`);
       // Try the next approved, verified project asset.
     } finally {
       clearTimeout(timeout);
     }
   }
+  // Log only source hosts and failure categories: no full third-party URLs,
+  // API keys, or customer data. Helps distinguish CMS 403 from network timeouts.
+  console.warn('Project image source failures', projectId, failureReasons.slice(0, 8).join('; '));
   return new Response('Project image is unavailable.', { status: 422 });
 }
