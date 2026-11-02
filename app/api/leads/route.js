@@ -145,7 +145,7 @@ export async function POST(request) {
       return Response.json({ error: 'Please select an appointment date and time.' }, { status: 400 });
     }
     if (appointmentType && (!validAppointmentDate(appointmentDate, requestedTimeZone) || !validAppointmentTime(appointmentTime))) {
-      return Response.json({ error: 'Please choose a date within the next 60 days and a time between 10:00 AM and 7:00 PM in the project's local time zone.' }, { status: 400 });
+      return Response.json({ error: "Please choose a date within the next 60 days and a time between 10:00 AM and 7:00 PM in the project's local time zone." }, { status: 400 });
     }
 
     const enquiryPreference = appointmentType
