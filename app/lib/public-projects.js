@@ -46,7 +46,7 @@ async function loadAllActiveInventory(db) {
   // published while a visitor is loading multiple pages.
   for (let page = 0; page < maxPages; page++) {
     let query = db.from('inventory')
-      .select('id,project_id,configuration,price,price_max,carpet_area_sqft,carpet_area_max_sqft')
+      .select('id,project_id,configuration,price,price_max,carpet_area_sqft,carpet_area_max_sqft,plot_area_sqft,plot_area_max_sqft')
       .eq('active', true)
       .order('id', { ascending: true })
       .limit(pageSize);
@@ -125,6 +125,7 @@ export async function loadPublicProjects() {
     const configurations = new Map();
     const offerGroups = new Map();
     const projectMarkets = new Map((projectsRes.data || []).map(p => [p.id, p.market]));
+    const projectCategories = new Map((projectsRes.data || []).map(p => [p.id, p.category]));
     for (const item of inventoryRes.data || []) {
       if (!item.project_id || !item.configuration || !projectMarkets.has(item.project_id)) continue;
       if (!configurations.has(item.project_id)) configurations.set(item.project_id, []);
@@ -136,8 +137,12 @@ export async function loadPublicProjects() {
       if (!label || !Number.isFinite(minimum) || minimum <= 0 || !Number.isFinite(maximum)) continue;
       if (!offerGroups.has(item.project_id)) offerGroups.set(item.project_id, new Map());
       const groups = offerGroups.get(item.project_id);
-      const areaMinimum = Number(item.carpet_area_sqft);
-      const areaMaximum = Number(item.carpet_area_max_sqft ?? item.carpet_area_sqft);
+      // Plotted developments use land size, not residential RERA carpet area.
+      const isPlot = ['plot', 'land'].includes(String(projectCategories.get(item.project_id) || '').toLowerCase());
+      const areaMinimum = Number(isPlot ? (item.plot_area_sqft ?? item.carpet_area_sqft) : item.carpet_area_sqft);
+      const areaMaximum = Number(isPlot
+        ? (item.plot_area_max_sqft ?? item.plot_area_sqft ?? item.carpet_area_max_sqft ?? item.carpet_area_sqft)
+        : (item.carpet_area_max_sqft ?? item.carpet_area_sqft));
       const hasValidArea = Number.isFinite(areaMinimum) && areaMinimum > 0
         && Number.isFinite(areaMaximum) && areaMaximum >= areaMinimum;
       if (!groups.has(label)) groups.set(label, {
