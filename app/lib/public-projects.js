@@ -2,7 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 
 // Public catalogue queries use the publishable key and existing RLS policies.
 // The service-role key must NEVER be used in server-rendered page props.
-const projectColumns = 'id,name,slug,address,status,min_price,max_price,featured,verified,hero_image_url,market,category,bhk_original,carpet_area_original,price_original,min_carpet_sqft,max_carpet_sqft,developer_id,location_id,developers(name,logo_url),locations(name,zone)';
+const projectColumns = 'id,name,slug,address,status,min_price,max_price,featured,verified,hero_image_url,market,category,bhk_original,carpet_area_original,min_carpet_sqft,max_carpet_sqft,developer_id,location_id,developers(name),locations(name,zone)';
 
 function summarizeConfigurations(values, market) {
   const dubai = String(market || '').toLowerCase() === 'dubai';
@@ -116,7 +116,7 @@ export async function loadPublicProjects() {
     const [projectsRes, locationsRes, developersRes, inventoryRes] = await Promise.all([
       loadAllPublishedProjects(db),
       db.from('locations').select('id,name,zone').eq('active', true).order('name'),
-      db.from('developers').select('id,name,logo_url').eq('active', true).order('name'),
+      db.from('developers').select('id,name').eq('active', true).order('name'),
       loadAllActiveInventory(db)
     ]);
     for (const res of [projectsRes, locationsRes, developersRes, inventoryRes]) {
@@ -155,7 +155,7 @@ export async function loadPublicProjects() {
       }
     }
     return {
-      projects: (projectsRes.data || []).filter(p => p.slug).map(p => ({
+      projects: (projectsRes.data || []).filter(p => p.slug).map(({updated_at, ...p}) => ({
         ...p,
         live_configuration_summary: summarizeConfigurations(configurations.get(p.id), p.market),
         // Public catalogue receives only configuration-level price ranges; no unit IDs or source notes.
