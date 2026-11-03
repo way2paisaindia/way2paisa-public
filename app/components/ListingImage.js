@@ -1,6 +1,6 @@
 'use client';
 
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 
 // Do not preemptively hide Emaar's genuine original image URLs: a server-side
 // image fetch failure is not proof that a visitor's browser cannot load them.
@@ -11,6 +11,8 @@ function isKnownUnavailableProjectSource(url) {
   return /^https:\/\/gplwebsitecdnblob\.blob\.core\.windows\.net\/godrej-cdn\/Images\/Godrej-Bliss-Mumbai-Gallery0[1-4]-1332X750/i.test(src);
 }
 export default function ListingImage({src, alt, projectId, mediaId, fallbackSources = [], ...props}) {
+  const imageRef = useRef(null);
+  const handledFailureSource = useRef(null);
   const originalUrl = String(src || '').toLowerCase();
   const unavailableOriginal = isKnownUnavailableProjectSource(src);
   const useOriginalEmaarImage = originalUrl.startsWith('https://uae-cms.emaar.com/');
@@ -31,10 +33,33 @@ export default function ListingImage({src, alt, projectId, mediaId, fallbackSour
     : selectedSource;
 
   useEffect(() => {
+    handledFailureSource.current = null;
     setFailed(!src || (unavailableOriginal && !alternatives.length));
     setUseDirectSource(false);
     setAlternateIndex(initialAlternative);
   }, [src]);
+
+  const handleImageFailure = useCallback(() => {
+    // Browser image requests can fail before React has hydrated and attached
+    // its onError handler. Also guard against the native error event and the
+    // post-hydration check handling the same failed URL twice.
+    if (handledFailureSource.current === displaySrc) return;
+    handledFailureSource.current = displaySrc;
+    if (shouldProxy) {
+      setUseDirectSource(true);
+    } else if (alternateIndex + 1 < alternatives.length) {
+      setAlternateIndex(current => current + 1);
+    } else {
+      setFailed(true);
+    }
+  }, [displaySrc, shouldProxy, alternateIndex, alternatives.length]);
+
+  useEffect(() => {
+    const image = imageRef.current;
+    // OnError may already have fired before hydration; native complete=true
+    // and naturalWidth=0 is the definitive broken-image state.
+    if (image?.complete && image.naturalWidth === 0) handleImageFailure();
+  }, [displaySrc, handleImageFailure]);
 
   if (failed) {
     // A logo or an unrelated stock photograph would misrepresent this
@@ -60,22 +85,10 @@ export default function ListingImage({src, alt, projectId, mediaId, fallbackSour
   return (
     <img
       {...props}
+      ref={imageRef}
       src={displaySrc}
       alt={alt}
-      onError={() => {
-        // Try the developer's own URL when the relay cannot fetch it.
-        if (shouldProxy) {
-          setUseDirectSource(true);
-          return;
-        }
-        // For a hero only, try other verified photographs of this
-        // *same* project before the transparent unavailable state.
-        if (alternateIndex + 1 < alternatives.length) {
-          setAlternateIndex(current => current + 1);
-          return;
-        }
-        setFailed(true);
-      }}
+      onError={handleImageFailure}
     />
   );
 }
