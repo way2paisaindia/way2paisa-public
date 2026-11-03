@@ -2,20 +2,21 @@
 
 import {useEffect, useState} from 'react';
 
-// Preserve valid project photography. The legacy Emaar CMS upload URLs return
-// HTTP 404 in production. Avoid repeated network requests for those known-bad
-// links until verified replacements have been added to the project record.
-function isUnavailableEmaarCmsSource(url) {
-  return /^https:\/\/uae-cms\.emaar\.com\/uploads\//i.test(String(url || ''));
+// Retain genuine project images. Skip only developer URLs whose HTTP 404
+// failures were independently confirmed; original sources remain in storage.
+function isKnownUnavailableProjectSource(url) {
+  const src=String(url || '');
+  return /^https:\/\/uae-cms\.emaar\.com\/uploads\//i.test(src)
+    || /^https:\/\/gplwebsitecdnblob\.blob\.core\.windows\.net\/godrej-cdn\/Images\/Godrej-Bliss-Mumbai-Gallery0[1-4]-1332X750/i.test(src);
 }
 export default function ListingImage({src, alt, projectId, mediaId, fallbackSources = [], ...props}) {
   const originalUrl = String(src || '').toLowerCase();
-  const unavailableOriginal = isUnavailableEmaarCmsSource(src);
+  const unavailableOriginal = isKnownUnavailableProjectSource(src);
   const useOriginalEmaarImage = originalUrl.startsWith('https://uae-cms.emaar.com/');
   const useOriginalMahindraImage = originalUrl.startsWith('https://cms.mahindralifespaces.com/web/sites/default/files/')
     && !originalUrl.includes('/styles/');
   const alternatives = Array.isArray(fallbackSources)
-    ? [...new Set(fallbackSources.filter(url => typeof url === 'string' && url.startsWith('https://') && url !== src && !isUnavailableEmaarCmsSource(url)))].slice(0, 3)
+    ? [...new Set(fallbackSources.filter(url => typeof url === 'string' && url.startsWith('https://') && url !== src && !isKnownUnavailableProjectSource(url)))].slice(0, 3)
     : [];
   const initialAlternative = unavailableOriginal && alternatives.length ? 0 : -1;
   const [failed, setFailed] = useState(!src || (unavailableOriginal && !alternatives.length));
