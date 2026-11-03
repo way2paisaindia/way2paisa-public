@@ -2,12 +2,13 @@
 
 import {useEffect, useState} from 'react';
 
-// Retain genuine project images. Skip only developer URLs whose HTTP 404
-// failures were independently confirmed; original sources remain in storage.
+// Do not preemptively hide Emaar's genuine original image URLs: a server-side
+// image fetch failure is not proof that a visitor's browser cannot load them.
+// Attempt the original Emaar URL directly and fall back on its real img onError.
+// Keep the previously identified unavailable Godrej Bliss CDN assets blocked.
 function isKnownUnavailableProjectSource(url) {
   const src=String(url || '');
-  return /^https:\/\/uae-cms\.emaar\.com\/uploads\//i.test(src)
-    || /^https:\/\/gplwebsitecdnblob\.blob\.core\.windows\.net\/godrej-cdn\/Images\/Godrej-Bliss-Mumbai-Gallery0[1-4]-1332X750/i.test(src);
+  return /^https:\/\/gplwebsitecdnblob\.blob\.core\.windows\.net\/godrej-cdn\/Images\/Godrej-Bliss-Mumbai-Gallery0[1-4]-1332X750/i.test(src);
 }
 export default function ListingImage({src, alt, projectId, mediaId, fallbackSources = [], ...props}) {
   const originalUrl = String(src || '').toLowerCase();
