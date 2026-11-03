@@ -220,6 +220,15 @@ const confirmedMissingProjectImageURLs = new Set([
   "https://www.vicl.co/assets/front/img/portfolio/vardhaman-palace-office.png", // gallery: vardhaman-palace
   "https://theodyssey.shapoorjirealestate.com/images/gallery/5.webp", // gallery: the-odyssey-shapoorji-pallonji-marine-drive
   "https://www.paradise-projects.com/sai-world-one/img/ft2-PC.webp", // gallery: sai-world-one-paradise-group-nerul-navi-mumbai
+  "https://binghattiweb.imgix.net/ps-new-binghatti-moonlight-two-bedrooms.webp", // gallery: binghatti-moonlight-al-jaddaf
+  "https://binghattiweb.imgix.net/ps-new-binghatti-pinnacle-three-bedrooms.webp", // gallery: binghatti-pinnacle-al-jaddaf
+  "https://binghattiweb.imgix.net/ps-new-dusk-by-binghatti-studio.webp", // gallery: binghatti-dusk-jvc
+  "https://www.godrejproperties.com/backoffice/data_content/projects/godrej_avenue_eleven_mumbai/landing_page/assets/img/gallery/2.jpg", // gallery: avenue-eleven-godrej-properties-mahalaxmi
+  "https://speed.damacproperties.com/sites/default/files/2023-05/496370940-5.jpg", // gallery: damac-canal-crown-business-bay
+  "https://speed.damacproperties.com/sites/default/files/2023-05/496370958-6.jpg", // gallery: damac-canal-crown-business-bay
+  "https://danubeproperties.com/wp-content/uploads/2026/03/4.jpg", // gallery: greenz-by-danube
+  "https://danubeproperties.com/wp-content/uploads/2026/03/3.jpg", // gallery: greenz-by-danube
+  "https://danubeproperties.com/wp-content/uploads/2026/03/Greenz_livingroom.jpg", // gallery: greenz-by-danube
 ]);
 
 // Verified broken developer image URLs must not be advertised to search
