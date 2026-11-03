@@ -176,12 +176,30 @@ if (recommendations.length < 3 && project.market === 'MMR' && ['villa','commerci
   }
 }
 return{project,inventory:inventory||[],media:media||[],recommendations,recommendationBasis}});
+// Additional project-specific source URLs confirmed HTTP 404 in repeated
+// 3 Nov 2026 GET checks. These exact matches are excluded from public SEO,
+// sharing and gallery presentation; original DB URLs remain unchanged.
+const confirmedMissingHeroImageURLs = new Set([
+  "https://72parksyde.com/images/gallery/ele/1.webp", // 72-parksyde-ghatkopar-east
+  "https://bhakti-pride.chemburproject.site/assets/images/banner/6a85f15d92e30.webp", // bhakti-pride-chembur
+  "https://jaydeepgroup.in/images/project/ongoing/Elora/Ellora.webp", // gami-and-jaydeep-elora
+  "https://godrejkhargharofficial.com/images/gallery/gallery-1.webp", // godrej-varanya-godrej-properties-kharghar-navi-mumbai
+  "https://kaustubhgroup.com/projects/assets/projects/breeze-91/gallery1.webp", // kaustubh-breeze-91-borivali-west
+  "https://www.roswalt.com/backend/uploads/raya-1.jpg", // roswalt-raya-roswalt-realty-chembur
+  "https://www.paradise-projects.com/sai-world-one/img/ft2-PC.webp", // sai-world-one-paradise-group-nerul-navi-mumbai
+  "https://theodyssey.shapoorjirealestate.com/images/gallery/1.webp", // the-odyssey-shapoorji-pallonji-marine-drive
+  "https://www.vicl.co/assets/front/images/vardhaman-aarambh.png", // vardhaman-aarambh
+  "https://www.vicl.co/assets/front/img/portfolio/vardhaman-ananda-lobby.jpg", // vardhaman-ananda-ghatkopar-east
+  "https://www.vicl.co/assets/front/img/portfolio/vardhaman-palace1.jpg", // vardhaman-palace
+]);
+
 // Verified broken developer image URLs must not be advertised to search
 // engines or social scrapers, nor trigger repeated client-side 404 requests.
 // Preserve original sources in database records for traceability.
 function unavailableKnownProjectImage(url){
   const src=String(url||'');
-  return /^https:\/\/uae-cms\.emaar\.com\/uploads\//i.test(src)
+  return confirmedMissingHeroImageURLs.has(src)
+    || /^https:\/\/uae-cms\.emaar\.com\/uploads\//i.test(src)
     || (/^https:\/\/www\.emaar\.com\/_next\/image\?/i.test(src) && /uae-cms\.emaar\.com/i.test(src))
     || /^https:\/\/newwayint\.com\/image\/cache\/catalog\/projects-chini\/serro-emaar\/serro-emaar-02-750x563\.webp(?:\?.*)?$/i.test(src)
     || /^https:\/\/gplwebsitecdnblob\.blob\.core\.windows\.net\/godrej-cdn\/Images\/Godrej-Bliss-Mumbai-Gallery0[1-4]-1332X750/i.test(src);
