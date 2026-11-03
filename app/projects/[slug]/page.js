@@ -229,6 +229,25 @@ const confirmedMissingProjectImageURLs = new Set([
   "https://danubeproperties.com/wp-content/uploads/2026/03/4.jpg", // gallery: greenz-by-danube
   "https://danubeproperties.com/wp-content/uploads/2026/03/3.jpg", // gallery: greenz-by-danube
   "https://danubeproperties.com/wp-content/uploads/2026/03/Greenz_livingroom.jpg", // gallery: greenz-by-danube
+  "https://ajmera-arham.in/public/admin/images/image1710580385.jpg", // gallery: ajmera-arham
+  "https://narangprivado-thane.com/public/admin/images/Narang-Privado-Amenities-Clubhouse-20072026235939.jpg", // gallery: narang-privado-tower-b-thane
+  "https://www.ashwinshethgroup.com/wp-content/uploads/2022/06/Cnergy2.jpg", // gallery: sheth-cnergy-phase-1-thane-west
+  "https://www.ashwinshethgroup.com/wp-content/uploads/2022/06/Cnergy3.jpg", // gallery: sheth-cnergy-phase-1-thane-west
+  "https://www.ashwinshethgroup.com/wp-content/uploads/2022/06/Cnergy5.jpg", // gallery: sheth-cnergy-phase-1-thane-west
+  "https://www.ashwinshethgroup.com/wp-content/uploads/2022/06/Cnergy4.jpg", // gallery: sheth-cnergy-phase-1-thane-west
+  "https://www.jaydeepgroup.in/images/project/ongoing/estella/cam_1_chembur%20entrance%20lobby_01.webp", // gallery: gami-and-jaydeep-estella
+  "https://www.jaydeepgroup.in/images/project/ongoing/estella/cam_2_chembur%20entrance%20lobby_01.webp", // gallery: gami-and-jaydeep-estella
+  "https://www.jaydeepgroup.in/images/project/ongoing/estella/cam_1_gym%20area_01.webp", // gallery: gami-and-jaydeep-estella
+  "https://www.rivaliparksborivalieast.com/assets/img/gallery/1.webp", // gallery: moonrise-at-rivali-park-borivali-east
+  "https://www.rivaliparksborivalieast.com/assets/img/gallery/2.webp", // gallery: moonrise-at-rivali-park-borivali-east
+  "https://www.rivaliparksborivalieast.com/assets/img/gallery/3.webp", // gallery: moonrise-at-rivali-park-borivali-east
+  "https://www.rivaliparksborivalieast.com/assets/img/gallery/4.webp", // gallery: moonrise-at-rivali-park-borivali-east
+  "https://www.shapoorjipallonji-bkc9.com/assets/img/amenities/swimmingpool.webp", // gallery: shapoorji-bkc-9-bandra-east
+  "https://www.shapoorjipallonji-bkc9.com/assets/img/amenities/loungearea.webp", // gallery: shapoorji-bkc-9-bandra-east
+  "https://www.romellgroup.com/romellorbis/img/gallery/gym-view.jpg", // gallery: romell-orbis-andheri-east
+  "https://www.romellgroup.com/romellorbis/img/gallery/interior-view-childrens-bedroom.jpg", // gallery: romell-orbis-andheri-east
+  "https://www.romellgroup.com/romellorbis/img/gallery/interior-view-bedroom-1.jpg", // gallery: romell-orbis-andheri-east
+  "https://www.skylightadvisors.co/assets/osc-gallery-8-C6KKSnE7.jpg", // gallery: oberoi-sky-city-borivali-east
 ]);
 
 // Verified broken developer image URLs must not be advertised to search
