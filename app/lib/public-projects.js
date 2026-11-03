@@ -33,6 +33,29 @@ function summarizeConfigurations(values, market) {
   return [...tokens].sort((a, b) => rank(a) - rank(b) || a.localeCompare(b)).join(' | ');
 }
 
+// A transient upstream 502 can otherwise erase the entire public catalogue
+// for that render. Retry only read-only SELECT operations, and only once.
+// Persistent schema/auth errors still surface immediately.
+function isTransientCatalogueFailure(error) {
+  const message = String(error?.message || error?.details || error || '');
+  return /\b(?:429|502|503|504)\b|bad gateway|service unavailable|gateway timeout|fetch failed|network error|econnreset|etimedout/i.test(message);
+}
+async function readCatalogueWithRetry(read) {
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const response = await read();
+      if (attempt === 0 && response?.error && isTransientCatalogueFailure(response.error)) {
+        await new Promise(resolve => setTimeout(resolve, 180));
+        continue;
+      }
+      return response;
+    } catch (error) {
+      if (attempt !== 0 || !isTransientCatalogueFailure(error)) throw error;
+      await new Promise(resolve => setTimeout(resolve, 180));
+    }
+  }
+}
+
 // Supabase/PostgREST may enforce a per-response max-rows cap even when a
 // larger .limit() is requested. Page all active units so every configuration
 // participates in the public search and bedroom filters.
@@ -45,13 +68,15 @@ async function loadAllActiveInventory(db) {
   // Keyset pagination avoids offset/count drift when new inventory is
   // published while a visitor is loading multiple pages.
   for (let page = 0; page < maxPages; page++) {
-    let query = db.from('inventory')
-      .select('id,project_id,configuration,price,price_max,carpet_area_sqft,carpet_area_max_sqft,plot_area_sqft,plot_area_max_sqft')
-      .eq('active', true)
-      .order('id', { ascending: true })
-      .limit(pageSize);
-    if (cursor) query = query.gt('id', cursor);
-    const res = await query;
+    const res = await readCatalogueWithRetry(() => {
+      let query = db.from('inventory')
+        .select('id,project_id,configuration,price,price_max,carpet_area_sqft,carpet_area_max_sqft,plot_area_sqft,plot_area_max_sqft')
+        .eq('active', true)
+        .order('id', { ascending: true })
+        .limit(pageSize);
+      if (cursor) query = query.gt('id', cursor);
+      return query;
+    });
     if (res.error) throw res.error;
     if (!Array.isArray(res.data)) throw new Error('Invalid inventory response');
     if (res.data.length && cursor && res.data[0].id <= cursor) {
@@ -76,15 +101,17 @@ async function loadAllPublishedProjects(db) {
   const rows = [];
   let cursor = null;
   for (let page = 0; page < maxPages; page++) {
-    let query = db.from('projects')
-      .select(projectColumns + ',updated_at')
-      .eq('active', true)
-      .eq('verified', true)
-      .eq('enrichment_status', 'complete')
-      .order('id', { ascending: true })
-      .limit(pageSize);
-    if (cursor) query = query.gt('id', cursor);
-    const res = await query;
+    const res = await readCatalogueWithRetry(() => {
+      let query = db.from('projects')
+        .select(projectColumns + ',updated_at')
+        .eq('active', true)
+        .eq('verified', true)
+        .eq('enrichment_status', 'complete')
+        .order('id', { ascending: true })
+        .limit(pageSize);
+      if (cursor) query = query.gt('id', cursor);
+      return query;
+    });
     if (res.error) throw res.error;
     if (!Array.isArray(res.data)) throw new Error('Invalid published project response');
     if (res.data.length && cursor && res.data[0].id <= cursor) {
@@ -115,8 +142,8 @@ export async function loadPublicProjects() {
     const db = createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
     const [projectsRes, locationsRes, developersRes, inventoryRes] = await Promise.all([
       loadAllPublishedProjects(db),
-      db.from('locations').select('id,name,zone').eq('active', true).order('name'),
-      db.from('developers').select('id,name').eq('active', true).order('name'),
+      readCatalogueWithRetry(() => db.from('locations').select('id,name,zone').eq('active', true).order('name')),
+      readCatalogueWithRetry(() => db.from('developers').select('id,name').eq('active', true).order('name')),
       loadAllActiveInventory(db)
     ]);
     for (const res of [projectsRes, locationsRes, developersRes, inventoryRes]) {
