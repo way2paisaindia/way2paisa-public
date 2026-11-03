@@ -1,4 +1,5 @@
 import {createClient} from '@supabase/supabase-js';
+import {cache} from 'react';
 import MobileNav from '../../components/MobileNav';
 import {notFound} from 'next/navigation';
 import BrandedMedia from '../../components/BrandedMedia';
@@ -60,7 +61,7 @@ function client(){
     global:{fetch:fetchPublishedProjectData},
   });
 }
-async function getProject(slug){const supabase=client();const projectResponse=await supabase.from('projects').select('*,developers(name,logo_url,description),locations(name,zone,description)').eq('slug',slug).eq('active',true).eq('verified',true).eq('enrichment_status','complete').maybeSingle();
+const getProject=cache(async function getProject(slug){const supabase=client();const projectResponse=await supabase.from('projects').select('*,developers(name,logo_url,description),locations(name,zone,description)').eq('slug',slug).eq('active',true).eq('verified',true).eq('enrichment_status','complete').maybeSingle();
 // A failed database read is not evidence that the listing does not exist.
 // Keep genuine unpublished or unknown slugs as 404, but do not emit a false
 // 404 that could cause a live project to be dropped from Google indexing.
@@ -174,7 +175,7 @@ if (recommendations.length < 3 && project.market === 'MMR' && ['villa','commerci
     await addVerifiedPeers('Mumbai','Another verified office project in the wider Mumbai region');
   }
 }
-return{project,inventory:inventory||[],media:media||[],recommendations,recommendationBasis}}
+return{project,inventory:inventory||[],media:media||[],recommendations,recommendationBasis}});
 // Emaar's retired CMS upload URLs return 404 in production image-relay checks.
 // Keep the developer URL on the listing for legitimate browser attempts,
 // but never advertise a known-unavailable URL to social scrapers or JSON-LD.
