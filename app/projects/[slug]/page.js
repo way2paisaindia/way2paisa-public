@@ -31,17 +31,47 @@ const wa=process.env.NEXT_PUBLIC_WHATSAPP_NUMBER||'918850373012';
 // Cache project API reads for a bounded time as well as the rendered HTML.
 // Next.js has separate persistent Data and Route caches; an unbounded
 // Supabase fetch could otherwise regenerate a page from old database content.
+// Retry transient Supabase gateway failures only for public read-only
+// project requests. An upstream outage must never be mistaken for a 404.
+async function fetchPublishedProjectData(input, init) {
+  const requestOptions = {
+    ...(init || {}),
+    next: {...((init && init.next) || {}), revalidate: 300},
+  };
+  const method = String(requestOptions.method || 'GET').toUpperCase();
+  const isReadOnly = method === 'GET' || method === 'HEAD';
+  for (let attempt = 0; attempt < (isReadOnly ? 2 : 1); attempt++) {
+    try {
+      const response = await fetch(input, requestOptions);
+      if (isReadOnly && attempt === 0 && [429, 502, 503, 504].includes(response.status)) {
+        await response.body?.cancel().catch(() => {});
+        await new Promise(resolve => setTimeout(resolve, 180));
+        continue;
+      }
+      return response;
+    } catch (error) {
+      if (!isReadOnly || attempt > 0) throw error;
+      await new Promise(resolve => setTimeout(resolve, 180));
+    }
+  }
+}
 function client(){
   return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL,process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,{
-    global:{
-      fetch:(input,init)=>fetch(input,{
-        ...(init||{}),
-        next:{...((init&&init.next)||{}),revalidate:300},
-      }),
-    },
+    global:{fetch:fetchPublishedProjectData},
   });
 }
-async function getProject(slug){const supabase=client();const{data:project}=await supabase.from('projects').select('*,developers(name,logo_url,description),locations(name,zone,description)').eq('slug',slug).eq('active',true).eq('verified',true).eq('enrichment_status','complete').maybeSingle();if(!project)return null;const[{data:inventory},{data:media},{data:recommendationRows}]=await Promise.all([supabase.from('inventory').select('id,configuration,carpet_area_sqft,carpet_area_max_sqft,plot_area_sqft,plot_area_max_sqft,built_up_area_sqft,built_up_area_max_sqft,price,price_max,availability,source_type,source_url,parking,last_verified,updated_at').eq('project_id',project.id).eq('active',true).order('price',{ascending:true}),supabase.from('project_media').select('id,image_url,alt_text,media_type,configuration,source_url,sort_order,verified_at').eq('project_id',project.id).eq('active',true).order('sort_order'),supabase.from('project_recommendations').select('recommended_project_id,distance_km,recommendation_score,reasons').eq('source_project_id',project.id).eq('active',true).order('recommendation_score',{ascending:false}).limit(6)]);let recommendations=[];if(recommendationRows?.length){const ids=recommendationRows.map(x=>x.recommended_project_id);const{data:nearby}=await supabase.from('projects').select('id,name,slug,hero_image_url,bhk_original,status,min_price,price_original,possession_date,possession_original,market,locations(name)').in('id',ids).eq('active',true).eq('verified',true).eq('enrichment_status','complete').eq('category',project.category).eq('market',project.market);const byId=new Map((nearby||[]).map(x=>[x.id,x]));recommendations=recommendationRows.map(row=>{const target=byId.get(row.recommended_project_id);return target?{...target,distance_km:row.distance_km,recommendation_score:row.recommendation_score,reasons:row.reasons||[]}:null}).filter(Boolean)}
+async function getProject(slug){const supabase=client();const projectResponse=await supabase.from('projects').select('*,developers(name,logo_url,description),locations(name,zone,description)').eq('slug',slug).eq('active',true).eq('verified',true).eq('enrichment_status','complete').maybeSingle();
+// A failed database read is not evidence that the listing does not exist.
+// Keep genuine unpublished or unknown slugs as 404, but do not emit a false
+// 404 that could cause a live project to be dropped from Google indexing.
+if(projectResponse.error)throw new Error('Public project database read temporarily unavailable');
+const project=projectResponse.data;
+if(!project)return null;
+const [inventoryResponse,mediaResponse,recommendationResponse]=await Promise.all([supabase.from('inventory').select('id,configuration,carpet_area_sqft,carpet_area_max_sqft,plot_area_sqft,plot_area_max_sqft,built_up_area_sqft,built_up_area_max_sqft,price,price_max,availability,source_type,source_url,parking,last_verified,updated_at').eq('project_id',project.id).eq('active',true).order('price',{ascending:true}),supabase.from('project_media').select('id,image_url,alt_text,media_type,configuration,source_url,sort_order,verified_at').eq('project_id',project.id).eq('active',true).order('sort_order'),supabase.from('project_recommendations').select('recommended_project_id,distance_km,recommendation_score,reasons').eq('source_project_id',project.id).eq('active',true).order('recommendation_score',{ascending:false}).limit(6)]);
+if(inventoryResponse.error || mediaResponse.error)throw new Error('Public project details temporarily unavailable');
+const inventory=inventoryResponse.data||[],media=mediaResponse.data||[];
+const recommendationRows=recommendationResponse.error?[]:(recommendationResponse.data||[]);
+let recommendations=[];if(recommendationRows?.length){const ids=recommendationRows.map(x=>x.recommended_project_id);const{data:nearby}=await supabase.from('projects').select('id,name,slug,hero_image_url,bhk_original,status,min_price,price_original,possession_date,possession_original,market,locations(name)').in('id',ids).eq('active',true).eq('verified',true).eq('enrichment_status','complete').eq('category',project.category).eq('market',project.market);const byId=new Map((nearby||[]).map(x=>[x.id,x]));recommendations=recommendationRows.map(row=>{const target=byId.get(row.recommended_project_id);return target?{...target,distance_km:row.distance_km,recommendation_score:row.recommendation_score,reasons:row.reasons||[]}:null}).filter(Boolean)}
 let recommendationBasis='nearby';
 // When a project has no proximity recommendations, link to relevant fully
 // published projects in the same locality, then the same developer and market.
