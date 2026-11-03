@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import {appointmentDateBounds} from '../../lib/project-appointment-date';
+import {appointmentDateBounds,isFutureAppointmentSlot} from '../../lib/project-appointment-date';
 
 const notificationTo = 'way2paisaindia@gmail.com';
 const notificationFrom = 'Way2Paisa Enquiries <onboarding@resend.dev>';
@@ -146,6 +146,9 @@ export async function POST(request) {
     }
     if (appointmentType && (!validAppointmentDate(appointmentDate, requestedTimeZone) || !validAppointmentTime(appointmentTime))) {
       return Response.json({ error: "Please choose a date within the next 60 days and a time between 10:00 AM and 7:00 PM in the project's local time zone." }, { status: 400 });
+    }
+    if (appointmentType && !isFutureAppointmentSlot(appointmentDate, appointmentTime, requestedTimeZone)) {
+      return Response.json({ error: 'That appointment time has passed. Please select a future time slot.' }, { status: 400 });
     }
 
     const enquiryPreference = appointmentType
