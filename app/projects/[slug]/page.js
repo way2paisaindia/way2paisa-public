@@ -176,10 +176,10 @@ if (recommendations.length < 3 && project.market === 'MMR' && ['villa','commerci
   }
 }
 return{project,inventory:inventory||[],media:media||[],recommendations,recommendationBasis}});
-// Additional project-specific source URLs confirmed HTTP 404 in repeated
+// Additional project-specific hero/gallery URLs confirmed HTTP 404 in repeated
 // 3 Nov 2026 GET checks. These exact matches are excluded from public SEO,
 // sharing and gallery presentation; original DB URLs remain unchanged.
-const confirmedMissingHeroImageURLs = new Set([
+const confirmedMissingProjectImageURLs = new Set([
   "https://72parksyde.com/images/gallery/ele/1.webp", // 72-parksyde-ghatkopar-east
   "https://bhakti-pride.chemburproject.site/assets/images/banner/6a85f15d92e30.webp", // bhakti-pride-chembur
   "https://jaydeepgroup.in/images/project/ongoing/Elora/Ellora.webp", // gami-and-jaydeep-elora
@@ -191,6 +191,35 @@ const confirmedMissingHeroImageURLs = new Set([
   "https://www.vicl.co/assets/front/images/vardhaman-aarambh.png", // vardhaman-aarambh
   "https://www.vicl.co/assets/front/img/portfolio/vardhaman-ananda-lobby.jpg", // vardhaman-ananda-ghatkopar-east
   "https://www.vicl.co/assets/front/img/portfolio/vardhaman-palace1.jpg", // vardhaman-palace
+  "https://bhakti-pride.chemburproject.site/assets/images/gallery/g1.jpg", // gallery: bhakti-pride-chembur
+  "https://bhakti-pride.chemburproject.site/assets/images/gallery/g2.jpg", // gallery: bhakti-pride-chembur
+  "https://bhakti-pride.chemburproject.site/assets/images/gallery/g3.jpg", // gallery: bhakti-pride-chembur
+  "https://72parksyde.com/images/gallery/inte/1.webp", // gallery: 72-parksyde-ghatkopar-east
+  "https://72parksyde.com/images/gallery/inte/3.webp", // gallery: 72-parksyde-ghatkopar-east
+  "https://72parksyde.com/images/gallery/inte/2.webp", // gallery: 72-parksyde-ghatkopar-east
+  "https://godrejkhargharofficial.com/images/gallery/gallery-3.webp", // gallery: godrej-varanya-godrej-properties-kharghar-navi-mumbai
+  "https://godrejkhargharofficial.com/images/gallery/gallery-2.webp", // gallery: godrej-varanya-godrej-properties-kharghar-navi-mumbai
+  "https://godrejkhargharofficial.com/images/gallery/gallery-4.webp", // gallery: godrej-varanya-godrej-properties-kharghar-navi-mumbai
+  "https://kaustubhgroup.com/projects/assets/projects/breeze-91/gallery4.webp", // gallery: kaustubh-breeze-91-borivali-west
+  "https://kaustubhgroup.com/projects/assets/projects/breeze-91/gallery3.webp", // gallery: kaustubh-breeze-91-borivali-west
+  "https://kaustubhgroup.com/projects/assets/projects/breeze-91/gallery2.webp", // gallery: kaustubh-breeze-91-borivali-west
+  "https://theodyssey.shapoorjirealestate.com/images/gallery/1.webp", // gallery: the-odyssey-shapoorji-pallonji-marine-drive
+  "https://theodyssey.shapoorjirealestate.com/images/gallery/2.webp", // gallery: the-odyssey-shapoorji-pallonji-marine-drive
+  "https://www.roswalt.com/backend/uploads/raya-3.jpg", // gallery: roswalt-raya-roswalt-realty-chembur
+  "https://www.roswalt.com/backend/uploads/raya-1.jpg", // gallery: roswalt-raya-roswalt-realty-chembur
+  "https://theodyssey.shapoorjirealestate.com/images/gallery/4.webp", // gallery: the-odyssey-shapoorji-pallonji-marine-drive
+  "https://www.vicl.co/assets/front/img/portfolio/aarambh-elevation.png", // gallery: vardhaman-aarambh
+  "https://www.vicl.co/assets/front/img/portfolio/aarambh-gym.png", // gallery: vardhaman-aarambh
+  "https://www.roswalt.com/backend/uploads/raya-2.jpg", // gallery: roswalt-raya-roswalt-realty-chembur
+  "https://www.vicl.co/assets/front/img/portfolio/aarambh-space.png", // gallery: vardhaman-aarambh
+  "https://www.vicl.co/assets/front/img/portfolio/vardhaman-ananda.jpg", // gallery: vardhaman-ananda-ghatkopar-east
+  "https://www.vicl.co/assets/front/img/portfolio/vardhaman-ananda-high.jpg", // gallery: vardhaman-ananda-ghatkopar-east
+  "https://www.vicl.co/assets/front/img/portfolio/vardhaman-ananda-high2.jpg", // gallery: vardhaman-ananda-ghatkopar-east
+  "https://www.vicl.co/assets/front/img/portfolio/vardhaman-palace-rooftop.png", // gallery: vardhaman-palace
+  "https://www.vicl.co/assets/front/img/portfolio/vardhaman-palace-shops.png", // gallery: vardhaman-palace
+  "https://www.vicl.co/assets/front/img/portfolio/vardhaman-palace-office.png", // gallery: vardhaman-palace
+  "https://theodyssey.shapoorjirealestate.com/images/gallery/5.webp", // gallery: the-odyssey-shapoorji-pallonji-marine-drive
+  "https://www.paradise-projects.com/sai-world-one/img/ft2-PC.webp", // gallery: sai-world-one-paradise-group-nerul-navi-mumbai
 ]);
 
 // Verified broken developer image URLs must not be advertised to search
@@ -198,7 +227,7 @@ const confirmedMissingHeroImageURLs = new Set([
 // Preserve original sources in database records for traceability.
 function unavailableKnownProjectImage(url){
   const src=String(url||'');
-  return confirmedMissingHeroImageURLs.has(src)
+  return confirmedMissingProjectImageURLs.has(src)
     || /^https:\/\/uae-cms\.emaar\.com\/uploads\//i.test(src)
     || (/^https:\/\/www\.emaar\.com\/_next\/image\?/i.test(src) && /uae-cms\.emaar\.com/i.test(src))
     || /^https:\/\/newwayint\.com\/image\/cache\/catalog\/projects-chini\/serro-emaar\/serro-emaar-02-750x563\.webp(?:\?.*)?$/i.test(src)
