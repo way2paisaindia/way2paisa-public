@@ -22,6 +22,12 @@ export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const projectId = searchParams.get('project') || '';
   const mediaId = searchParams.get('media') || '';
+  // One bounded preview size for grid cards and gallery thumbnails. Never
+  // expose arbitrary dimensions or quality parameters to public callers.
+  const variant = searchParams.get('variant') || 'full';
+  if (variant !== 'full' && variant !== 'preview') return new Response('Invalid image variant.', { status: 400 });
+  const outputWidth = variant === 'preview' ? 960 : 1600;
+  const outputQuality = variant === 'preview' ? 80 : 88;
   if (!projectIdPattern.test(projectId) || (mediaId && !projectIdPattern.test(mediaId))) return new Response('Invalid project.', { status: 400 });
 
   const base = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -110,8 +116,8 @@ export async function GET(request) {
       }
       const jpeg = await sharp(buffer, { limitInputPixels: 40000000 })
         .rotate()
-        .resize({ width: 1600, height: 1600, fit: 'inside', withoutEnlargement: true })
-        .jpeg({ quality: 88, mozjpeg: true })
+        .resize({ width: outputWidth, height: outputWidth, fit: 'inside', withoutEnlargement: true })
+        .jpeg({ quality: outputQuality, mozjpeg: true })
         .toBuffer();
       return new Response(jpeg, {
         headers: {
