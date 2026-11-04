@@ -33,3 +33,21 @@ This is **not** a new page publication or sale-price failure and must not be rep
 - Preserve each project’s actual current developer unit status and AED price on a dated verification basis.
 - Do not claim complete Step 3 certification or begin Step 4 until the Emaar gallery failures, other known media exceptions and visitor UX validation are resolved.
 - No email requests, developer outreach, resale activation, unpublishing, or changes to existing active prices/inventory were made during this cycle.
+
+
+## 4 November further continuation — gallery-disclosure release and new phase research
+
+### Production code shipped
+- Commit `464e5f451ecfcc1de898e717e2842bee0d1ec6e7` changed only `app/projects/[slug]/page.js`: on pages with **zero verified gallery assets after the unavailable-image filter**, the previously absent gallery section now displays the explicit, non-misleading advisory note: `A verified project photo gallery is not currently available for this listing. Request current, developer-approved project photographs from our advisory team.`
+- This is a **disclosure**, not an image replacement, license, or browser-rendering certification. Known-dead Emaar assets remain excluded and the project-image relay retains its existing safe fallback.
+- Vercel production deployment `dpl_H99UfKepq5Ymtf9v5iTriEdt8Whv` reached **READY**, commit and domain aliases checked.
+- Post-deployment server HTML on **Emaar Clearpoint** and **Emaar Ocean Cove** returned HTTP 200 and contained the new gallery message; **Lodha Unica** returned HTTP 200 and correctly retained its actual gallery, not the new no-gallery message. The refreshed sitemap returned HTTP 200 and contained **667 project URLs**.
+- Fresh database audit: **667 published projects**, **2,378 active inventory records**, **3,173 active media records** (unchanged); **70 zero-surviving-gallery published pages (69 Dubai, 1 Mumbai)** after the known Emaar CMS URL filter; **71 published project heroes** and **277 active media records** use the unavailable `uae-cms.emaar.com/uploads/` family.
+- **Remaining Step 3 release gate:** obtain independently authorized stable exact-project imagery and validate visitor-browser rendering before claiming image remediation; Step 4 stays on hold.
+
+### Unpublished project discoveries kept separate
+- Original **Lodha Stella** Majiwade/Thane Project registered **P51700053017**, due Jul 2029. New private record `lodha-stella-thane-project-original-phase`, with two **inactive** 3 BHK+Study / 4 BHK development-wide price examples. Lodha quotes ₹3.08Cr+ / ₹3.78Cr+ on its current website; 1,319 / 1,585 sq.ft partner/carpet examples are **not confirmed promoter-allocated flats in this phase**.
+- **Lodha Stella — Tower B**, separately registered **PM1330002501225**, due Apr 2031 in the October regulator derivative. New private record `lodha-stella-tower-b-thane`, **zero inventory**, because no current specific Tower B allocation/price mapping is established. Statutory derivative reports five declared litigation matters and differs in historical booked totals; no buyer-facing legal clearance claim.
+- These remain separate so the shared Stella marketing page is not used to imply one RERA/price/possession relationship for two registered developments.
+- Emaar Acacia unit `DE Acacia C-1-107` remains quarantined in the Mulberry dataset because its **individual Emaar unit-page identity differs from the umbrella sales-feed grouping**; it was **not** reactivated.
+- No live-project prices, existing active inventory, published project status, or email outreach was changed in this continuation.
