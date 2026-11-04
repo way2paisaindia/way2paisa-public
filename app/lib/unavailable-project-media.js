@@ -84,6 +84,11 @@ const confirmedMissingProjectImageURLs = new Set([
   "https://vastushilp-borivali.in/public/admin/images/image1730284329.jpg", // vastu-shilp-uvk-develpers-borivali-east
   "https://vastushilp-borivali.in/public/admin/images/gallery1730284818.jpg", // vastu-shilp-uvk-develpers-borivali-east
   "https://vastushilp-borivali.in/public/admin/images/gallery1730284832.jpg", // vastu-shilp-uvk-develpers-borivali-east
+  // Rechecked 4 Nov 2026: these image addresses return HTML documents, not image bytes.
+  "https://aayushgroup.com/aayush-aurum/images/gallery/01.jpg", // aayush-aurum
+  "https://aayushgroup.com/aayush-aurum/images/gallery/02.jpg", // aayush-aurum
+  "https://aayushgroup.com/aayush-aurum/images/gallery/03.jpg", // aayush-aurum
+  "https://edmont.ashwinshethgroup.com/img/highlights/Pagoda.webp", // edmont-aurelia-kandivali-west
 ]);
 
 export function isKnownUnavailableProjectImage(url){
