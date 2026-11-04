@@ -370,7 +370,14 @@ function inventoryAwareTitle(p,items){
   const dubai=String(p?.market||'').toLowerCase().includes('dubai');
   const priceTag=price===null?'Price & Details':(dubai?formatDubaiStartingPrice(price):formatStartingPrice(price));
   const base=loc&&!name.toLowerCase().includes(loc.toLowerCase())?name+' '+loc:name;
-  return base.slice(0,67-priceTag.length).trim()+' | '+priceTag;
+  // Trim automatically generated SEO titles at complete word boundaries.
+  // A character-only slice produced broken names such as "Emaar Bea".
+  const limit=Math.max(20,67-priceTag.length);
+  const candidate=base.slice(0,limit);
+  const trimmed=base.length<=limit||/\s/.test(base.charAt(limit))
+    ?candidate.trim()
+    :(candidate.replace(/\s+\S*$/,'').trim()||candidate.trim());
+  return trimmed+' | '+priceTag;
 }
 function publicSeoDescription(p,items){
   const value=String(p?.seo_description||'').replace(/\s+/g,' ').trim();
