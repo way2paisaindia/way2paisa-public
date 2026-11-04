@@ -89,6 +89,8 @@ const confirmedMissingProjectImageURLs = new Set([
   "https://aayushgroup.com/aayush-aurum/images/gallery/02.jpg", // aayush-aurum
   "https://aayushgroup.com/aayush-aurum/images/gallery/03.jpg", // aayush-aurum
   "https://edmont.ashwinshethgroup.com/img/highlights/Pagoda.webp", // edmont-aurelia-kandivali-west
+  "https://architizer-prod.imgix.net/media/mediadata/uploads/1769584613592SCDA_C33-0.jpg?auto=format%2Ccompress&cs=strip&q=60&w=1680", // Meraas Jumeirah Residences Emirates Towers: HTTP 410 disabled_source
+
 ]);
 
 export function isKnownUnavailableProjectImage(url){
