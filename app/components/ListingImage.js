@@ -1,19 +1,8 @@
 'use client';
 
 import {useCallback, useEffect, useRef, useState} from 'react';
+import {isKnownUnavailableProjectImage as isKnownUnavailableProjectSource} from '../lib/unavailable-project-media';
 
-// The legacy Emaar /uploads sources attached to the current projects have
-// been verified as HTTP 404 (277 unique gallery URLs and 71 hero URLs,
-// 3 Nov 2026). Preserve the recorded sources but do not request broken images
-// on public pages. Fresh, independently verified replacement hosts are allowed.
-// Also skip the previously confirmed unavailable Godrej Bliss CDN images.
-function isKnownUnavailableProjectSource(url) {
-  const src=String(url || '');
-  return /^https:\/\/uae-cms\.emaar\.com\/uploads\//i.test(src)
-    || (/^https:\/\/www\.emaar\.com\/_next\/image\?/i.test(src) && /uae-cms\.emaar\.com/i.test(src))
-    || /^https:\/\/newwayint\.com\/image\/cache\/catalog\/projects-chini\/serro-emaar\/serro-emaar-02-750x563\.webp(?:\?.*)?$/i.test(src)
-    || /^https:\/\/gplwebsitecdnblob\.blob\.core\.windows\.net\/godrej-cdn\/Images\/Godrej-Bliss-Mumbai-Gallery0[1-4]-1332X750/i.test(src);
-}
 export default function ListingImage({src, alt, projectId, mediaId, fallbackSources = [], ...props}) {
   const imageRef = useRef(null);
   const handledFailureSource = useRef(null);
@@ -26,7 +15,12 @@ export default function ListingImage({src, alt, projectId, mediaId, fallbackSour
     ? [...new Set(fallbackSources.filter(url => typeof url === 'string' && url.startsWith('https://') && url !== src && !isKnownUnavailableProjectSource(url)))].slice(0, 3)
     : [];
   const initialAlternative = unavailableOriginal && alternatives.length ? 0 : -1;
-  const [failed, setFailed] = useState(!src || (unavailableOriginal && !alternatives.length));
+  // A confirmed-dead original may still have a working, same-project gallery
+  // photograph available through the server relay. Try that once, but never
+  // request the known-dead original directly in the visitor's browser.
+  const canUseProjectRelay = Boolean(projectId && !useOriginalEmaarImage && !useOriginalMahindraImage);
+  const initialFailed = !src || (unavailableOriginal && !canUseProjectRelay && !alternatives.length);
+  const [failed, setFailed] = useState(initialFailed);
   const [useDirectSource, setUseDirectSource] = useState(false);
   const [alternateIndex, setAlternateIndex] = useState(initialAlternative);
   const selectedSource = alternateIndex >= 0 ? alternatives[alternateIndex] : src;
@@ -38,7 +32,7 @@ export default function ListingImage({src, alt, projectId, mediaId, fallbackSour
 
   useEffect(() => {
     handledFailureSource.current = null;
-    setFailed(!src || (unavailableOriginal && !alternatives.length));
+    setFailed(initialFailed);
     setUseDirectSource(false);
     setAlternateIndex(initialAlternative);
   }, [src]);
@@ -49,7 +43,7 @@ export default function ListingImage({src, alt, projectId, mediaId, fallbackSour
     // post-hydration check handling the same failed URL twice.
     if (handledFailureSource.current === displaySrc) return;
     handledFailureSource.current = displaySrc;
-    if (shouldProxy) {
+    if (shouldProxy && !unavailableOriginal) {
       setUseDirectSource(true);
     } else if (alternateIndex + 1 < alternatives.length) {
       setAlternateIndex(current => current + 1);
