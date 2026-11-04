@@ -1,4 +1,5 @@
 import sharp from 'sharp';
+import {isKnownUnavailableProjectImage} from '../../lib/unavailable-project-media';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -63,7 +64,9 @@ export async function GET(request) {
   const seen = new Set();
   const addCandidate = (url, referer) => {
     const source = safeUrl(url);
-    if (!source || seen.has(source)) return;
+    // Do not spend remote fetch time on already confirmed HTTP 404 assets.
+    // The relay can still test another verified image of the same project.
+    if (!source || isKnownUnavailableProjectImage(source) || seen.has(source)) return;
     seen.add(source);
     candidates.push({ source, referer: safeUrl(referer) || safeUrl(project?.overview_source_url) || '' });
   };
