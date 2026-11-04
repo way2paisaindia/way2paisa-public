@@ -71,6 +71,19 @@ const confirmedMissingProjectImageURLs = new Set([
   "https://www.romellgroup.com/romellorbis/img/gallery/interior-view-childrens-bedroom.jpg", // gallery: romell-orbis-andheri-east
   "https://www.romellgroup.com/romellorbis/img/gallery/interior-view-bedroom-1.jpg", // gallery: romell-orbis-andheri-east
   "https://www.skylightadvisors.co/assets/osc-gallery-8-C6KKSnE7.jpg", // gallery: oberoi-sky-city-borivali-east
+  // Confirmed 4 Nov 2026: HTTP 200 responses containing HTML, not an image.
+  "https://www.runwalgardenvista.com/assets/img/deskban2.webp", // garden-vista-runwal-enterprises-kanjurmarg-east
+  "https://www.runwalgardenvista.com/assets/img/deskban1.webp", // garden-vista-runwal-enterprises-kanjurmarg-east
+  "https://www.runwalgardenvista.com/assets/img/amenities/amphitheatre.webp", // garden-vista-runwal-enterprises-kanjurmarg-east
+  "https://www.runwalgardenvista.com/assets/img/amenities/swimmingpool.webp", // garden-vista-runwal-enterprises-kanjurmarg-east
+  "https://centrio-nx.com/images/slider/w1.webp", // mj-shah-centrio-nx-phase-1
+  "https://centrio-nx.com/images/gallery/ame/1.jpg", // mj-shah-centrio-nx-phase-1
+  "https://centrio-nx.com/images/gallery/interior/1.jpg", // mj-shah-centrio-nx-phase-1
+  "https://centrio-nx.com/images/overview.jpg", // mj-shah-centrio-nx-phase-1
+  "https://vastushilp-borivali.in/public/admin/images/1730285050.jpg", // vastu-shilp-uvk-develpers-borivali-east
+  "https://vastushilp-borivali.in/public/admin/images/image1730284329.jpg", // vastu-shilp-uvk-develpers-borivali-east
+  "https://vastushilp-borivali.in/public/admin/images/gallery1730284818.jpg", // vastu-shilp-uvk-develpers-borivali-east
+  "https://vastushilp-borivali.in/public/admin/images/gallery1730284832.jpg", // vastu-shilp-uvk-develpers-borivali-east
 ]);
 
 export function isKnownUnavailableProjectImage(url){
