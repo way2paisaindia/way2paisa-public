@@ -84,6 +84,14 @@ const confirmedMissingProjectImageURLs = new Set([
   "https://vastushilp-borivali.in/public/admin/images/image1730284329.jpg", // vastu-shilp-uvk-develpers-borivali-east
   "https://vastushilp-borivali.in/public/admin/images/gallery1730284818.jpg", // vastu-shilp-uvk-develpers-borivali-east
   "https://vastushilp-borivali.in/public/admin/images/gallery1730284832.jpg", // vastu-shilp-uvk-develpers-borivali-east
+  // Production `/api/project-image` returned HTTP 422 for hero plus all three
+  // project-specific Dosti Eden photos (4 Nov 2026). Both original developer
+  // CMS and tested alternate CloudFront banner host failed. Keep the source
+  // rows for traceability; show the no-verified-gallery notice to visitors.
+  "https://admin.dostirealty.com/uploads/Dosti_Eden_Banner_Image_36da48e6b8.jpg", // dosti-eden
+  "https://admin.dostirealty.com/uploads/living_room_spec_5aa227f032.jpg", // dosti-eden
+  "https://admin.dostirealty.com/uploads/Pool_with_Sundeck_59b56a1b9b.png", // dosti-eden
+  "https://admin.dostirealty.com/uploads/Gymnasium_44dc4bab3a.png", // dosti-eden
   // Rechecked 4 Nov 2026: these image addresses return HTML documents, not image bytes.
   "https://aayushgroup.com/aayush-aurum/images/gallery/01.jpg", // aayush-aurum
   "https://aayushgroup.com/aayush-aurum/images/gallery/02.jpg", // aayush-aurum
