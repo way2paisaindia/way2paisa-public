@@ -101,3 +101,19 @@ export function isKnownUnavailableProjectImage(url){
     || /^https:\/\/newwayint\.com\/image\/cache\/catalog\/projects-chini\/serro-emaar\/serro-emaar-02-750x563\.webp(?:\?.*)?$/i.test(src)
     || /^https:\/\/gplwebsitecdnblob\.blob\.core\.windows\.net\/godrej-cdn\/Images\/Godrej-Bliss-Mumbai-Gallery0[1-4]-1332X750/i.test(src);
 }
+
+// Some image CDNs deny requests made by social-image crawlers even when
+// visitors may be able to see the project photograph in their browser.
+// Exclude these exact URLs from social-preview metadata only, never from
+// on-page project photography. Verified HTTP 403 using browser, Facebook,
+// Twitter and Google image-crawler user agents on 4 Nov 2026.
+const knownUnavailableSocialPreviewURLs = new Set([
+  'https://meraas.com/sites/default/files/2025-11/3%20-%201920x1080_0.jpg',
+  'https://meraas.com/sites/default/files/2026-08/768x432_6.jpg',
+  'https://meraas.com/sites/default/files/2025-12/Banner_8.jpg',
+]);
+
+export function isKnownUnavailableSocialPreview(url) {
+  return isKnownUnavailableProjectImage(url)
+    || knownUnavailableSocialPreviewURLs.has(String(url || ''));
+}
