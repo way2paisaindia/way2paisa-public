@@ -269,7 +269,15 @@ function publicInventoryRows(items, project) {
   }
   return [...grouped.values()].sort((a, b) => (Number(a.price) || Infinity) - (Number(b.price) || Infinity));
 }
-function publicConfigurationLabel(value){return String(value||'').split(/\s+[—–-]\s+/)[0].replace(/\s*\([^)]*\)\s*/g,' ').replace(/\s+/g,' ').trim()}function publicAvailability(value,sourceType,sourceUrl,lastVerified){const raw=String(value||'').trim().toLowerCase();if(/sold\s*out/.test(raw))return'Sold Out';if(/coming\s*soon|pre[-\s]?launch/.test(raw))return'Coming Soon';if(/(?:advertis|indicative|quotation|quote|broker|partner|confirm|reconfirm|verify|unverified|on request|check availability|not reserved|not confirmed|allocation)/.test(raw))return'Confirm Availability';const type=String(sourceType||'').trim().toLowerCase();const url=String(sourceUrl||'').trim().toLowerCase();const directUnit=/^https:\/\/www\.emaar\.com\/en\/unit-details\//.test(url);const developerOfficial=/^(?:official[_ -]?developer|developer[_ -]?official|first[_ -]?party[_ -]?developer)/.test(type);const verifiedAt=lastVerified?new Date(lastVerified).getTime():NaN;const ageDays=(Date.now()-verifiedAt)/86400000;const recent=Number.isFinite(ageDays)&&ageDays>=0&&ageDays<=14;if(/^(?:available|in stock)$/.test(raw))return recent&&(directUnit||developerOfficial)?'Available':'Confirm Availability';return'Check Availability'}function publicStatus(value){
+function publicConfigurationLabel(value){
+ const base=String(value||'').split(/\s+[—–-]\s+/)[0]
+  .replace(/\s*\([^)]*\)\s*/g,' ').replace(/\s+/g,' ').trim();
+ // Generic apartment suffixes are not separate BHK configurations. Retain
+ // Townhouse, Villa, Penthouse and other distinct property types intact.
+ return /^(?:studio|[1-8](?:\.5)?\s*(?:bedroom(?:s)?|bhk))\s+apartments?$/i.test(base)
+  ? base.replace(/\s+apartments?$/i,'').trim()
+  : base;
+}function publicAvailability(value,sourceType,sourceUrl,lastVerified){const raw=String(value||'').trim().toLowerCase();if(/sold\s*out/.test(raw))return'Sold Out';if(/coming\s*soon|pre[-\s]?launch/.test(raw))return'Coming Soon';if(/(?:advertis|indicative|quotation|quote|broker|partner|confirm|reconfirm|verify|unverified|on request|check availability|not reserved|not confirmed|allocation)/.test(raw))return'Confirm Availability';const type=String(sourceType||'').trim().toLowerCase();const url=String(sourceUrl||'').trim().toLowerCase();const directUnit=/^https:\/\/www\.emaar\.com\/en\/unit-details\//.test(url);const developerOfficial=/^(?:official[_ -]?developer|developer[_ -]?official|first[_ -]?party[_ -]?developer)/.test(type);const verifiedAt=lastVerified?new Date(lastVerified).getTime():NaN;const ageDays=(Date.now()-verifiedAt)/86400000;const recent=Number.isFinite(ageDays)&&ageDays>=0&&ageDays<=14;if(/^(?:available|in stock)$/.test(raw))return recent&&(directUnit||developerOfficial)?'Available':'Confirm Availability';return'Check Availability'}function publicStatus(value){
  const raw=String(value||'').toLowerCase();
  if(/\bsold\s*out\b/.test(raw))return'Sold Out';
  // A part-OC does not certify an entire mixed-phase development as ready.
