@@ -3,7 +3,7 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
 import {isKnownUnavailableProjectImage as isKnownUnavailableProjectSource} from '../lib/unavailable-project-media';
 
-export default function ListingImage({src, alt, projectId, mediaId, fallbackSources = [], ...props}) {
+export default function ListingImage({src, alt, projectId, mediaId, fallbackSources = [], imageVariant = 'full', ...props}) {
   const imageRef = useRef(null);
   const handledFailureSource = useRef(null);
   const originalUrl = String(src || '').toLowerCase();
@@ -27,7 +27,7 @@ export default function ListingImage({src, alt, projectId, mediaId, fallbackSour
   const shouldProxy = projectId && src && !useDirectSource && alternateIndex < 0
     && !useOriginalEmaarImage && !useOriginalMahindraImage;
   const displaySrc = shouldProxy
-    ? `/api/project-image?project=${encodeURIComponent(projectId)}${mediaId ? `&media=${encodeURIComponent(mediaId)}` : ''}`
+    ? `/api/project-image?project=${encodeURIComponent(projectId)}${mediaId ? `&media=${encodeURIComponent(mediaId)}` : ''}${imageVariant === 'preview' ? '&variant=preview' : ''}`
     : selectedSource;
 
   useEffect(() => {
