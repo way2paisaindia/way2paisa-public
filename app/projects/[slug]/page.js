@@ -206,7 +206,7 @@ function videoLabel(v,i){const u=String(v.source_url||v.image_url||'').toLowerCa
  if(!raw)return'Available on request';
  // A bare mention of "OC" is not evidence of occupancy. Do not convert
  // "OC pending", "OC to verify", or a partly completed tower into Ready to Move.
- const readyProof=\b(?:ready[\s-]*to[\s-]*move|(?:full\s+)?oc\s+(?:received|granted|issued|obtained)|project\s+completed|100%\s+possession\s+(?:achieved|completed))\b;
+ const readyProof=/\b(?:ready[\s-]*to[\s-]*move|(?:full\s+)?oc\s+(?:received|granted|issued|obtained)|project\s+completed|100%\s+possession\s+(?:achieved|completed))\b/i;
  const uncertainty=/\b(?:unverified|not\s+(?:yet\s+)?(?:verified|confirmed|issued|granted|received)|pending|awaiting|subject\s+to|to\s+(?:confirm|verify|recheck)|must\s+be\s+checked|check\s+(?:the|unit)|part(?:ial)?[\s-]*oc)\b/i;
  const mixedTowers=/\b(?:tower|wing|phase)s?\b/i.test(raw)&&/\bunder construction\b/i.test(raw);
  if(readyProof.test(raw)&&!uncertainty.test(raw)&&!mixedTowers)return'Ready to Move';
@@ -219,9 +219,9 @@ function videoLabel(v,i){const u=String(v.source_url||v.image_url||'').toLowerCa
   const scope=part.match(/\b(?:phase|tower|wing)\s*[A-Z0-9-]+\b/i)?.[0]||'';
   const passed=/(?:has\s+passed|date\s+passed|elapsed)/i.test(part);
   const stillActive=/(?:still\s+records|remains\s+recorded|under\s+construction|project\s+active|records\s+the\s+project\s+active)/i.test(part);
-  if(/maha?rera|rera/i.test(part))return \`RERA\${scope?' '+scope:''} \${date}\${passed?' · registered date passed':''}\${stillActive?' · project remains active':''}\`;
-  if(/\bdld\b/i.test(part))return \`DLD\${scope?' '+scope:''} \${date}\${passed?' · registered date passed':''}\${stillActive?' · project remains active':''}\`;
-  if(/target|developer|handover|marketed|expected/i.test(part))return \`Target\${scope?' '+scope:''} \${date}\`;
+  if(/maha?rera|rera/i.test(part))return `RERA${scope?' '+scope:''} ${date}${passed?' · registered date passed':''}${stillActive?' · project remains active':''}`;
+  if(/\bdld\b/i.test(part))return `DLD${scope?' '+scope:''} ${date}${passed?' · registered date passed':''}${stillActive?' · project remains active':''}`;
+  if(/target|developer|handover|marketed|expected/i.test(part))return `Target${scope?' '+scope:''} ${date}`;
   return date;
  });
  const unique=[...new Set(parts.filter(Boolean))];
