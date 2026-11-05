@@ -41,3 +41,9 @@ Developer landing page: https://sunset.in/gardens/
 - Another source-qualified listing is not automatically publishable solely because it has a legal RERA identifier; inspect actual phase and currently advertised developer stock first.
 - Existing project queues remain private where registration/OC conflicts, ambiguous promoter allocations, unlicensed galleries, duplicate phases or sold-out inventory persist.
 - No emails, developer contact, resale activation, photo replacements, old price changes, or Step 4 actions within this continuation.
+
+## Final refreshed sitemap confirmation
+
+- A later authenticated Vercel **READY production** deployment (`dpl_EGH4qo2KCPqsxKkzbdj8WXKD3twe`) returned **HTTP 200** for `/sitemap.xml`, now containing **670 project URLs**, including both `sunset-gardens-by-marathon-mulund-west` and `marathon-zaver-arcade-mulund-west`.
+- Sitemap output contains **677 total URLs**; additional static/guide URLs are unrelated to this project publication audit. This replaces the earlier 669-project cached snapshot. No Google-indexed status is inferred.
+- Database project counts and the Sunset Gardens project HTML were verified separately. User's instruction to keep Step 4 on hold applies to this continuation; do not treat any unrelated parallel commits as authorization to begin Step 4 here.
