@@ -50,3 +50,18 @@
 
 - All existing published project IDs and active inventory prices retained; no unpublishing, rebranding of duplicates, invented unit allocations, unauthorised media, or email outreach.
 - Step 3 continues until existing image and visitor-browser QA issues are truly cleared. Step 4 remains on hold.
+
+## Post-deployment production HTTP verification
+
+- Vercel production `dpl_5w7gHSLC7pqzPv6qRC9FhmPZ7K6s` is **READY**, commit `32d234cd3f141dc3b515398466bc52a5a9f10885`.
+- Independently fetched the READY Vercel production artifact using the authenticated deployment page fetch:
+  - `/projects/marathon-zaver-arcade-mulund-west` → **HTTP 200**, canonical URL correct, SEO title correct, RERA `P51800020332`, ₹2.30 Cr and honest no-gallery notice in server HTML.
+  - `/sitemap.xml` → **HTTP 200**, **668 project URLs**, **672 total URLs** including four static routes, and the new Zaver Arcade canonical present. Private K Raheja SoBo Residence slug was **absent**.
+- HTTP response and server HTML do **not** prove independent interactive visitor browser, photo licence, or external Google indexation. Media Step 3 stays OPEN.
+- The earlier HTTP-verification-pending entry above described the state *before* the successful checks. It is superseded by this section.
+
+## Additional current candidate refusal — Marathon Ekveera
+
+- The Marathon website advertises studio/1BHK from ₹39.99L, but MahaRERA filing derivative identifies `P51800032741` as **lapsed**, with December 2023 registered completion and unresolved renewed/legal standing (https://reragenie.com/p/ekveera-sidharth-nagar-mulund-west-d83em0r8/).
+- **Not published**. Obtain regulator-current completion/OC and ability to transact lawfully before advertising sale stock. Developer project site https://marathon.in/ekveera/ alone is insufficient.
+
