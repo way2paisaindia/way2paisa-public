@@ -6,6 +6,8 @@ import ListingImage from '../../components/ListingImage';
 import styles from './page.module.css';
 
 export const revalidate = 300;
+// Do not generate unpublished or overlapping buyer-intent routes.
+export const dynamicParams = false;
 
 export function generateStaticParams(){
   return intentLandingSlugs.map(intent=>({intent}));
@@ -112,7 +114,7 @@ export default async function IntentLandingPage({params}){
     </section>
     <nav className={styles.related} aria-label="Other property searches">
       <strong>Explore another property goal</strong>
-      {intentLandingSlugs.filter(key=>key!==intent).map(key=><Link key={key} href={'/explore/'+key}>{intentLandingPages[key].title}</Link>)}
+      <Link href="/solutions/mumbai-luxury-homes">Mumbai luxury homes</Link><Link href="/solutions/mumbai-commercial-property">Mumbai commercial offices</Link><Link href="/solutions/dubai-property-investment">Dubai property investment</Link>
     </nav>
     <footer className={styles.footer}><Link href="/">Way2Paisa FinPro Services</Link><span>Independent channel partner. Details and images subject to developer confirmation. Verify approvals, pricing and terms before booking. T&amp;C apply.</span><Link href="/legal">Legal information</Link></footer>
     <script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(structured).replace(/</g,'\\u003c')}}/>
