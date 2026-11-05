@@ -50,3 +50,15 @@
 - No emails or developer follow-ups.
 - No deletion, unpublishing, changed price or active status for any previously published project.
 - Step 3 remains **OPEN** for image licence, serving and visitor-browser validation. Step 4 remains **ON HOLD**.
+
+
+## Verified production release result — final check, 5 November
+
+- Vercel production artifact `dpl_F4EJyLcK3gbwQXV8SftrZJhFJkvb` for audit commit `756d58ed9635a46339a6485aff0bade42aedbeca` is **READY**.
+- Authenticated deployed sitemap `/sitemap.xml`: **HTTP 200, 669 project URLs, 673 total URLs**. Both Dosti Willow and Marathon Zaver Arcade appear; the unpublished `k-raheja-sobo-residences` is absent.
+- Dosti Willow SSR page `/projects/dosti-west-county-willow-thane`: **HTTP 200**, title **Dosti Willow Thane West | 2 BHK From ₹1.91 Cr+**, correct canonical and P51700056278, developer project-level offer, and explicit no-verified-gallery disclosure. Rendered unit rows show carpet-area **On request**, not an invented unit-level price/carpet pairing.
+- Private SoBo route `/projects/k-raheja-sobo-residences`: **HTTP 404**.
+- Follow-up database query: **669** published projects, **2,382** active inventory, **3,173** active media, **1,161** private projects.
+- The exact-image blacklist audit now identifies **89** published projects with no gallery surviving the static known-unavailable filter (69 Dubai, 16 Mumbai, 4 MMR): up from 87 before the two explicitly disclosed image-free publications. This is a filter-only count, not a browser/network certification. Step 3 remains OPEN.
+- A targeted database refinement to the new Willow overview includes exact marketed-versus-RERA-derived area figures, but the inspected server HTML may still be serving an earlier cache snapshot. Do not claim this latest descriptive refinement has reached every visitor before a post-cache SSR check. The project has remained listed with a discrepancy warning throughout.
+- No emails, outreach, existing price changes, existing active inventory changes, or unpublishing were performed; Step 4 remains held.
