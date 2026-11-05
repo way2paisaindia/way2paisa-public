@@ -1,0 +1,86 @@
+/* Step 4: distinct, editorial buyer-journey pages; no neighbourhood-index directory. */
+.solutionTopNav{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:18px max(5vw,22px);background:#fff;border-bottom:1px solid #dce7f1}
+.solutionBrand img{display:block;width:178px;max-width:100%;height:auto;object-fit:contain}
+.solutionTopNav nav{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.solutionTopNav nav a{font-size:13px;color:#10385f;text-decoration:none;font-weight:700}
+.solutionTopNav nav a:hover,.solutionTopNav nav a:focus-visible{color:#176bb1;text-decoration:underline}
+.solutionTopNav nav .solutionTopAction{padding:11px 15px;background:#07376d;border-radius:8px;color:#fff}
+.solutionTopNav nav .solutionTopAction:hover,.solutionTopNav nav .solutionTopAction:focus-visible{background:#17528e;color:#fff;text-decoration:none}
+.solutionHero{background:linear-gradient(125deg,#051d37,#0b4077 64%,#166ba0);color:#fff;padding:70px max(5vw,22px) 68px}
+.solutionHeroInner{max-width:1200px;margin:auto}
+.solutionBreadcrumb{display:flex;align-items:center;gap:10px;color:#cfdfed;font-size:12px;margin-bottom:44px}
+.solutionBreadcrumb a{color:#fff;text-decoration:underline}
+.solutionEyebrow{font-size:12px;letter-spacing:2.5px;font-weight:800;color:#a4d1f5;text-transform:uppercase;margin:0 0 16px}
+.solutionHero h1{font-family:Georgia,serif;font-size:clamp(38px,5vw,74px);line-height:1.08;max-width:970px;color:#fff;margin:0 0 20px;font-weight:500}
+.solutionSubtitle{font-size:clamp(17px,2vw,23px);line-height:1.6;color:#e5f0f8;max-width:850px;margin:0}
+.solutionHeroActions{display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin-top:32px}
+.solutionButton{display:inline-block;padding:14px 20px;border-radius:9px;background:#fff;color:#083766;font-size:14px;font-weight:800;text-decoration:none}
+.solutionButton:hover,.solutionButton:focus-visible{background:#dcefff;color:#06315e}
+.solutionSecondary{color:#fff;text-decoration:underline;font-weight:700;font-size:14px}
+.solutionTrust{font-size:12px;color:#b9d2e6;margin:25px 0 0;line-height:1.5}
+.solutionIntro,.solutionProjects,.solutionEditorial,.solutionFaq,.solutionRelated{width:min(1200px,90%);margin:0 auto}
+.solutionIntro{padding:54px 0 34px;max-width:950px}
+.solutionIntro p,.solutionEditorial p,.solutionContactCopy p{color:#465d71;font-size:16px;line-height:1.85}
+.solutionIntro p{margin:0 0 20px}
+.solutionProjects{padding:40px 0 70px}
+.solutionSectionHead{max-width:820px;margin-bottom:30px}
+.solutionSectionHead h2,.solutionFaq h2,.solutionRelated h2,.solutionContactCopy h2{font:500 clamp(30px,3.5vw,46px)/1.16 Georgia,serif;color:#0a315a;margin:0 0 18px}
+.solutionSectionHead .solutionEyebrow,.solutionEditorial>.solutionEyebrow,.solutionFaq>.solutionEyebrow,.solutionContactCopy>.solutionEyebrow{color:#2071a6}
+.solutionSectionHead>p:not(.solutionEyebrow){color:#516a80;line-height:1.7;margin:0}
+.solutionListings{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:23px}
+.solutionListing{min-width:0;border:1px solid #dbe6ef;border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 12px 32px rgba(10,45,78,.055);display:flex;flex-direction:column}
+.solutionListingImage{display:block;aspect-ratio:16/10;background:#0b3861;overflow:hidden}
+.solutionListingImage>img,.solutionListingImage>span{width:100%;height:100%;object-fit:cover;display:block}
+.solutionImageMissing{height:100%;display:flex;justify-content:center;align-items:center;padding:20px;text-align:center;background:#0b3861;color:#fff;font-size:13px}
+.solutionListingBody{padding:20px;display:flex;flex-direction:column;flex:1;gap:10px}
+.solutionListingArea{color:#52748f;font-size:12px;line-height:1.5}
+.solutionListing h3{color:#0c355f;margin:0;font-size:20px;line-height:1.3;font-family:Georgia,serif}
+.solutionListing h3 a{color:inherit;text-decoration:none}
+.solutionListing h3 a:hover{text-decoration:underline}
+.solutionListingBody>p{color:#567086;font-size:13px;line-height:1.55;margin:0}
+.solutionListingBottom{display:flex;gap:10px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;margin-top:auto;padding-top:13px;border-top:1px solid #ebf0f4}
+.solutionListingBottom strong{font-size:16px;color:#073869}
+.solutionListingBottom a{font-size:12px;font-weight:800;color:#0d65a4}
+.solutionFootnote{color:#70839a;font-size:12px;line-height:1.65;margin:20px 0 10px}
+.solutionTextLink{display:inline-block;color:#0a4f90;font-weight:800;font-size:14px;margin-top:12px}
+.solutionEmpty{border:1px solid #d9e7f2;border-radius:10px;padding:24px;color:#567}
+.solutionEditorial{padding:50px 0 62px;border-top:1px solid #dfebf4}
+.solutionEditorialSection{display:grid;grid-template-columns:80px minmax(0,1fr);column-gap:18px;padding:32px 0;border-bottom:1px solid #e1ebf3}
+.solutionEditorialNumber{font-family:Georgia,serif;font-size:36px;color:#8eb4d0}
+.solutionEditorial h2{margin:0 0 16px;font:500 clamp(24px,2.8vw,34px)/1.25 Georgia,serif;color:#10385f}
+.solutionEditorial p{margin:0 0 14px;max-width:980px}
+.solutionFaq{padding:58px 0 85px}
+.solutionFaqList{border-top:1px solid #d8e6f1}
+.solutionFaqItem{border-bottom:1px solid #d8e6f1;padding:17px 0}
+.solutionFaqItem summary{font-size:17px;font-weight:750;color:#10385f;cursor:pointer;line-height:1.5}
+.solutionFaqItem summary:focus-visible{outline:2px solid #0f75bd;outline-offset:6px}
+.solutionFaqItem p{font-size:15px;line-height:1.8;color:#546d81;max-width:950px;margin:14px 0 4px}
+.solutionEnquirySection{display:grid;grid-template-columns:1fr 1fr;gap:44px;padding:60px max(5vw,22px);background:#eef5fa;align-items:start;scroll-margin-top:24px}
+.solutionContactCopy{max-width:580px;justify-self:end}
+.solutionContactCopy h2{font-size:clamp(30px,3.8vw,50px)}
+.solutionContactCopy p{font-size:15px;line-height:1.75}
+.solutionContactCopy a{color:#085995;font-weight:750}
+.solutionForm,.solutionFormSuccess{background:white;border:1px solid #d5e4ef;border-radius:15px;padding:30px;width:100%;max-width:600px;box-shadow:0 12px 40px rgba(7,55,109,.07)}
+.solutionForm h3,.solutionFormSuccess h3{font:500 29px/1.2 Georgia,serif;margin:0 0 10px;color:#10385f}
+.solutionForm>p,.solutionFormSuccess p{line-height:1.7;color:#597187;font-size:14px;margin:0 0 24px}
+.solutionFormFields{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.solutionFormFields label{display:flex;flex-direction:column;gap:8px;font-size:13px;font-weight:750;color:#173e63;min-width:0}
+.solutionFormFields label span{font-weight:400;color:#6d8192}
+.solutionFormFields input{width:100%;min-width:0;box-sizing:border-box;border:1px solid #c9dbea;border-radius:8px;padding:12px;font:inherit;font-size:14px;color:#163953;background:#fff}
+.solutionFormFields input:focus-visible{outline:2px solid #197fca;outline-offset:2px}
+.solutionForm button[type=submit]{margin-top:25px;display:block;background:#07376d;color:white;border:0;border-radius:9px;padding:13px 20px;font-size:15px;font-weight:800;cursor:pointer;width:100%}
+.solutionForm button[type=submit]:hover,.solutionForm button[type=submit]:focus-visible{background:#12538d}
+.solutionForm button[disabled]{opacity:.7;cursor:wait}
+.solutionForm small{font-size:11px;color:#72869a;line-height:1.6;display:block;margin-top:13px}
+.solutionFormError{color:#a22222;font-size:13px}
+.solutionRelated{padding:55px 0 65px}
+.solutionRelated h2{font-size:30px}
+.solutionRelated>div{display:flex;flex-wrap:wrap;gap:14px}
+.solutionRelated a{display:inline-block;text-decoration:none;border:1px solid #b7d3e8;border-radius:9px;padding:12px 17px;font-size:14px;color:#0b548d;font-weight:750}
+.solutionRelated a:hover,.solutionRelated a:focus-visible{background:#eaf4fd}
+.solutionFooter{display:flex;flex-wrap:wrap;align-items:start;justify-content:space-between;gap:24px;background:#061e38;color:#eaf3fa;padding:40px max(5vw,22px) 26px}
+.solutionFooter strong{font-size:17px}.solutionFooter p{font-size:13px;line-height:1.6;color:#bdd0e1;margin:7px 0}
+.solutionFooter>div:nth-child(2){display:flex;gap:15px;flex-wrap:wrap}.solutionFooter a{font-size:13px;color:#e1f0fc}
+.solutionDisclaimer{flex-basis:100%;max-width:980px}.solutionFooter>span{font-size:13px;color:#dceffc}
+@media(max-width:980px){.solutionListings{grid-template-columns:repeat(2,minmax(0,1fr))}.solutionEnquirySection{grid-template-columns:1fr;gap:25px}.solutionContactCopy{justify-self:stretch;max-width:780px}.solutionForm{max-width:780px}.solutionTopNav nav{gap:12px}}
+@media(max-width:620px){.solutionTopNav{padding:14px 5vw;align-items:flex-start}.solutionBrand img{width:132px}.solutionTopNav nav{justify-content:flex-end;gap:8px}.solutionTopNav nav a{font-size:11px}.solutionTopNav nav .solutionTopAction{display:none}.solutionHero{padding:34px 5vw 46px}.solutionBreadcrumb{margin-bottom:30px}.solutionHeroActions{gap:12px}.solutionTrust{font-size:11px}.solutionIntro,.solutionProjects,.solutionEditorial,.solutionFaq,.solutionRelated{width:90%}.solutionIntro{padding:35px 0 12px}.solutionListings{grid-template-columns:1fr;gap:16px}.solutionEditorialSection{grid-template-columns:1fr;gap:4px;padding:23px 0}.solutionEditorialNumber{font-size:23px}.solutionEnquirySection{padding:40px 5vw}.solutionForm{padding:22px}.solutionFormFields{grid-template-columns:1fr;gap:13px}.solutionFooter{padding:33px 5vw}}
