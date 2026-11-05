@@ -1,3 +1,4 @@
+import {intentLandingSlugs} from './lib/intent-landing-pages';
 // Match the public catalogue cache so newly published projects are discoverable promptly.
 export const revalidate = 300;
 
@@ -57,6 +58,7 @@ export default async function sitemap() {
     { url: baseUrl + '/solutions/mumbai-commercial-property', changeFrequency: 'weekly', priority: 0.75 },
     { url: baseUrl + '/solutions/dubai-property-investment', changeFrequency: 'weekly', priority: 0.75 },
     { url: baseUrl + '/legal', changeFrequency: 'monthly', priority: 0.3 },
+    ...intentLandingSlugs.map(slug => ({ url: baseUrl + '/explore/' + slug, changeFrequency: 'weekly', priority: 0.8 })),
   ];
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
