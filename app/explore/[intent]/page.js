@@ -110,6 +110,20 @@ export default async function IntentLandingPage({params}){
         <div className={styles.notice}>No fully published projects match these criteria today. <Link href={config.browseHref}>Browse the full catalogue</Link>.</div>}
       {projects.length>selected.length&&<p className={styles.more}>Showing {selected.length} of {projects.length} matching projects. <Link href={config.browseHref}>Refine your search in the full property catalogue.</Link></p>}
     </section>
+    {config.sections?.length>0&&<section className="solutionEditorial" aria-label="Villa and plot buying guide">
+      <p className="solutionEyebrow">VILLA AND PLOT BUYER GUIDE</p>
+      {config.sections.map((section,i)=><article className="solutionEditorialSection" key={section.title}>
+        <div className="solutionEditorialNumber">{String(i+1).padStart(2,'0')}</div>
+        <div><h2>{section.title}</h2>{section.paragraphs.map((paragraph,j)=><p key={j}>{paragraph}</p>)}</div>
+      </article>)}
+    </section>}
+    {config.faqs?.length>0&&<section className="solutionFaq" aria-labelledby="mmr-property-faq-title">
+      <p className="solutionEyebrow">COMMON BUYER QUESTIONS</p>
+      <h2 id="mmr-property-faq-title">Frequently asked questions</h2>
+      <div className="solutionFaqList">{config.faqs.map(([question,answer])=><details key={question} className="solutionFaqItem">
+        <summary>{question}</summary><p>{answer}</p>
+      </details>)}</div>
+    </section>}
     <section className={styles.advisory}>
       <div><p className={styles.kicker}>BUYER DUE DILIGENCE</p><h2>Before you shortlist</h2><p>{config.guidance}</p></div>
       <div><h2>Need tailored options?</h2><p>Share your preferred location, budget and property type. The enquiry form below lets our team coordinate a relevant shortlist without unrelated listings.</p><a className={styles.primary} href="#consultation">Request a property shortlist</a></div>
