@@ -53,6 +53,9 @@ export default async function sitemap() {
     { url: baseUrl, changeFrequency: 'daily', priority: 1 },
     { url: baseUrl + '/properties', changeFrequency: 'daily', priority: 0.9 },
     { url: baseUrl + '/finance', changeFrequency: 'monthly', priority: 0.7 },
+    { url: baseUrl + '/solutions/mumbai-luxury-homes', changeFrequency: 'weekly', priority: 0.75 },
+    { url: baseUrl + '/solutions/mumbai-commercial-property', changeFrequency: 'weekly', priority: 0.75 },
+    { url: baseUrl + '/solutions/dubai-property-investment', changeFrequency: 'weekly', priority: 0.75 },
     { url: baseUrl + '/legal', changeFrequency: 'monthly', priority: 0.3 },
   ];
 
