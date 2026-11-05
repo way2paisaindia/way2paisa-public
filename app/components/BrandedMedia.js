@@ -21,7 +21,7 @@ export default function BrandedMedia({item,floorPlan=false}) {
   </span>;
   return <figure className="brandedMedia">
     <button type="button" className="mediaOpen" disabled={imageFailed} onClick={()=>dialog.current?.showModal()} aria-label={imageFailed?`${caption} temporarily unavailable`:`Enlarge ${caption}`}>{picture}</button>
-    <figcaption>{floorPlan&&item.configuration?item.configuration:caption}</figcaption>
+    <figcaption>{caption}</figcaption>
     <dialog ref={dialog} className="mediaDialog" onClick={e=>{if(e.target===e.currentTarget)e.currentTarget.close()}}>
       <button type="button" className="mediaClose" onClick={()=>dialog.current.close()}>Close</button>
       <div className="mediaFull">{picture}</div><p>{caption}</p>
