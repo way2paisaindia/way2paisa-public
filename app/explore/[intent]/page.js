@@ -3,6 +3,8 @@ import {notFound} from 'next/navigation';
 import {loadPublicProjects} from '../../lib/public-projects';
 import {intentLandingPages,intentLandingSlugs} from '../../lib/intent-landing-pages';
 import ListingImage from '../../components/ListingImage';
+import HighIntentEnquiryForm from '../../components/HighIntentEnquiryForm';
+import '../../solutions/solutions.css';
 import styles from './page.module.css';
 
 export const revalidate = 300;
@@ -110,7 +112,11 @@ export default async function IntentLandingPage({params}){
     </section>
     <section className={styles.advisory}>
       <div><p className={styles.kicker}>BUYER DUE DILIGENCE</p><h2>Before you shortlist</h2><p>{config.guidance}</p></div>
-      <div><h2>Need tailored options?</h2><p>Tell our advisory team your preferred location, budget and property type. We can help review suitable published developments and arrange a discussion.</p><Link className={styles.primary} href="/#enquire">Speak to an advisor</Link></div>
+      <div><h2>Need tailored options?</h2><p>Share your preferred location, budget and property type. The enquiry form below lets our team coordinate a relevant shortlist without unrelated listings.</p><a className={styles.primary} href="#consultation">Request a property shortlist</a></div>
+    </section>
+    <section className="solutionEnquirySection" id="consultation" aria-labelledby="mmr-shortlist-title">
+      <div className="solutionContactCopy"><p className="solutionEyebrow">MMR VILLA & PLOT ADVISORY</p><h2 id="mmr-shortlist-title">Find the right second home or plotted development.</h2><p>Share your preferred area, budget and whether you seek a built villa or residential plot. We can coordinate published project information, site visits and the questions to ask about legal approvals and construction scope.</p><p>Prices and inventory must be reconfirmed against current developer documentation before any booking.</p></div>
+      <HighIntentEnquiryForm topic="MMR Villas and Plots Advisory" market="Mumbai"/>
     </section>
     <nav className={styles.related} aria-label="Other property searches">
       <strong>Explore another property goal</strong>
