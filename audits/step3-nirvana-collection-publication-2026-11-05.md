@@ -66,3 +66,12 @@ Original developer plan: https://marathon.in/nexzone/wp-content/uploads/sites/29
 - Existing published project statuses, prices, inventory, developer profiles and active media remain intact. Five new project-level developer starting offers only; no unauthorized source images, no cloned tower projects, no precise coordinates invented.
 - **No email or developer outreach.**
 - **Step 3 is OPEN. Step 4 remains on HOLD for this requested continuation.**
+
+## Later 5 November buyer legal reconciliation — Wing B
+
+A further independently checked RERA-derived filing for S6 Wing B (`PM1273032502304`) materially extends due diligence:
+
+- ReraGenie reports **₹180 crore secured land charge** declared 6 Oct 2025 in favour of **PIRAMALFINANCELTD**. Source https://reragenie.com/p/marathon-nexzone-phase-3-s6-wing-b-near-palaspe-phata-panvel-mumbai-maharashtra-kwufvcsy/
+- A source discrepancy exists about commencement certificates: ReraGenie does not list the CC in its public document slots; independent RERA Inspector says initial CC is on file and **further CC for full height remains pending** https://www.rerainspector.com/projects/59732/PM1273032502304 . Do NOT claim either that the correct sanctioned floor has a valid CC or that no CC exists based solely on derivatives.
+- Public description was amended with one concise sentence: **“Wing B filing reports a secured land charge, so lender NOC and phase-specific approvals should be checked before booking.”** Internally, the more detailed risk, conflicting derivative reports, official RERA confirmation and agreement/charge-release needs were saved to `project_sources`, `enrichment_notes` and `data_quality_flags`.
+- This was a new-project-only description and source update; **no inventory price, active project count, old project or media changed**. Current publication is a developer-advertised launch discovery result, **not certified transaction/legal clearance**.
