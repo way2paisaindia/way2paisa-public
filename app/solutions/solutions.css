@@ -73,7 +73,7 @@
 .solutionForm button[type=submit]:hover,.solutionForm button[type=submit]:focus-visible{background:#12538d}
 .solutionForm button[disabled]{opacity:.7;cursor:wait}
 .solutionForm small{font-size:11px;color:#72869a;line-height:1.6;display:block;margin-top:13px}
-.solutionFormError{color:#a22222;font-size:13px}
+.solutionFormError{color:#a22222;font-size:13px}.solutionFieldError{display:block;color:#a22222;font-size:12px;font-weight:600;line-height:1.5}.solutionFormFields input[aria-invalid="true"]{border-color:#b42d2d;outline-color:#b42d2d}
 .solutionRelated{padding:55px 0 65px}
 .solutionRelated h2{font-size:30px}
 .solutionRelated>div{display:flex;flex-wrap:wrap;gap:14px}
