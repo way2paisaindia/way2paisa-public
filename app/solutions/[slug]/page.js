@@ -139,6 +139,10 @@ export default async function HighIntentLandingPage({params}){
           : <p className="solutionEmpty">Current published project matches are temporarily unavailable. Browse the main verified catalogue or request an updated shortlist.</p>}
         <p className="solutionFootnote">Starting prices are indicative from currently published active inventory, not final unit quotations. Eligibility, taxes and charges depend on the actual transaction. Images are subject to the source-specific verification and display notices on each listing.</p>
         <a className="solutionTextLink" href={page.catalogueLink}>Explore the full verified catalogue</a>
+        <div className="solutionProjectCta">
+          <div><strong>Need a shortlist tailored to your requirements?</strong><p>Tell us your preferred location, configuration and budget. We will help compare relevant published options.</p></div>
+          <a href="#consultation">Request a tailored shortlist</a>
+        </div>
       </section>
       <section className="solutionEditorial" aria-label="Property buying and due diligence guide">
         <p className="solutionEyebrow">BUYER DECISION GUIDE</p>
