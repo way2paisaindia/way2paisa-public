@@ -117,7 +117,10 @@ export async function GET(request) {
       const jpeg = await sharp(buffer, { limitInputPixels: 40000000 })
         .rotate()
         .resize({ width: outputWidth, height: outputWidth, fit: 'inside', withoutEnlargement: true })
-        .jpeg({ quality: outputQuality, mozjpeg: true })
+        // Vercel Hobby Active CPU is bounded: mozjpeg's trellis compression is
+        // much more CPU-intensive than Sharp's standard JPEG encoder.
+        // Keep verified source, output dimensions, quality, and cache headers unchanged.
+        .jpeg({ quality: outputQuality })
         .toBuffer();
       return new Response(jpeg, {
         headers: {
