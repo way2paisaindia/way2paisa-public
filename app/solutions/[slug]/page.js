@@ -1,7 +1,7 @@
 import {notFound} from 'next/navigation';
 import ListingImage from '../../components/ListingImage';
 import HighIntentEnquiryForm from '../../components/HighIntentEnquiryForm';
-import {loadPublicProjects} from '../../lib/public-projects';
+import {loadLandingProjects} from '../../lib/public-projects';
 import {highIntentPages,highIntentSlugs} from '../../lib/high-intent-pages';
 import '../solutions.css';
 
@@ -67,7 +67,7 @@ export default async function HighIntentLandingPage({params}){
   const {slug}=await params;
   const page=highIntentPages[slug];
   if(!page)notFound();
-  const catalogue=await loadPublicProjects();
+  const catalogue=await loadLandingProjects({slugs:page.slugs});
   const eligible=new Map((catalogue.projects||[])
     .filter(project=>project.market===page.market&&page.categories.includes(project.category))
     .map(project=>[project.slug,project]));
