@@ -132,6 +132,10 @@ export default async function IntentLandingPage({params}){
         selected.length?<div className={styles.grid}>{selected.map(card)}</div>:
         <div className={styles.notice}>No fully published projects match these criteria today. <Link href={config.browseHref}>Browse the full catalogue</Link>.</div>}
       {projects.length>selected.length&&<p className={styles.more}>Showing {selected.length} of {projects.length} matching projects. <Link href={config.browseHref}>Refine your search in the full property catalogue.</Link></p>}
+      <div className="solutionProjectCta">
+        <div><strong>Looking for a particular villa or residential plot?</strong><p>Share your preferred area, budget and whether you want a built home or land. Request a more focused comparison.</p></div>
+        <a href="#consultation">Request a tailored shortlist</a>
+      </div>
     </section>
     {config.sections?.length>0&&<section className="solutionEditorial" aria-label="Villa and plot buying guide">
       <p className="solutionEyebrow">VILLA AND PLOT BUYER GUIDE</p>
