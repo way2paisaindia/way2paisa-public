@@ -59,3 +59,11 @@ New records used slug-and-MahaRERA-not-exists guarded, transactional Supabase in
 - **Lodha Promina Worli**: valid commercial RERA **PC1170002501811**, but verified current developer office prices are not published. No unsourced pricing invented. Sources https://www.lodhagroup.com/projects/commercial-property-in-mumbai/lodha-promina-worli and https://askrera.com/projects/lodha-promina-pc1170002501811/ .
 
 **User constraints maintained:** No email/developer outreach, no unverified image substitutions, no existing prices or published statuses changed, Step 3 media verification open, Step 4 held, no changes to GoDaddy DNS or production hosting.
+
+## Final sitemap propagation confirmed
+
+- Following the initial cached **678-project** XML response, both a separate uncached query and then the **unmodified canonical public** `https://www.way2paisa.in/sitemap.xml` returned **HTTP 200, 679 project URLs and 687 total sitemap URLs**.
+- All three new paths were present: `lodha-signet-kalyan-shil-road-offices`, `lodha-bellavista-thane-west`, `lodha-signet-thane-kolshet-road-offices`.
+- The public homepage separately returned **HTTP 200** with the expected premium Way2Paisa homepage title. No DNS or code changes on live `main`.
+- Cloudflare's separate static build has **minimum 679 active published projects** guard committed and its synthetic GitHub build tests passed. This does **not** validate browser-level premium layout parity, admin, CRM, lead notifications or Cloudflare deployability and is **not an authorisation to switch DNS**.
+- Final controlled cycle count from Supabase: **679 published**, **2,409 active inventory**, **3,173 active media**, **1,161 private projects**. Three new projects, seven new active developer starting-offer configuration records and 21 provenance records.
