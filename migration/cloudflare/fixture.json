@@ -1,0 +1,56 @@
+{
+  "projects": [
+    {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "QA Test Residence (Fixture Only)",
+      "slug": "qa-test-residence",
+      "address": "Fixture Road, Mumbai",
+      "description": "Fixture-only project. Not a real offer. <script>alert('bad')</script>",
+      "rera_number": "TEST-NOT-REGISTERED",
+      "status": "Under Construction",
+      "min_price": 2.75,
+      "min_carpet_sqft": 730,
+      "max_carpet_sqft": 800,
+      "hero_image_url": null,
+      "market": "Mumbai",
+      "bhk_original": "2 BHK",
+      "seo_title": "QA Fixture Test Residence | Way2Paisa",
+      "seo_description": "Migration source smoke test. Not a real project.",
+      "amenities": [
+        "Gym",
+        "Play Area"
+      ],
+      "google_maps_url": null,
+      "category": "apartment",
+      "developer_id": "00000000-0000-4000-8000-000000000002",
+      "location_id": "00000000-0000-4000-8000-000000000003",
+      "updated_at": "2026-11-06T00:00:00Z",
+      "featured": true
+    }
+  ],
+  "inventory": [
+    {
+      "id": "00000000-0000-4000-8000-000000000004",
+      "project_id": "00000000-0000-4000-8000-000000000001",
+      "configuration": "2 BHK",
+      "carpet_area_sqft": 730,
+      "carpet_area_max_sqft": 800,
+      "price": 2.75,
+      "price_max": null
+    }
+  ],
+  "media": [],
+  "developers": [
+    {
+      "id": "00000000-0000-4000-8000-000000000002",
+      "name": "Fixture Developer"
+    }
+  ],
+  "locations": [
+    {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "name": "Mumbai",
+      "zone": "West"
+    }
+  ]
+}
