@@ -114,10 +114,20 @@ function directoryHtml(projects){
 }
 const guideContent=highIntentPages;
 function guideHtml(key,meta,projects,pathname){
- const target=meta.market==='Dubai'?'Dubai':meta.market==='MMR'?'MMR':'Mumbai';
- const eligible=projects.filter(p=>(target==='Dubai'?p.market==='Dubai':target==='MMR'?p.market==='MMR':p.market!=='Dubai')&&(!meta.categories?.length||meta.categories.includes(p.category)));
- const preferred=Array.isArray(meta.slugs)?meta.slugs.map(slug=>eligible.find(p=>p.slug===slug)).filter(Boolean):[];
- const selected=preferred.length?preferred:eligible.slice(0,30);
+ // The migration must match the exact production guide eligibility. The MMR
+ // intent has a match(project) function, not a market/categories property.
+ // Otherwise an MMR villa/plot guide can accidentally show Mumbai apartments.
+ const isIntent=pathname.startsWith('/explore/');
+ const eligible=isIntent&&typeof meta.match==='function'
+  ? projects.filter(meta.match)
+  : projects.filter(p=>p.market===meta.market&&(!meta.categories?.length||meta.categories.includes(p.category)));
+ // Curated guide slugs must never fall back to an unrelated project if a
+ // featured unit goes unpublished. Intent collections use production ordering.
+ const selected=Array.isArray(meta.slugs)
+  ? meta.slugs.map(slug=>eligible.find(p=>p.slug===slug)).filter(Boolean)
+  : isIntent
+   ? eligible.slice().sort((a,b)=>Number(Boolean(b.featured))-Number(Boolean(a.featured))||String(a.name||'').localeCompare(String(b.name||''))).slice(0,24)
+   : eligible.slice(0,24);
  const intro=Array.isArray(meta.introduction)?meta.introduction:meta.intro?[meta.intro]:[];
  const h2=Array.isArray(meta.sections)?meta.sections.map(section=>'<section class="guide-section"><h2>'+esc(section.title)+'</h2>'+((section.paragraphs||[]).map(p=>'<p>'+esc(p)+'</p>').join(''))+'</section>').join(''):'';
  const faqs=Array.isArray(meta.faqs)&&meta.faqs.length?'<section class="section"><h2>Frequently asked questions</h2>'+meta.faqs.map(([q,a])=>'<details><summary>'+esc(q)+'</summary><p>'+esc(a)+'</p></details>').join('')+'</section>':'';
