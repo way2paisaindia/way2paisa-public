@@ -16,6 +16,10 @@ const OUTPUT = join(ROOT, 'dist');
 const HOST = 'https://www.way2paisa.in';
 const SNAPSHOT = process.env.MIGRATION_FIXTURE === '1';
 const MIN_COUNT = Number(process.env.MIN_PUBLISHED_PROJECTS || 679);
+// Keep the real production GA4 measurement ID in the Cloudflare build environment.
+// No placeholder IDs or private analytics credentials are shipped to browsers.
+const gaInput = process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID || '';
+const GA_ID = /^G-[A-Z0-9]+$/.test(gaInput) ? gaInput : '';
 const pageSize = 500;
 
 const esc = input => String(input ?? '').replace(/[&<>"']/g, x => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]));
@@ -33,7 +37,11 @@ const date = d => /^\d{4}-\d{2}-\d{2}/.test(String(d||''))? String(d).slice(0,10
 function pageHead(title,description,pathname,extra=''){
  const canonical=HOST+pathname.replace(/\/$/,'')+(pathname==='/'?'':'');
  const headline=esc(title),short=esc(description);
- return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+headline+'</title><meta name="description" content="'+short+'"><meta name="robots" content="index,follow"><link rel="canonical" href="'+esc(canonical)+'"><meta property="og:type" content="website"><meta property="og:title" content="'+headline+'"><meta property="og:description" content="'+short+'"><meta property="og:url" content="'+esc(canonical)+'"><link rel="icon" href="/way2paisa-mark.jpg"><link rel="stylesheet" href="/assets/site.css">'+extra+'</head><body>';
+ const analytics=GA_ID
+  ? '<script async src="https://www.googletagmanager.com/gtag/js?id='+GA_ID+'"></script>'+
+    '<script>window.dataLayer=window.dataLayer||[];window.gtag=window.gtag||function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config","'+GA_ID+'");</script>'
+  : '';
+ return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+headline+'</title><meta name="description" content="'+short+'"><meta name="robots" content="index,follow"><link rel="canonical" href="'+esc(canonical)+'"><meta property="og:type" content="website"><meta property="og:title" content="'+headline+'"><meta property="og:description" content="'+short+'"><meta property="og:url" content="'+esc(canonical)+'"><link rel="icon" href="/way2paisa-mark.jpg"><link rel="stylesheet" href="/assets/site.css">'+analytics+extra+'</head><body>';
 }
 const nav = '<header class="nav"><a class="logo" href="/"><img src="/way2paisa-logo.png" alt="Way2Paisa FinPro Services" width="164"></a><nav aria-label="Main navigation"><a href="/properties/">Properties</a><a href="/properties/?market=Mumbai">Mumbai &amp; MMR</a><a href="/properties/?market=Dubai">Dubai</a><a href="/finance/">Finance</a></nav><a class="nav-cta" href="/#enquire">Speak to an Advisor</a></header>';
 const foot = '<footer class="footer"><p><strong>Way2Paisa FinPro Services</strong> · Mumbai, India</p><p>Independent channel partner. Verify MahaRERA/DLD registration, developer quotation, available unit, carpet area, legal approvals and all charges before booking.</p><p><a href="/legal/">Legal &amp; Privacy</a> · <a href="https://wa.me/918850373012">WhatsApp +91 88503 73012</a> · <a href="https://www.way2paisa.in/">www.way2paisa.in</a></p></footer><script src="/assets/site.js" defer></script></body></html>';
@@ -132,10 +140,10 @@ function guideHtml(key,meta,projects,pathname){
  const h2=Array.isArray(meta.sections)?meta.sections.map(section=>'<section class="guide-section"><h2>'+esc(section.title)+'</h2>'+((section.paragraphs||[]).map(p=>'<p>'+esc(p)+'</p>').join(''))+'</section>').join(''):'';
  const faqs=Array.isArray(meta.faqs)&&meta.faqs.length?'<section class="section"><h2>Frequently asked questions</h2>'+meta.faqs.map(([q,a])=>'<details><summary>'+esc(q)+'</summary><p>'+esc(a)+'</p></details>').join('')+'</section>':'';
  return pageHead(meta.seoTitle||meta.metaTitle||meta.title+' | Way2Paisa',meta.seoDescription||meta.description||meta.subtitle||'',pathname)+nav+
- '<main><section class="hero compact"><p class="eyebrow">'+esc(meta.eyebrow||'WAY2PAISA SPECIALIST ADVISORY')+'</p><h1>'+esc(meta.title)+'</h1><p>'+esc(meta.subtitle||meta.description||'')+'</p><a href="'+esc(meta.catalogueLink||meta.browseHref||'/properties/')+'" class="nav-cta">'+esc(meta.browseLabel||'Browse all published projects')+'</a></section>'+
+ '<main><section class="hero compact"><p class="eyebrow">'+esc(meta.eyebrow||'WAY2PAISA SPECIALIST ADVISORY')+'</p><h1>'+esc(meta.title)+'</h1><p>'+esc(meta.subtitle||meta.description||'')+'</p><a href="#consultation" class="nav-cta">Request a tailored shortlist</a> <a href="'+esc(meta.catalogueLink||meta.browseHref||'/properties/')+'">'+esc(meta.browseLabel||'Browse all published projects')+'</a></section>'+
  '<section class="section guide-article">'+intro.map(p=>'<p>'+esc(p)+'</p>').join('')+h2+(meta.guidance?'<p>'+esc(meta.guidance)+'</p>':'')+'</section>'+
  '<section class="section"><h2>'+esc(meta.cardHeading||'Explore current developer offers')+'</h2><p>'+esc(meta.cardIntro||meta.criteria||'')+'</p><div class="cards">'+selected.map(card).join('')+'</div></section>'+
- faqs+'<section class="section"><h2>Speak to an Advisor</h2>'+leadForm('',meta.leadName||meta.title)+'</section></main>'+foot;
+ faqs+'<section class="section" id="consultation"><h2>Speak to an Advisor</h2>'+leadForm('',meta.leadName||meta.title)+'</section></main>'+foot;
 }
 function financeHtml(){
  return pageHead('Property Finance & Loans | Way2Paisa','Home loans, loan against property and finance advisory by Way2Paisa, Mumbai.','/finance')+nav+'<main><section class="hero compact"><h1>Finance your next move.</h1><p>Home Loans · Loan Against Property · Commercial Funding · Business Finance</p></section><section class="section split"><div><h2>Finance solutions</h2><p>Independent facilitation with leading banks and NBFCs. Eligibility, interest rates, documentation and approvals are lender-dependent. No guaranteed sanction.</p><ul><li>Home Loans for new purchases and under-construction projects</li><li>Loan Against Property for residential and commercial assets</li><li>Commercial purchase finance and developer-side financing coordination</li><li>Refinancing and balance-transfer guidance</li></ul></div><aside><h2>Request a Finance Consultation</h2>'+leadForm('','Finance enquiry')+'</aside></section></main>'+foot;
