@@ -155,7 +155,7 @@ export default async function HighIntentLandingPage({params}){
       </section>
       <section className="solutionRelated" aria-label="Other property advisory guides">
         <h2>Explore more property decisions</h2>
-        <div>{highIntentSlugs.filter(other=>other!==slug).map(other=><a key={other} href={'/solutions/'+other}>{highIntentPages[other].title}</a>)}</div>
+        <div>{highIntentSlugs.filter(other=>other!==slug).map(other=><a key={other} href={'/solutions/'+other}>{highIntentPages[other].title}</a>)}<a href="/explore/villas-and-plots-mmr">MMR Villas &amp; Residential Plots</a></div>
       </section>
     </main>
     <footer className="solutionFooter">
