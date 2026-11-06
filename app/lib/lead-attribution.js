@@ -28,8 +28,19 @@ export function getLeadAttribution() {
   }
 }
 
-export function trackSavedLead(leadType) {
+// Only accept non-personal, predeclared buyer-guide identifiers. Never pass
+// enquiry text, contact details or full URLs to analytics.
+const LEAD_TOPICS = new Set([
+  'mumbai_luxury_homes',
+  'mumbai_commercial_offices',
+  'dubai_property_investment',
+  'mmr_villas_plots'
+]);
+
+export function trackSavedLead(leadType, {leadTopic} = {}) {
   if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
-    window.gtag('event', 'generate_lead', { lead_type: tidy(leadType || 'advisory') });
+    const fields = { lead_type: tidy(leadType || 'advisory') };
+    if (LEAD_TOPICS.has(leadTopic)) fields.lead_topic = leadTopic;
+    window.gtag('event', 'generate_lead', fields);
   }
 }
