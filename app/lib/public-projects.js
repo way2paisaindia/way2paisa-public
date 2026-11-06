@@ -203,3 +203,124 @@ export async function loadPublicProjects() {
     return empty;
   }
 }
+
+
+// Step 4: a buyer guide must not fetch the whole public catalogue just to
+// render a handful of cards. Only these explicitly requested, published
+// projects and their active inventory enter the scope of each read.
+// The homepage and searchable catalogue retain loadPublicProjects unchanged.
+export async function loadLandingProjects({ slugs, market, categories } = {}) {
+  const errorResult = { projects: [], error: 'The published projects are temporarily unavailable. Please try again.' };
+  const selectedSlugs = Array.isArray(slugs) && slugs.length > 0 && slugs.length <= 50
+    && slugs.every(slug => typeof slug === 'string' && /^[a-z0-9-]{2,120}$/.test(slug))
+    ? [...new Set(slugs)] : null;
+  const selectedMarket = !selectedSlugs && market === 'MMR'
+    && Array.isArray(categories) && categories.length > 0
+    && categories.every(category => ['plot', 'villa', 'land'].includes(category))
+    ? market : null;
+  if (!selectedSlugs && !selectedMarket) {
+    console.error('Scoped project query requested without a recognised buyer-guide filter');
+    return errorResult;
+  }
+
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+  if (!url || !key) return errorResult;
+
+  try {
+    const db = createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
+
+    // Retain safe keyset pagination: public PostgREST instances can cap rows
+    // below a requested limit, and the catalogue may grow after this launch.
+    async function readAll(table, columns, scope) {
+      const rows = [];
+      let cursor = null;
+      for (let page = 0; page < 20; page++) {
+        const response = await readCatalogueWithRetry(() => {
+          let query = db.from(table).select(columns).order('id', { ascending: true }).limit(500);
+          query = scope(query);
+          if (cursor) query = query.gt('id', cursor);
+          return query;
+        });
+        if (response.error) throw response.error;
+        if (!Array.isArray(response.data)) throw new Error('Invalid buyer-guide response: ' + table);
+        if (response.data.length && cursor && response.data[0].id <= cursor) {
+          throw new Error('Buyer-guide keyset pagination did not advance: ' + table);
+        }
+        rows.push(...response.data);
+        if (response.data.length < 500) return rows;
+        const nextCursor = response.data[response.data.length - 1]?.id;
+        if (!nextCursor || cursor === nextCursor) throw new Error('Buyer-guide pagination stalled');
+        cursor = nextCursor;
+      }
+      throw new Error('Buyer-guide catalogue exceeded pagination safety limit');
+    }
+
+    const published = await readAll('projects', projectColumns, query => {
+      query = query.eq('active', true).eq('verified', true).eq('enrichment_status', 'complete');
+      return selectedSlugs
+        ? query.in('slug', selectedSlugs)
+        : query.eq('market', selectedMarket).in('category', categories);
+    });
+    if (published.length === 0) return { projects: [], error: '' };
+
+    const projectMap = new Map(published.map(project => [project.id, project]));
+    const inventory = await readAll(
+      'inventory',
+      'id,project_id,configuration,price,price_max,carpet_area_sqft,carpet_area_max_sqft,plot_area_sqft,plot_area_max_sqft',
+      query => query.eq('active', true).in('project_id', [...projectMap.keys()])
+    );
+
+    const configurations = new Map();
+    const offers = new Map();
+    for (const unit of inventory) {
+      const project = projectMap.get(unit.project_id);
+      if (!project || !unit.configuration) continue;
+      if (!configurations.has(project.id)) configurations.set(project.id, []);
+      configurations.get(project.id).push(unit.configuration);
+
+      const label = summarizeConfigurations([unit.configuration], project.market);
+      const minimum = Number(unit.price);
+      const rawMaximum = Number(unit.price_max);
+      const maximum = Number.isFinite(rawMaximum) && rawMaximum >= minimum ? rawMaximum : minimum;
+      if (!label || !Number.isFinite(minimum) || minimum <= 0 || !Number.isFinite(maximum)) continue;
+
+      if (!offers.has(project.id)) offers.set(project.id, new Map());
+      const byConfiguration = offers.get(project.id);
+      const plot = ['plot', 'land'].includes(String(project.category || '').toLowerCase());
+      const areaMinimum = Number(plot
+        ? (unit.plot_area_sqft ?? unit.carpet_area_sqft) : unit.carpet_area_sqft);
+      const areaMaximum = Number(plot
+        ? (unit.plot_area_max_sqft ?? unit.plot_area_sqft ?? unit.carpet_area_max_sqft ?? unit.carpet_area_sqft)
+        : (unit.carpet_area_max_sqft ?? unit.carpet_area_sqft));
+      const hasArea = Number.isFinite(areaMinimum) && areaMinimum > 0
+        && Number.isFinite(areaMaximum) && areaMaximum >= areaMinimum;
+      if (!byConfiguration.has(label)) {
+        byConfiguration.set(label, {
+          configuration: label, minimum, maximum,
+          ...(hasArea ? { areaMinimum, areaMaximum } : {})
+        });
+      } else {
+        const group = byConfiguration.get(label);
+        group.minimum = Math.min(group.minimum, minimum);
+        group.maximum = Math.max(group.maximum, maximum);
+        if (hasArea) {
+          group.areaMinimum = Math.min(Number.isFinite(group.areaMinimum) ? group.areaMinimum : areaMinimum, areaMinimum);
+          group.areaMaximum = Math.max(Number.isFinite(group.areaMaximum) ? group.areaMaximum : areaMaximum, areaMaximum);
+        }
+      }
+    }
+
+    return {
+      projects: published.filter(project => project.slug).map(project => ({
+        ...project,
+        live_configuration_summary: summarizeConfigurations(configurations.get(project.id), project.market),
+        live_unit_offers: [...(offers.get(project.id)?.values() || [])]
+      })),
+      error: ''
+    };
+  } catch (error) {
+    console.error('Scoped buyer-guide catalogue read failed', error?.message || error);
+    return errorResult;
+  }
+}
