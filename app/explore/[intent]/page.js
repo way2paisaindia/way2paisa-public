@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import {notFound} from 'next/navigation';
-import {loadPublicProjects} from '../../lib/public-projects';
+import {loadLandingProjects} from '../../lib/public-projects';
 import {intentLandingPages,intentLandingSlugs} from '../../lib/intent-landing-pages';
 import ListingImage from '../../components/ListingImage';
 import HighIntentEnquiryForm from '../../components/HighIntentEnquiryForm';
@@ -64,7 +64,7 @@ export default async function IntentLandingPage({params}){
   const{intent}=await params;
   const config=intentLandingPages[intent];
   if(!config)notFound();
-  const result=await loadPublicProjects();
+  const result=await loadLandingProjects({market:'MMR',categories:['plot','villa','land']});
   const projects=(result.projects||[]).filter(config.match);
   // The source loader already excludes anything not active, verified and
   // completely enriched. Never fall back to draft or unpublished projects.
