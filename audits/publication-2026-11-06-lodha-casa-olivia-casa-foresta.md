@@ -56,3 +56,10 @@ No existing project, previously published listing, price, inventory, gallery or 
 2. Check that buyer enquiry forms, CRM submissions, admin console and analytics still function; 200 server HTML alone does not certify these.
 3. Source-based litigation/finance/OC/live unit allocation diligence for any potential transaction; don't call unknown booked inventory "guaranteed".
 4. Work towards Cloudflare free-plan preview without switching DNS or treating free hosting as contractually guaranteed forever.
+
+## Final sitemap and preview branch checks (same continuation)
+
+- After the initial stale 672-project sitemap snapshot, a subsequent fetch of **https://www.way2paisa.in/sitemap.xml** returned **HTTP 200 with exactly 673 project URLs (681 total sitemap URLs)**, containing both `lodha-casa-olivia-palava` and `lodha-casa-foresta-palava`. The initial discrepancy was cache propagation, not an unindexed listing.
+- Both new public project pages returned **HTTP 200**, correct SEO titles, the correct individual registration and prices. No-gallery fallback is honest and maintained. This does **not** prove live lead submission, browser photo rights or Google indexing.
+- Cloudflare migration CI passed against updated **673** minimum-project guard: GitHub Actions run https://github.com/way2paisaindia/way2paisa-public/actions/runs/42211436168 (source baseline at run `a522b1a018cc865b14b52d36546f59c23c09bf06`). Passing fixture validation does not establish a live Cloudflare preview because no connected Cloudflare service/account is available.
+- Other candidates rechecked but **held**: `the-sands-sasawane-alibaug` has unresolved first-party villa size vs registered 335–380 sq.ft carpet and contradictory ready/under-construction status; `lodha-villa-royale-palava-plotted-phase` has RERA-declared six litigation cases/one complaint, and only historic unbooked plot inventory, so current legal/individual plot status is not certified. Both remain unpublished and are not counted in this 673-project snapshot.
