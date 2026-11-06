@@ -12,7 +12,7 @@ const GUIDE_TOPICS=Object.freeze({
  '/solutions/dubai-property-investment':'dubai_property_investment',
  '/explore/villas-and-plots-mmr':'mmr_villas_plots'
 });
-const currentPath=location.pathname.replace(/\\/+$/,'')||'/';
+const currentPath=location.pathname.replace(new RegExp('/+$'),'')||'/';
 const leadTopic=GUIDE_TOPICS[currentPath]||'';
 const ATTR_KEY='way2paisa_attribution_v1';
 const UTM_KEYS=['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
