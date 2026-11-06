@@ -17,11 +17,27 @@ export default function HighIntentEnquiryForm({topic,market}) {
   const [sending,setSending]=useState(false);
   const [submitted,setSubmitted]=useState(false);
   const [error,setError]=useState('');
-  const change=event=>setForm(previous=>({...previous,[event.target.name]:event.target.value}));
+  const [phoneError,setPhoneError]=useState('');
+  const change=event=>{
+    setForm(previous=>({...previous,[event.target.name]:event.target.value}));
+    if(event.target.name==='phone')setPhoneError('');
+  };
   async function submit(event){
     event.preventDefault();
+    if(sending)return;
+    const rawPhone=form.phone.trim();
+    const digits=rawPhone.replace(/\D/g,'');
+    // Match the existing server-side validation to give visitors immediate
+    // feedback, without excluding +91, +971 or other international formats.
+    const validPhone=/^[+\d\s().-]+$/.test(rawPhone)
+      && digits.length>=8&&digits.length<=15&&!/^(\d)\1+$/.test(digits);
+    if(!validPhone){
+      setPhoneError('Enter a valid mobile number (8–15 digits). You may include a country code.');
+      return;
+    }
     setSending(true);
     setError('');
+    setPhoneError('');
     try{
       const response=await fetch('/api/leads',{
         method:'POST',
@@ -54,7 +70,7 @@ export default function HighIntentEnquiryForm({topic,market}) {
     <p>Tell us what you need. We will coordinate a relevant comparison rather than send unrelated listings.</p>
     <div className="solutionFormFields">
       <label>Full name<input name="name" autoComplete="name" value={form.name} onChange={change} required maxLength={120}/></label>
-      <label>Mobile / WhatsApp number<input name="phone" type="tel" inputMode="tel" autoComplete="tel" value={form.phone} onChange={change} required maxLength={40} placeholder="+91 or +971 …"/></label>
+      <label>Mobile / WhatsApp number<input name="phone" type="tel" inputMode="tel" autoComplete="tel" value={form.phone} onChange={change} aria-invalid={Boolean(phoneError)} aria-describedby={phoneError?'solution-phone-error':undefined} required maxLength={40} placeholder="+91 or +971 …"/>{phoneError&&<span id="solution-phone-error" className="solutionFieldError" role="alert">{phoneError}</span>}</label>
       <label>Email <span>(optional)</span><input name="email" type="email" autoComplete="email" value={form.email} onChange={change} maxLength={160}/></label>
       <label>Preferred location<input name="preferred_locations" value={form.preferred_locations} onChange={change} maxLength={300} placeholder={market==='Dubai'?'Business Bay, Dubai Islands…':'Juhu, Worli, Bandra…'}/></label>
       <label>Property / configuration<input name="preferred_bhk" value={form.preferred_bhk} onChange={change} maxLength={80} placeholder={topic.includes('Office')?'Office area and use':'3 BHK, villa, duplex…'}/></label>
