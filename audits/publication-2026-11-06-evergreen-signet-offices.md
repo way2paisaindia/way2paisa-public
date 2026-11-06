@@ -53,3 +53,10 @@
 
 - **Lodha Casa Magnolia** was researched but confirmed *already published* at `lodha-casa-magnolia-palava` (MahaRERA P51700020131), so no duplicate created.
 - **Lodha Casa Belvedere Wing J** first-party collection price is not assigned to its specifically registered wing; historical statutory filing has **two declared litigation cases**, 2026 current booking changes and a revised deadline extending from Dec 2029 to Apr 2030 depending on derivative. Leave unpublished pending phase-specific quote/stock verification. Sources: https://www.lodhagroup.com/palava-city/projects/residential-property-in-dombivli/casa-belvedere-by-lodha/price ; https://reragenie.com/p/belvedere-j-hedutane-emkl06nb/ ; https://reradata.in/maharashtra/projects/P51700078768/belvedere-j-kalyan .
+
+## Final production checks — completed after cache refresh
+
+- The canonical public **https://www.way2paisa.in/sitemap.xml** responded **HTTP 200 with exactly 676 project URLs and 684 total URLs**, including all three newly published canonical slugs. This supersedes the initial cached 674-project sitemap seen immediately after the write. An independent READY Vercel production deployment `way2paisa-public-pzrdatitf-federalinfosystem-9302.vercel.app` returned the same counts and all three paths.
+- Public project HTML verification on `www.way2paisa.in`: Evergreen, Signet Vikhroli and Signet Matunga all **HTTP 200**, expected SEO title, canonical, MahaRERA IDs, configured starting prices and no-gallery disclosure. Does *not* establish Google indexing or interactive browser photo behavior.
+- Cloudflare branch's updated 676-project guard passed isolated GitHub Actions build and safety test: https://github.com/way2paisaindia/way2paisa-public/actions/runs/42215053177 . This test is synthetic; the external free hosting account and custom domain are not switched.
+- Latest known verified DB: **676 published, 2,402 active inventory, 3,173 media, 1,161 private**. No old prices or stock modified, no emails or outreach, Step 3 unresolved images open and Step 4 on hold.
