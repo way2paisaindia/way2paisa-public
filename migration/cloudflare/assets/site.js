@@ -5,6 +5,45 @@ const esc=t=>String(t??'').replace(/[&<>"']/g,k=>({'&':'&amp;','<':'&lt;','>':'&
 const imgSource=u=>{try{const uo=new URL(u);return uo.protocol==='https:'?u:''}catch{return''}};
 let all=[],show=36,current=[];
 const dom=id=>document.getElementById(id);
+
+const GUIDE_TOPICS=Object.freeze({
+ '/solutions/mumbai-luxury-homes':'mumbai_luxury_homes',
+ '/solutions/mumbai-commercial-property':'mumbai_commercial_offices',
+ '/solutions/dubai-property-investment':'dubai_property_investment',
+ '/explore/villas-and-plots-mmr':'mmr_villas_plots'
+});
+const currentPath=location.pathname.replace(/\\/+$/,'')||'/';
+const leadTopic=GUIDE_TOPICS[currentPath]||'';
+const ATTR_KEY='way2paisa_attribution_v1';
+const UTM_KEYS=['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
+const safeTag=value=>String(value||'').replace(/[^a-zA-Z0-9 _.-]/g,'').slice(0,100).trim();
+function captureAttribution(){
+ try{
+  const params=new URLSearchParams(location.search);
+  const tags=Object.fromEntries(UTM_KEYS.map(key=>[key,safeTag(params.get(key))]).filter(([,value])=>value));
+  const existing=JSON.parse(sessionStorage.getItem(ATTR_KEY)||'null');
+  if(Object.keys(tags).length||!existing){
+   let referrer='';
+   try{referrer=document.referrer?new URL(document.referrer).hostname.slice(0,100):''}catch{}
+   const next={...tags,landing_path:location.pathname.slice(0,200),referrer_host:referrer};
+   sessionStorage.setItem(ATTR_KEY,JSON.stringify(next));
+   return next;
+  }
+  return existing;
+ }catch{return{landing_path:location.pathname.slice(0,200)}}
+}
+// Analytics receives only a fixed non-personal topic. No enquiry text,
+// telephone, email, budget, address, or full URL is ever sent to GA4.
+function track(name,fields){
+ if(typeof window.gtag==='function')window.gtag('event',name,fields);
+}
+document.addEventListener('click',event=>{
+ const link=event.target?.closest?.('a[href]');
+ if(link?.getAttribute('href')==='#consultation'&&leadTopic){
+  track('select_advisory_cta',{lead_topic:leadTopic});
+ }
+});
+captureAttribution();
 function makeCard(p){
  const link='/projects/'+encodeURIComponent(p.slug)+'/';
  const image=imgSource(p.hero_image_url);
@@ -51,12 +90,13 @@ async function submitForm(event){
  event.preventDefault();const form=event.currentTarget,feedback=form.querySelector('.form-status'),button=form.querySelector('button[type=submit]');
  const data=new FormData(form);
  if(clean(data.get('website')))return;
- const payload={name:clean(data.get('name'),120),phone:clean(data.get('phone'),40),email:clean(data.get('email'),160),projectId:clean(data.get('projectId'),64),projectName:clean(data.get('projectName'),200),preferred_locations:clean(data.get('preferred_locations'),300),source:'Cloudflare Pages - Website enquiry',landingPage:location.href,whatsapp_updates:data.get('whatsapp_updates')==='on',email_notifications:false};
+ const payload={name:clean(data.get('name'),120),phone:clean(data.get('phone'),40),email:clean(data.get('email'),160),projectId:clean(data.get('projectId'),64),projectName:clean(data.get('projectName'),200),preferred_locations:clean(data.get('preferred_locations'),300),source:leadTopic?'Website - High Intent Landing':'Cloudflare Pages - Website enquiry',landingPage:location.href,attribution:captureAttribution(),whatsapp_updates:data.get('whatsapp_updates')==='on',email_notifications:false};
  button.disabled=true;feedback.textContent='Sending your enquiry…';
  try{
   const response=await fetch('/api/leads',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
   let result=await response.json().catch(()=>({}));
   if(!response.ok||!result.ok)throw Error(result.error||'Unable to submit. Try WhatsApp instead.');
+  track('generate_lead',leadTopic?{lead_type:'advisory',lead_topic:leadTopic}:{lead_type:'advisory'});
   feedback.textContent='Thank you. Your enquiry was saved. Our team will contact you shortly.'+(result.notificationWarning?' Notification delivery may be delayed.':'');
   form.reset();
  }catch(error){feedback.textContent=error.message+' You can contact us via WhatsApp on +91 88503 73012.'}
