@@ -91,8 +91,17 @@ export default async function HighIntentLandingPage({params}){
       }))
     }
   };
+  const breadcrumbs={
+    '@context':'https://schema.org',
+    '@type':'BreadcrumbList',
+    itemListElement:[
+      {'@type':'ListItem',position:1,name:'Home',item:'https://www.way2paisa.in/'},
+      {'@type':'ListItem',position:2,name:page.title,item:currentUrl}
+    ]
+  };
   return <>
     <script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(structured).replace(/</g,'\\u003c')}}/>
+    <script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(breadcrumbs).replace(/</g,'\\u003c')}}/>
     <header className="solutionTopNav">
       <a className="solutionBrand" href="/"><img src="/way2paisa-logo.png" alt="Way2Paisa FinPro Services"/></a>
       <nav aria-label="Primary navigation">
