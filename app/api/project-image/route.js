@@ -125,7 +125,8 @@ export async function GET(request) {
       return new Response(jpeg, {
         headers: {
           'Content-Type': 'image/jpeg',
-          'Cache-Control': 'public, max-age=3600, s-maxage=604800, stale-while-revalidate=86400',
+          'Cache-Control': process.env.NETLIFY === 'true' ? 'no-store' : 'public, max-age=3600, s-maxage=604800, stale-while-revalidate=86400',
+          ...(process.env.NETLIFY === 'true' ? { 'Netlify-CDN-Cache-Control': 'no-store', 'Netlify-Vary': 'query=project|media|variant' } : {}),
           'Content-Length': String(jpeg.length),
           'X-Content-Type-Options': 'nosniff',
         },
