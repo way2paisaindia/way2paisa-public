@@ -54,8 +54,26 @@ jobs:
           assert.match(detail,/application\/ld\+json/);
           assert.match(sitemap,/projects\/qa-test-residence/);
           assert.match(robots,/Disallow: \/admin/);
-          assert.equal(JSON.parse(catalogue).length,1);
-          for(const path of ['assets/site.js','assets/site.css','assets/admin.js','assets/admin-promotions.js','admin/index.html','admin/promotions/index.html','finance/index.html','legal/index.html','properties/index.html','explore/villas-and-plots-mmr/index.html']) {
+          assert.equal(JSON.parse(catalogue).length,2);
+          // Never put unrelated Mumbai apartments on the MMR villa/plot page.
+          // Never silently replace a missing curated project with an arbitrary one.
+          const [mmrGuide,luxuryGuide,officeGuide,dubaiGuide]=await Promise.all([
+            readFile(dir+'explore/villas-and-plots-mmr/index.html','utf8'),
+            readFile(dir+'solutions/mumbai-luxury-homes/index.html','utf8'),
+            readFile(dir+'solutions/mumbai-commercial-property/index.html','utf8'),
+            readFile(dir+'solutions/dubai-property-investment/index.html','utf8')
+          ]);
+          assert.match(mmrGuide,/qa-test-mmr-plot/);
+          assert.ok(!mmrGuide.includes('qa-test-residence'), 'Unrelated Mumbai apartment leaked into MMR guide');
+          for(const html of [luxuryGuide,officeGuide,dubaiGuide]) {
+            assert.ok(!html.includes('qa-test-residence'), 'Unapproved curated fallback property leaked into guide');
+            assert.ok(!html.includes('qa-test-mmr-plot'), 'MMR test plot leaked into unrelated guide');
+            assert.match(html,/rel="canonical"/);
+          }
+          for(const route of ['/solutions/mumbai-luxury-homes','/solutions/mumbai-commercial-property','/solutions/dubai-property-investment','/explore/villas-and-plots-mmr']) {
+            assert.ok(sitemap.includes(route), 'Missing high-intent guide in sitemap: '+route);
+          }
+          for(const path of ['assets/site.js','assets/site.css','assets/admin.js','assets/admin-promotions.js','admin/index.html','admin/promotions/index.html','finance/index.html','legal/index.html','properties/index.html','projects/qa-test-mmr-plot/index.html','explore/villas-and-plots-mmr/index.html']) {
             assert.ok((await stat(dir+path)).size>0,'Missing '+path);
           }
           console.log('Cloudflare offline safety tests passed.');
