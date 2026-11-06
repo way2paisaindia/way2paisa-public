@@ -17,7 +17,7 @@
 ## Current production source baseline (6 Nov 2026)
 
 - GitHub: `way2paisaindia/way2paisa-public`, Next.js 15, React 19, Supabase-backed project catalogue and CRM. `main` remains live.
-- Supabase project ref `dqoxrsywknsgkxrdrxep`; **679 fully published projects**, **2,409 active inventory records**, **3,173 active media records**. Counts must be checked afresh just before cutover.
+- Supabase project ref `dqoxrsywknsgkxrdrxep`; **681 fully published projects**, **2,412 active inventory records**, **3,173 active media records**. Counts must be checked afresh just before cutover.
 - 6 major Next API families include leads/notifications, image relay (Sharp), FX, developer logos and Promotion Studio workflows. Admin promotions currently performs protected server-side Instagram/Meta/other operations. Never expose those credentials to the browser.
 - The public image relay is expensive under Vercel's Fluid Active CPU; use browser-native lazy loading and remove per-request Sharp transforms from the static site, with accurate unavailable-image fallback.
 - Current website homepage returned HTTP 200; this is not proof the Vercel free-tier pause has been lifted.
@@ -86,3 +86,10 @@ No hosting vendor can contractually guarantee a perpetual ₹0 plan. Cloudflare 
 - Expanded the **offline-only** fixture with a synthetic MMR plot alongside a Mumbai apartment; GitHub Actions assertions require the MMR plot on its own guide, exclude the Mumbai apartment, reject unmatched curated substitutions, and require all four guide sitemap entries.
 - An isolated, direct execution of the updated `guideHtml` function passed four-guide category and explicit-slug tests, including 24-card cap and featured ordering. The full GitHub Actions build status was not independently confirmed during this continuation; do not treat this as a completed Cloudflare deployment acceptance test.
 - No public project/inventory/media database changes, no live domain/DNS changes, no emails, and no Cloudflare cutover. The premium layout, functional CRM/Promotion Studio, real lead writes, licensed images and Free-tier performance still require full preview acceptance before changing hosting.
+
+## 6 November 2026 later controlled activation: 681 verified published baseline
+
+- Before: **679 active published projects, 2,409 active inventory, 3,173 media, 1,161 private**. After: **681 published, 2,412 active inventory, 3,173 media, 1,159 private**.
+- Two existing pre-researched MMR plotted projects newly activated: **Godrej Hillview Estate** (Khalapur, P52000055348, one marketplace-listed 1,200sq.ft plot type ₹54.4L, indicative) and **Birla Mrida** (Boisar, PP1240002502953, Square Yards marketplace-advertised 1,200/1,500sqft types ₹56.39L/₹70.48L plus charges, indicative). **Not promoter-issued numbered plot availability.** Previous archived/unsupported plot price rows stayed inactive.
+- The current Supabase production database enforces `enforce_project_verification_completeness` on `BEFORE UPDATE OF verified`; its `project_enrichment_gaps(project_id)` must be empty before promotion. Both activated records returned `[]`, including price-to-type source, mapping, verified media with source, GIS and developer information. An attempt to activate an incomplete **Godrej Nexspace** commercial record was stopped by this trigger: missing inventory exact area, location/GPS and original hero/gallery. No bypass or partial Nexspace write occurred; it remains private.
+- The Cloudflare static export fail-closed default `MIN_PUBLISHED_PROJECTS` is now **681**. Production layout, admin, image rights, lead capture and SEO integration still require real `*.pages.dev` end-to-end preview before changing GoDaddy DNS. Free plan terms and build/Workers quotas are not permanently guaranteed.
