@@ -17,7 +17,7 @@
 ## Current production source baseline (6 Nov 2026)
 
 - GitHub: `way2paisaindia/way2paisa-public`, Next.js 15, React 19, Supabase-backed project catalogue and CRM. `main` remains live.
-- Supabase project ref `dqoxrsywknsgkxrdrxep`; **673 fully published projects**, **2,394 active inventory records**, **3,173 active media records**. Counts must be checked afresh just before cutover.
+- Supabase project ref `dqoxrsywknsgkxrdrxep`; **676 fully published projects**, **2,402 active inventory records**, **3,173 active media records**. Counts must be checked afresh just before cutover.
 - 6 major Next API families include leads/notifications, image relay (Sharp), FX, developer logos and Promotion Studio workflows. Admin promotions currently performs protected server-side Instagram/Meta/other operations. Never expose those credentials to the browser.
 - The public image relay is expensive under Vercel's Fluid Active CPU; use browser-native lazy loading and remove per-request Sharp transforms from the static site, with accurate unavailable-image fallback.
 - Current website homepage returned HTTP 200; this is not proof the Vercel free-tier pause has been lifted.
@@ -63,3 +63,10 @@ No hosting vendor can contractually guarantee a perpetual ₹0 plan. Cloudflare 
 - Supabase source-of-truth published **Lodha Casa Olivia** (RERA P51700052243, 3 BHK deck from developer named price ₹1.09Cr+) and **Lodha Casa Foresta A/B/H/I** (RERA P51700032990, four developer starting price variants from ₹74L+). These are newly published project records not preexisting files. 7 and 6 primary/statutory source records, respectively; no new media activated without rights clearance.
 - Latest actual database count **673 active verified complete projects, 2,394 active inventory, 3,173 active project media**. Private records remain 1,161. Subsequent exporter requires minimum 673 or fails closed. This is a minimum guard, not a guarantee that every file and edge case is valid; the full preview count/URL parity must still pass before switching DNS.
 - Do not merge or deploy this branch over `main` merely to update a count: isolate the Cloudflare migration to protect Vercel production while free hosting is configured. No emails or external developer requests are authorised.
+
+## 6 November 2026 later publication refresh — 676 minimum
+
+- **New:** Lodha Casa Evergreen Vikhroli West (C1/C3), Lodha Signet Vikhroli commercial offices, Lodha Signet Matunga commercial offices. Three separate source-verified RERA listings, adding **8 active developer advertised configuration-level starting offers**; project photos were not copied without rights clearance.
+- Latest *live database* counts **676 active verified complete projects, 2,402 active inventory, 3,173 active media, 1,161 private project records**. Supersedes the historical 673/2,394 row above. Static export now refuses to run with fewer than **676** published projects.
+- This is a **temporary count floor**, not a mechanism for publishing new database records on a static Cloudflare website. Until a real Cloudflare owner account, build-time Supabase config, preview QA and safe redeploy trigger are connected, **no live Cloudflare migration has happened**. It would be misleading to claim the site can stay up indefinitely at ₹0 simply because the isolated GitHub fixture CI passed.
+- Original `main` on Vercel and GoDaddy nameservers remain unchanged. No emails or outreach, no DNS switch, Step 3 image issues open, Step 4 on hold.
