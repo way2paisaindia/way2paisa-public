@@ -9,6 +9,7 @@ import {dirname, join, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {highIntentPages} from '../../app/lib/high-intent-pages.js';
 import {intentLandingPages} from '../../app/lib/intent-landing-pages.js';
+import {build as esbuild} from 'esbuild';
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const OUTPUT = join(ROOT, 'dist');
@@ -134,6 +135,30 @@ function legalHtml(content){
  return pageHead(content.title,content.description,'/legal')+nav+'<main><section class="hero compact"><h1>Legal, compliance &amp; privacy</h1><p>Clear information about how we present property and finance opportunities, and how we handle your details.</p></section><article class="section legal-body">'+entries.map(([title,paragraphs])=>'<section><h2>'+esc(title)+'</h2>'+(paragraphs||[]).map(text=>'<p>'+esc(text)+'</p>').join('')+'</section>').join('')+'<p class="disclosure">Last updated: '+esc(content.updated||'')+'</p></article></main>'+foot;
 }
 
+async function buildAdminBundle(){
+ // Client-side authenticated CRM uses existing Supabase RLS; no privileged key.
+ // Every production build must receive a public Supabase publishable key.
+ const publicURL=process.env.NEXT_PUBLIC_SUPABASE_URL||process.env.SUPABASE_URL||(SNAPSHOT?'https://fixture.invalid':'');
+ const publicKey=process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY||process.env.SUPABASE_PUBLISHABLE_KEY||(SNAPSHOT?'fixture-publishable-key':'');
+ if(!publicURL||!publicKey)throw Error('Missing public Supabase config for admin build');
+ const common={bundle:true,platform:'browser',format:'iife',minify:true,target:'es2020',jsx:'automatic',
+  loader:{'.js':'jsx'},logLevel:'warning',
+  define:{
+   'process.env.NEXT_PUBLIC_SUPABASE_URL':JSON.stringify(publicURL),
+   'process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY':JSON.stringify(publicKey),
+   'process.env.NEXT_PUBLIC_WHATSAPP_NUMBER':JSON.stringify('918850373012')
+  }};
+ await Promise.all([
+  esbuild({...common,entryPoints:[join(ROOT,'admin-entry.jsx')],outfile:join(OUTPUT,'assets/admin.js')}),
+  esbuild({...common,entryPoints:[join(ROOT,'promotions-entry.jsx')],outfile:join(OUTPUT,'assets/admin-promotions.js')})
+ ]);
+ const adminHead='<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><link rel="icon" href="/way2paisa-mark.jpg"><title>Way2Paisa Admin Operations</title></head><body style="margin:0">';
+ await write('admin/index.html',adminHead+'<div id="admin-root"></div><script src="/assets/admin.js" defer></script></body></html>');
+ await write('admin/promotions/index.html',adminHead.replace('Way2Paisa Admin Operations','Way2Paisa Promotion Studio')+
+ '<p style="background:#fff3d0;padding:12px;font:14px Arial,sans-serif;color:#663300">Migration preview only: protected social publishing endpoints have not been migrated. Do not publish live promotions from this preview.</p>'+
+ '<div id="admin-root"></div><script src="/assets/admin-promotions.js" defer></script></body></html>');
+}
+
 async function main(){
  let projects,inventory,media,developers,locations;
  if(SNAPSHOT){
@@ -169,6 +194,7 @@ async function main(){
  await mkdir(join(OUTPUT,'assets'),{recursive:true});
  await cp(join(ROOT,'assets/site.css'),join(OUTPUT,'assets/site.css'));
  await cp(join(ROOT,'assets/site.js'),join(OUTPUT,'assets/site.js'));
+ await buildAdminBundle();
  await write('index.html',pageHead('Way2Paisa FinPro Services | Premium Real Estate & Finance Advisory','Premium new launches, residential, commercial, villas and plots across Mumbai, MMR and Dubai.','/')+nav+'<main><section class="hero"><p class="eyebrow">Mumbai · MMR · Dubai</p><h1>Find your next address.<br>Invest with confidence.</h1><p>Premium developer projects and independent real estate and finance advisory.</p><p><a class="nav-cta" href="/properties/">Explore Published Projects</a></p></section><section class="section"><h2>Featured opportunities</h2><div class="cards">'+projects.filter(p=>p.featured).concat(projects.filter(p=>!p.featured)).slice(0,12).map(card).join('')+'</div><p><a href="/properties/">Browse all '+fmt(projects.length)+' published projects</a></p></section><section class="section split"><div><h2>Mumbai, MMR &amp; Dubai</h2><p>Discover new launches, under-construction residences, villas, plots, commercial offices and investment opportunities sourced from published project records.</p><p>Every transaction is subject to developer confirmation and regulatory checks.</p></div><aside id="enquire"><h2>Enquire Now</h2>'+leadForm()+'</aside></section></main>'+foot);
  await write('properties/index.html',directoryHtml(projects));
  await write('finance/index.html',financeHtml());
