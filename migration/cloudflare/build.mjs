@@ -15,7 +15,7 @@ const ROOT = dirname(fileURLToPath(import.meta.url));
 const OUTPUT = join(ROOT, 'dist');
 const HOST = 'https://www.way2paisa.in';
 const SNAPSHOT = process.env.MIGRATION_FIXTURE === '1';
-const MIN_COUNT = Number(process.env.MIN_PUBLISHED_PROJECTS || 679);
+const MIN_COUNT = Number(process.env.MIN_PUBLISHED_PROJECTS || 681);
 // Keep the real production GA4 measurement ID in the Cloudflare build environment.
 // No placeholder IDs or private analytics credentials are shipped to browsers.
 const gaInput = process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID || '';
