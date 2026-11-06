@@ -142,6 +142,7 @@ async function buildAdminBundle(){
  const publicKey=process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY||process.env.SUPABASE_PUBLISHABLE_KEY||(SNAPSHOT?'fixture-publishable-key':'');
  if(!publicURL||!publicKey)throw Error('Missing public Supabase config for admin build');
  const common={bundle:true,platform:'browser',format:'iife',minify:true,target:'es2020',jsx:'automatic',
+  nodePaths:[join(ROOT,'node_modules')],
   loader:{'.js':'jsx'},logLevel:'warning',
   define:{
    'process.env.NEXT_PUBLIC_SUPABASE_URL':JSON.stringify(publicURL),
