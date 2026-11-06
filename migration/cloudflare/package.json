@@ -1,0 +1,16 @@
+{
+  "name": "way2paisa-cloudflare-static",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "check": "node --check build.mjs && node --check functions/api/leads.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.57.4",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "esbuild": "^0.25.0"
+  }
+}
