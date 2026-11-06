@@ -39,8 +39,22 @@ function priceLabel(project){
   if(crore>=1)return 'From ₹'+crore.toLocaleString('en-IN',{maximumFractionDigits:2})+' Cr';
   return 'From ₹'+(crore*100).toLocaleString('en-IN',{maximumFractionDigits:2})+' L';
 }
-function projectType(value){
-  return {apartment:'Apartment',villa:'Villa',plot:'Residential plot',land:'Land plot',commercial_office:'Commercial office'}[value]||'Property';
+// If a published development offers both bare plots and built villas,
+// never pair the lower plot price with an unqualified "Villa" label.
+// Both amounts are derived from verified, active configuration-level stock.
+function mixedPlotVillaPrices(project){
+  const offers=project.live_unit_offers||[];
+  const valid=offers.filter(offer=>Number.isFinite(Number(offer.minimum))&&Number(offer.minimum)>0);
+  const plot=valid.filter(offer=>/\b(?:plot|land)\b/i.test(String(offer.configuration||'')));
+  const villa=valid.filter(offer=>/\b(?:villa|townhouse)\b/i.test(String(offer.configuration||'')));
+  if(!plot.length||!villa.length)return null;
+  const lowest=items=>Math.min(...items.map(item=>Number(item.minimum)));
+  const format=amount=>priceLabel({...project,min_price:amount}).replace(/^From /,'')+'+';
+  return {plot:format(lowest(plot)),villa:format(lowest(villa))};
+}
+function projectType(project){
+  if(mixedPlotVillaPrices(project))return'Plots & Villas';
+  return {apartment:'Apartment',villa:'Villa',plot:'Residential plot',land:'Land plot',commercial_office:'Commercial office'}[project.category]||'Property';
 }
 function card(p){
   return <article key={p.id} className={styles.card}>
@@ -48,12 +62,12 @@ function card(p){
       <ListingImage src={p.hero_image_url} projectId={p.id} alt={p.name} imageVariant="preview" loading="lazy"/>
     </Link>
     <div className={styles.cardBody}>
-      <div className={styles.cardMeta}><span>{projectType(p.category)}</span><span>{p.locations?.name||p.market}</span></div>
+      <div className={styles.cardMeta}><span>{projectType(p)}</span><span>{p.locations?.name||p.market}</span></div>
       <h3><Link href={'/projects/'+encodeURIComponent(p.slug)}>{p.name}</Link></h3>
       {p.developers?.name&&<p className={styles.developer}>By {p.developers.name}</p>}
       <p className={styles.configuration}>{trim(p.live_configuration_summary)||'Configurations on request'}</p>
       <div className={styles.cardFooter}>
-        <strong>{priceLabel(p)}</strong>
+        {mixedPlotVillaPrices(p)?<div className={styles.priceTypes}><span>Plots <strong>{mixedPlotVillaPrices(p).plot}</strong></span><span>Villas <strong>{mixedPlotVillaPrices(p).villa}</strong></span></div>:<strong>{priceLabel(p)}</strong>}
         <Link href={'/projects/'+encodeURIComponent(p.slug)}>View details <span aria-hidden="true">→</span></Link>
       </div>
     </div>
