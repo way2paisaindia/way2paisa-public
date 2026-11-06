@@ -33,6 +33,12 @@ export default function AnalyticsTracker() {
       if (leadTopic && href === '#consultation') {
         window.gtag('event', 'select_advisory_cta', { lead_topic: leadTopic });
       }
+      // Project detail to buyer-guide navigation: measure useful engagement
+      // with fixed categories only, without sending visitor or project data.
+      const guideTopic = pathname?.startsWith('/projects/') ? BUYER_GUIDE_TOPICS[href] : '';
+      if (guideTopic) {
+        window.gtag('event', 'select_buyer_guide', { lead_topic: guideTopic, page_section: 'project' });
+      }
       if (/^tel:/i.test(href)) {
         window.gtag('event', 'click_call', { page_section: pageSection });
       } else if (/^https?:\/\/(?:wa\.me|api\.whatsapp\.com|www\.wa\.me)\//i.test(href)) {
