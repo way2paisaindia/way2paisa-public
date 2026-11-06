@@ -9,8 +9,9 @@ export const intentLandingPages = {
     intro: 'Discover published villas and plotted developments across the wider Mumbai Metropolitan Region. Compare distinct property types and locations rather than treating plots and built residences as equivalent.',
     guidance: 'Land purchases and villas require different checks. Verify title, permitted land use, approvals, construction scope and site boundaries independently before booking.',
     criteria: 'Published villa and plot/land projects in the MMR catalogue',
-    browseHref: '/properties?market=Mumbai&category=plot',
-    browseLabel: 'Explore more MMR properties',
+    // Broaden the catalogue follow-up: restricting it to plots hides villas.
+    browseHref: '/properties?market=Mumbai',
+    browseLabel: 'Explore all Mumbai & MMR properties',
     match: project => project.market === 'MMR'
       && ['villa', 'plot', 'land'].includes(project.category),
     sections: [
