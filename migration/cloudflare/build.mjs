@@ -7,6 +7,8 @@
 import {mkdir, writeFile, rm, cp, readFile} from 'node:fs/promises';
 import {dirname, join, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {highIntentPages} from '../../app/lib/high-intent-pages.js';
+import {intentLandingPages} from '../../app/lib/intent-landing-pages.js';
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const OUTPUT = join(ROOT, 'dist');
@@ -109,20 +111,27 @@ function directoryHtml(projects){
  return pageHead('New & Upcoming Projects in Mumbai, MMR & Dubai | Way2Paisa','Explore verified residential, commercial, villas and plots in Mumbai, MMR and Dubai. Compare developer-advertised prices and configurations.','/properties')+nav+
  '<main><section class="hero compact"><p class="eyebrow">WAY2PAISA PROPERTY DISCOVERY</p><h1>Find the right property.</h1><p>Browse '+fmt(projects.length)+' published projects in Mumbai, MMR and Dubai.</p></section><section class="section"><div class="filters"><label>Market<select id="market"><option value="Mumbai">Mumbai &amp; MMR</option><option value="Dubai">Dubai</option></select></label><label>Search<input id="search" placeholder="Project, developer, location"></label><label>Property type<select id="category"><option value="">All categories</option><option value="apartment">Residential apartments</option><option value="villa">Villas</option><option value="plot">Plots</option><option value="commercial_office">Commercial offices</option><option value="retail">Retail</option></select></label><label>Configuration<input id="configuration" placeholder="e.g. 2 BHK, 3 BR"></label><label>Budget (maximum)<input id="maxBudget" type="number" min="0" step="0.1" placeholder="₹ Cr or AED"></label></div><p id="result-count" role="status"></p><div id="results" class="cards"></div><button id="more" type="button" class="load-more">Show More Projects</button><noscript>JavaScript is required for catalogue filters. The full index is available in the <a href="/sitemap.xml">XML sitemap</a>.</noscript></section></main>'+foot;
 }
-const guideContent={
- 'mumbai-luxury-homes':{title:'Luxury Residential Properties in Mumbai',description:'Discover developer-verified premium homes across South Mumbai, Bandra, Juhu and Western Suburbs.',market:'Mumbai',categories:['apartment','villa']},
- 'mumbai-commercial-property':{title:'Commercial Offices & Retail in Mumbai',description:'Discover premium commercial projects in Mumbai with verified project registrations and configurations.',market:'Mumbai',categories:['commercial_office','retail']},
- 'dubai-property-investment':{title:'Dubai Real Estate Investment Opportunities',description:'Explore residential developments, luxury villas and Dubai commercial property projects.',market:'Dubai',categories:[]}
-};
+const guideContent=highIntentPages;
 function guideHtml(key,meta,projects,pathname){
- const match=projects.filter(p=>(meta.market==='Dubai'?p.market==='Dubai':p.market!=='Dubai')&&(!meta.categories?.length||meta.categories.includes(p.category))).slice(0,30);
- return pageHead(meta.title+' | Way2Paisa',meta.description,pathname)+nav+'<main><section class="hero compact"><p class="eyebrow">WAY2PAISA SPECIALIST ADVISORY</p><h1>'+esc(meta.title)+'</h1><p>'+esc(meta.description)+'</p><a href="/properties/?market='+esc(meta.market)+'" class="nav-cta">Browse all published projects</a></section><section class="section"><h2>Explore current developer offers</h2><div class="cards">'+match.map(card).join('')+'</div></section><section class="section"><h2>Speak to an Advisor</h2>'+leadForm()+'</section></main>'+foot;
+ const target=meta.market==='Dubai'?'Dubai':meta.market==='MMR'?'MMR':'Mumbai';
+ const eligible=projects.filter(p=>(target==='Dubai'?p.market==='Dubai':target==='MMR'?p.market==='MMR':p.market!=='Dubai')&&(!meta.categories?.length||meta.categories.includes(p.category)));
+ const preferred=Array.isArray(meta.slugs)?meta.slugs.map(slug=>eligible.find(p=>p.slug===slug)).filter(Boolean):[];
+ const selected=preferred.length?preferred:eligible.slice(0,30);
+ const intro=Array.isArray(meta.introduction)?meta.introduction:meta.intro?[meta.intro]:[];
+ const h2=Array.isArray(meta.sections)?meta.sections.map(section=>'<section class="guide-section"><h2>'+esc(section.title)+'</h2>'+((section.paragraphs||[]).map(p=>'<p>'+esc(p)+'</p>').join(''))+'</section>').join(''):'';
+ const faqs=Array.isArray(meta.faqs)&&meta.faqs.length?'<section class="section"><h2>Frequently asked questions</h2>'+meta.faqs.map(([q,a])=>'<details><summary>'+esc(q)+'</summary><p>'+esc(a)+'</p></details>').join('')+'</section>':'';
+ return pageHead(meta.seoTitle||meta.metaTitle||meta.title+' | Way2Paisa',meta.seoDescription||meta.description||meta.subtitle||'',pathname)+nav+
+ '<main><section class="hero compact"><p class="eyebrow">'+esc(meta.eyebrow||'WAY2PAISA SPECIALIST ADVISORY')+'</p><h1>'+esc(meta.title)+'</h1><p>'+esc(meta.subtitle||meta.description||'')+'</p><a href="'+esc(meta.catalogueLink||meta.browseHref||'/properties/')+'" class="nav-cta">'+esc(meta.browseLabel||'Browse all published projects')+'</a></section>'+
+ '<section class="section guide-article">'+intro.map(p=>'<p>'+esc(p)+'</p>').join('')+h2+(meta.guidance?'<p>'+esc(meta.guidance)+'</p>':'')+'</section>'+
+ '<section class="section"><h2>'+esc(meta.cardHeading||'Explore current developer offers')+'</h2><p>'+esc(meta.cardIntro||meta.criteria||'')+'</p><div class="cards">'+selected.map(card).join('')+'</div></section>'+
+ faqs+'<section class="section"><h2>Speak to an Advisor</h2>'+leadForm('',meta.leadName||meta.title)+'</section></main>'+foot;
 }
 function financeHtml(){
  return pageHead('Property Finance & Loans | Way2Paisa','Home loans, loan against property and finance advisory by Way2Paisa, Mumbai.','/finance')+nav+'<main><section class="hero compact"><h1>Finance your next move.</h1><p>Home Loans · Loan Against Property · Commercial Funding · Business Finance</p></section><section class="section split"><div><h2>Finance solutions</h2><p>Independent facilitation with leading banks and NBFCs. Eligibility, interest rates, documentation and approvals are lender-dependent. No guaranteed sanction.</p><ul><li>Home Loans for new purchases and under-construction projects</li><li>Loan Against Property for residential and commercial assets</li><li>Commercial purchase finance and developer-side financing coordination</li><li>Refinancing and balance-transfer guidance</li></ul></div><aside><h2>Request a Finance Consultation</h2>'+leadForm('','Finance enquiry')+'</aside></section></main>'+foot;
 }
-function legalHtml(){
- return pageHead('Legal, Privacy & Disclaimer | Way2Paisa','Terms, project accuracy and privacy disclosures for the Way2Paisa real estate and finance advisory website.','/legal')+nav+'<main><section class="hero compact"><h1>Legal &amp; Privacy</h1></section><section class="section"><h2>Independent advisory</h2><p>Way2Paisa FinPro Services is an independent channel partner and facilitator, not the developer, promoter or seller of the listed properties. Developer brochures, project specifications, advertised areas, layouts, prices, availability, taxes, possession and approvals may change without notice. These pages are not a binding offer.</p><h2>Regulatory checks</h2><p>Before investing, verify the official MahaRERA or Dubai Land Department registration, registered promoter, title, permissions, latest completion status, approved plans, allotment, price breakup and agreement. Illustrative images may be subject to source rights or change. All terms and conditions apply.</p><h2>Enquiries and privacy</h2><p>When you send an enquiry, contact and preference details are stored with service providers used for the Way2Paisa enquiry process and may be used to respond to your request. WhatsApp or promotional email updates require your separate consent. To request an update or removal of information, contact <a href="mailto:way2paisaindia@gmail.com">way2paisaindia@gmail.com</a>.</p><p>MahaRERA registered channel partner: A51900044593. This summary is a migration placeholder and requires a legal text parity review against the existing full policy before cutover.</p></section></main>'+foot;
+function legalHtml(content){
+ const entries=content.sections||[];
+ return pageHead(content.title,content.description,'/legal')+nav+'<main><section class="hero compact"><h1>Legal, compliance &amp; privacy</h1><p>Clear information about how we present property and finance opportunities, and how we handle your details.</p></section><article class="section legal-body">'+entries.map(([title,paragraphs])=>'<section><h2>'+esc(title)+'</h2>'+(paragraphs||[]).map(text=>'<p>'+esc(text)+'</p>').join('')+'</section>').join('')+'<p class="disclosure">Last updated: '+esc(content.updated||'')+'</p></article></main>'+foot;
 }
 
 async function main(){
@@ -163,17 +172,19 @@ async function main(){
  await write('index.html',pageHead('Way2Paisa FinPro Services | Premium Real Estate & Finance Advisory','Premium new launches, residential, commercial, villas and plots across Mumbai, MMR and Dubai.','/')+nav+'<main><section class="hero"><p class="eyebrow">Mumbai · MMR · Dubai</p><h1>Find your next address.<br>Invest with confidence.</h1><p>Premium developer projects and independent real estate and finance advisory.</p><p><a class="nav-cta" href="/properties/">Explore Published Projects</a></p></section><section class="section"><h2>Featured opportunities</h2><div class="cards">'+projects.filter(p=>p.featured).concat(projects.filter(p=>!p.featured)).slice(0,12).map(card).join('')+'</div><p><a href="/properties/">Browse all '+fmt(projects.length)+' published projects</a></p></section><section class="section split"><div><h2>Mumbai, MMR &amp; Dubai</h2><p>Discover new launches, under-construction residences, villas, plots, commercial offices and investment opportunities sourced from published project records.</p><p>Every transaction is subject to developer confirmation and regulatory checks.</p></div><aside id="enquire"><h2>Enquire Now</h2>'+leadForm()+'</aside></section></main>'+foot);
  await write('properties/index.html',directoryHtml(projects));
  await write('finance/index.html',financeHtml());
- await write('legal/index.html',legalHtml());
+ await write('legal/index.html',legalHtml(JSON.parse(await readFile(join(ROOT,'legal-content.json'),'utf8'))));
  for(const p of projects)await write('projects/'+p.slug+'/index.html',projectHtml(p,byInv.get(p.id)||[],byMedia.get(p.id)||[]));
  for(const [key,meta] of Object.entries(guideContent))await write('solutions/'+key+'/index.html',guideHtml(key,meta,projects,'/solutions/'+key));
+ for(const [key,meta] of Object.entries(intentLandingPages))await write('explore/'+key+'/index.html',guideHtml(key,meta,projects,'/explore/'+key));
  // Current production includes an intent landing page only where configured.
  // A source-backed dedicated migration file will be supplied after parity check.
  const publicJSON=projects.map(p=>({name:p.name,slug:p.slug,market:p.market,category:p.category,location:p.location_name,developer:p.developer_name,configuration:p.configuration_summary||p.bhk_original||'',min_price:p.min_price,featured:p.featured,hero_image_url:url(p.hero_image_url)}));
  await write('assets/catalogue.json',JSON.stringify(publicJSON));
- const pages=['/','/properties','/finance','/legal',...Object.keys(guideContent).map(x=>'/solutions/'+x),...projects.map(x=>'/projects/'+x.slug)];
+ const pages=['/','/properties','/finance','/legal',...Object.keys(guideContent).map(x=>'/solutions/'+x),...Object.keys(intentLandingPages).map(x=>'/explore/'+x),...projects.map(x=>'/projects/'+x.slug)];
  const siteMap='<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+pages.map(path=>'<url><loc>'+xml(HOST+path)+'</loc></url>').join('')+'</urlset>';
  await write('sitemap.xml',siteMap);
  await write('robots.txt','User-agent: *\nDisallow: /admin\nDisallow: /api/\nAllow: /\nSitemap: '+HOST+'/sitemap.xml\n');
+ await write('404.html',pageHead('Page Not Found | Way2Paisa','This page is not available.','/404')+nav+'<main class="section"><h1>Page not found</h1><p>Explore <a href="/properties/">published property listings</a>.</p></main>'+foot);
  // Cloudflare Pages transparent redirects for canonical no-trailing-slash routes.
  await write('_redirects','/favicon.ico /way2paisa-mark.jpg 301\n');
  // Security headers for static assets, not Functions.
