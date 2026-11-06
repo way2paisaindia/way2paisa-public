@@ -36,9 +36,11 @@
 ## Cloudflare Pages Git settings (after the preview build is production-ready)
 
 - Repository: `way2paisaindia/way2paisa-public`.
-- Production branch: initially a dedicated migration branch, not `main` during testing; defer production cutover.
-- Build command: `node migration/cloudflare/build.mjs`.
-- Build output: `migration/cloudflare/dist`.
+- **Root directory:** `migration/cloudflare` (Cloudflare must see this folder as its Pages project root, including its `functions/` directory).
+- Production branch: initially the dedicated `migration/cloudflare-free-static-first` branch, not `main` during testing; defer custom-domain cutover.
+- Build command: `npm run build` (Cloudflare should install dependencies from the nested `package.json`).
+- Build output directory: `dist` relative to that root.
+- Check in Pages build logs that React admin bundles and all static pages generated successfully. CI fixture builds only prove syntax and page template safety, not real runtime parity.
 - Build-time public configuration: `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`. These are publishable/RLS-restricted, not service-role secrets.
 - Required runtime `/api/leads` secrets/bindings: the same public Supabase URL/key (server-side use only), and `RESEND_API_KEY` if notifications are enabled. Never commit tokens to GitHub. MSG91 optional and requires user-authorized credentials.
 - Cloudflare Pages Functions must live in the Pages project root `functions/` relative to the configured repository root; verify adapter path when using nested code. A dedicated Cloudflare Pages root directory setting or a Worker advanced-mode alternative may be necessary. Test in preview before shipping.
@@ -47,3 +49,11 @@
 ## Budget and permanence disclaimer
 
 No hosting vendor can contractually guarantee a perpetual ₹0 plan. Cloudflare may change pricing, limits, or acceptable-use terms, and a growing site can exceed free function/other provider quotas. The migration targets **zero recurring *hosting subscription*** at current free-tier volumes, with portability/export to avoid lock-in. Domain renewal, Supabase, email and WhatsApp consumption may still involve costs. Never represent static pages alone as a fully migrated production business site.
+
+## Validated branch milestones
+
+- Synthetic project export and HTML escaping have passed the isolated GitHub Actions smoke workflow. A separate CI step now installs dependencies and tests the existing admin React components after static bundling.
+- Both legacy admin React entry points are available under `/admin/` and `/admin/promotions/` in the preview build, using the same browser Supabase auth/RLS. **Their visual and functional parity remains unverified.** Promotion Studio APIs are intentionally not yet provided; social publishing must remain disabled/blocked during preview.
+- The existing editorial `highIntentPages` and `intentLandingPages` modules are imported directly, preserving full SEO guide sections and FAQs for all three `/solutions/` pages and `/explore/villas-and-plots-mmr` rather than replacing them with generic text. The legal page includes all six original policy sections from the original production page.
+- A Cloudflare Pages Function has been prepared for `/api/leads`, using only the existing public INSERT RLS policy; optional Resend/MSG91 notifications require encrypted bindings. **No live lead was sent as part of preparation** and acceptance tests are pending. This does not authorize promotional messaging.
+- Never move `www.way2paisa.in` or change the GoDaddy DNS while preview has any failing feature, even if the static build succeeds.
