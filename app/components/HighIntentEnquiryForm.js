@@ -3,6 +3,15 @@
 import {useState} from 'react';
 import {getLeadAttribution,trackSavedLead} from '../lib/lead-attribution';
 
+// Exact public route mapping. Never send a visitor's free-text brief, name,
+// telephone number, email address or URL query string to analytics.
+const LANDING_TOPICS = {
+  '/solutions/mumbai-luxury-homes': 'mumbai_luxury_homes',
+  '/solutions/mumbai-commercial-property': 'mumbai_commercial_offices',
+  '/solutions/dubai-property-investment': 'dubai_property_investment',
+  '/explore/villas-and-plots-mmr': 'mmr_villas_plots'
+};
+
 export default function HighIntentEnquiryForm({topic,market}) {
   const [form,setForm]=useState({name:'',phone:'',email:'',preferred_locations:'',preferred_bhk:'',budget:''});
   const [sending,setSending]=useState(false);
@@ -27,7 +36,7 @@ export default function HighIntentEnquiryForm({topic,market}) {
       });
       const result=await response.json();
       if(!response.ok)throw new Error(result.error||'We could not submit your enquiry.');
-      trackSavedLead('advisory');
+      trackSavedLead('advisory', {leadTopic: LANDING_TOPICS[window.location.pathname]});
       setSubmitted(true);
     }catch(err){
       setError(err.message||'We could not submit your enquiry. Please try again.');
