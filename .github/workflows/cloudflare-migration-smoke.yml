@@ -1,0 +1,60 @@
+name: Cloudflare migration static build safety checks
+on:
+  push:
+    branches:
+      - migration/cloudflare-free-static-first
+    paths:
+      - 'migration/cloudflare/**'
+      - 'app/lib/high-intent-pages.js'
+      - 'app/lib/intent-landing-pages.js'
+      - '.github/workflows/cloudflare-migration-smoke.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate JavaScript modules
+        run: |
+          node --check migration/cloudflare/build.mjs
+          node --check migration/cloudflare/assets/site.js
+          node --check migration/cloudflare/functions/api/leads.js
+      - name: Build a synthetic one-project site (never deployed)
+        env:
+          MIGRATION_FIXTURE: '1'
+        run: node migration/cloudflare/build.mjs
+      - name: Verify route and SEO output; reject injection
+        run: |
+          node --input-type=module <<'NODE'
+          import {readFile,stat} from 'node:fs/promises';
+          import assert from 'node:assert/strict';
+          const dir='migration/cloudflare/dist/';
+          const [index,detail,sitemap,catalogue,robots]=await Promise.all([
+            readFile(dir+'index.html','utf8'),
+            readFile(dir+'projects/qa-test-residence/index.html','utf8'),
+            readFile(dir+'sitemap.xml','utf8'),
+            readFile(dir+'assets/catalogue.json','utf8'),
+            readFile(dir+'robots.txt','utf8')
+          ]);
+          assert.match(index,/Way2Paisa FinPro Services/);
+          assert.match(detail,/qa-test-residence/);
+          assert.match(detail,/&lt;script&gt;/);
+          assert.ok(!detail.includes("<script>alert('bad')</script>"));
+          assert.match(detail,/rel="canonical"/);
+          assert.match(detail,/application\/ld\+json/);
+          assert.match(sitemap,/projects\/qa-test-residence/);
+          assert.match(robots,/Disallow: \/admin/);
+          assert.equal(JSON.parse(catalogue).length,1);
+          for(const path of ['assets/site.js','assets/site.css','finance/index.html','legal/index.html','properties/index.html']) {
+            assert.ok((await stat(dir+path)).size>0,'Missing '+path);
+          }
+          console.log('Cloudflare offline safety tests passed.');
+          NODE
