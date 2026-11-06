@@ -17,7 +17,7 @@
 ## Current production source baseline (6 Nov 2026)
 
 - GitHub: `way2paisaindia/way2paisa-public`, Next.js 15, React 19, Supabase-backed project catalogue and CRM. `main` remains live.
-- Supabase project ref `dqoxrsywknsgkxrdrxep`; **671 fully published projects**, **2,389 active inventory records**, **3,173 active media records**. Counts must be checked afresh just before cutover.
+- Supabase project ref `dqoxrsywknsgkxrdrxep`; **673 fully published projects**, **2,394 active inventory records**, **3,173 active media records**. Counts must be checked afresh just before cutover.
 - 6 major Next API families include leads/notifications, image relay (Sharp), FX, developer logos and Promotion Studio workflows. Admin promotions currently performs protected server-side Instagram/Meta/other operations. Never expose those credentials to the browser.
 - The public image relay is expensive under Vercel's Fluid Active CPU; use browser-native lazy loading and remove per-request Sharp transforms from the static site, with accurate unavailable-image fallback.
 - Current website homepage returned HTTP 200; this is not proof the Vercel free-tier pause has been lifted.
@@ -29,7 +29,7 @@
 2. Build the full real-source static export (not just fixtures): full count parity, no null/unverified projects, same canonical slugs, no missing legal/static/guide URLs, sitemap count and 200/404 behavior audited.
 3. Visual/browser check across desktop and mobile: homepage, paginated catalogue/filter/search, Mumbai and Dubai currency formatting, 20 sampled project pages and every high-intent landing page; image fallback, accessibility and gallery rights.
 4. End-to-end test **actual** lead form submission, insert in Supabase CRM, optional email/WhatsApp notification status, anti-spam safeguards, analytics/GA4 and buyer appointment schedule. Mock unit tests alone are insufficient.
-5. Admin user login/roles, editing all 671 source-backed listings, inventory, CRM, and Promotion Studio's authenticated routes work on Cloudflare. If any operation is unsupported, pause migration, do not silently remove functionality.
+5. Admin user login/roles, editing all 673 source-backed listings, inventory, CRM, and Promotion Studio's authenticated routes work on Cloudflare. If any operation is unsupported, pause migration, do not silently remove functionality.
 6. Test Cloudflare Worker Free dynamic-requests and CPU, Pages build volume/files limits, Supabase free quotas, Resend/MSG91 quotas, security/abuse controls and analytics. Free tiers are **not a forever guarantee**; domain registration/renewal is still a cost.
 7. Only after all gates pass, add `www.way2paisa.in` to Cloudflare Pages, verify TLS and update GoDaddy CNAME in a coordinated final switchover; handle apex redirect carefully. Keep a verified rollback path to Vercel DNS/records and retain the source repo/database.
 
@@ -57,3 +57,9 @@ No hosting vendor can contractually guarantee a perpetual ₹0 plan. Cloudflare 
 - The existing editorial `highIntentPages` and `intentLandingPages` modules are imported directly, preserving full SEO guide sections and FAQs for all three `/solutions/` pages and `/explore/villas-and-plots-mmr` rather than replacing them with generic text. The legal page includes all six original policy sections from the original production page.
 - A Cloudflare Pages Function has been prepared for `/api/leads`, using only the existing public INSERT RLS policy; optional Resend/MSG91 notifications require encrypted bindings. **No live lead was sent as part of preparation** and acceptance tests are pending. This does not authorize promotional messaging.
 - Never move `www.way2paisa.in` or change the GoDaddy DNS while preview has any failing feature, even if the static build succeeds.
+
+## 6 November 2026 publication count refresh
+
+- Supabase source-of-truth published **Lodha Casa Olivia** (RERA P51700052243, 3 BHK deck from developer named price ₹1.09Cr+) and **Lodha Casa Foresta A/B/H/I** (RERA P51700032990, four developer starting price variants from ₹74L+). These are newly published project records not preexisting files. 7 and 6 primary/statutory source records, respectively; no new media activated without rights clearance.
+- Latest actual database count **673 active verified complete projects, 2,394 active inventory, 3,173 active project media**. Private records remain 1,161. Subsequent exporter requires minimum 673 or fails closed. This is a minimum guard, not a guarantee that every file and edge case is valid; the full preview count/URL parity must still pass before switching DNS.
+- Do not merge or deploy this branch over `main` merely to update a count: isolate the Cloudflare migration to protect Vercel production while free hosting is configured. No emails or external developer requests are authorised.
