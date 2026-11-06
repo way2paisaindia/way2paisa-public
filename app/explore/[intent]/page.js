@@ -86,6 +86,15 @@ export default async function IntentLandingPage({params}){
       }))
     }
   };
+  const breadcrumbs={
+    '@context':'https://schema.org',
+    '@type':'BreadcrumbList',
+    itemListElement:[
+      {'@type':'ListItem',position:1,name:'Home',item:'https://www.way2paisa.in/'},
+      {'@type':'ListItem',position:2,name:'Properties',item:'https://www.way2paisa.in/properties'},
+      {'@type':'ListItem',position:3,name:config.title,item:canonical}
+    ]
+  };
   return <main className={styles.page}>
     <header className={styles.header}>
       <Link className={styles.brand} href="/" aria-label="Way2Paisa homepage"><img src="/way2paisa-logo.png" alt="Way2Paisa FinPro Services"/></Link>
@@ -138,5 +147,6 @@ export default async function IntentLandingPage({params}){
     </nav>
     <footer className={styles.footer}><Link href="/">Way2Paisa FinPro Services</Link><span>Independent channel partner. Details and images subject to developer confirmation. Verify approvals, pricing and terms before booking. T&amp;C apply.</span><Link href="/legal">Legal information</Link></footer>
     <script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(structured).replace(/</g,'\\u003c')}}/>
+    <script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(breadcrumbs).replace(/</g,'\\u003c')}}/>
   </main>;
 }
