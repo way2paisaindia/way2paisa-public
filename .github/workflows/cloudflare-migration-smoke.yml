@@ -22,6 +22,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Install isolated migration build dependencies
+        run: npm --prefix migration/cloudflare install --no-audit --no-fund
       - name: Validate JavaScript modules
         run: |
           node --check migration/cloudflare/build.mjs
@@ -53,7 +55,7 @@ jobs:
           assert.match(sitemap,/projects\/qa-test-residence/);
           assert.match(robots,/Disallow: \/admin/);
           assert.equal(JSON.parse(catalogue).length,1);
-          for(const path of ['assets/site.js','assets/site.css','finance/index.html','legal/index.html','properties/index.html']) {
+          for(const path of ['assets/site.js','assets/site.css','assets/admin.js','assets/admin-promotions.js','admin/index.html','admin/promotions/index.html','finance/index.html','legal/index.html','properties/index.html','explore/villas-and-plots-mmr/index.html']) {
             assert.ok((await stat(dir+path)).size>0,'Missing '+path);
           }
           console.log('Cloudflare offline safety tests passed.');
