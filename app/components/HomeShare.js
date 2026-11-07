@@ -4,7 +4,7 @@ const ShareIcon=()=> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 16
 
 export default function HomeShare(){
  const text='Way2Paisa FinPro Services — Premium real-estate and finance advisory across Mumbai, MMR and Dubai.';
- const url=typeof window==='undefined'?'https://www.way2paisa.in':window.location.origin;
+ const url='https://www.way2paisa.in';
  const message=`${text}\n${url}`;
  return <a className="footerShareBtn" href={`https://wa.me/?text=${encodeURIComponent(message)}`} target="_blank" rel="noreferrer" aria-label="Share Way2Paisa on WhatsApp" title="Share on WhatsApp"><ShareIcon/></a>;
 }
