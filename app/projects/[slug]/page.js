@@ -16,6 +16,7 @@ import ProjectVisitBooking from '../../components/ProjectVisitBooking';
 import NearbyPlaces from '../../components/NearbyPlaces';
 import ProjectVideoGallery from '../../components/ProjectVideoGallery';
 import {getProjectIntentGuide} from '../../lib/project-intent-guide';
+import {formatStoredIsoPossession} from '../../lib/possession-date.mjs';
 // Public, verified project data can be cached briefly to avoid repeated database
 // queries on every Googlebot or visitor request. This does not cache lead form
 // submissions: those are handled separately by client-side API calls.
@@ -216,6 +217,8 @@ function Footer(){return <footer><div className="footerBrand"><img src="/way2pai
 function videoLabel(v,i){const u=String(v.source_url||v.image_url||'').toLowerCase();if(u.includes('youtube.com')||u.includes('youtu.be'))return 'Watch project video on YouTube';if(u.includes('instagram.com'))return 'Watch project reel on Instagram';return `Watch project video${i? ` ${i+1}`:''}`}function Block({kicker,title,children}){return <div className="contentBlock"><span className="kicker">{kicker}</span><h2>{title}</h2>{children}</div>};function Detail({label,value}){return <div><span>{label}</span><strong className="stackedValue">{value||'Available on request'}</strong></div>};const possessionText=value=>{
  const raw=String(value||'').trim();
  if(!raw)return'Available on request';
+ const isoTarget=formatStoredIsoPossession(raw);
+ if(isoTarget)return isoTarget;
  // A bare mention of "OC" is not evidence of occupancy. Do not convert
  // "OC pending", "OC to verify", or a partly completed tower into Ready to Move.
  const readyProof=/\b(?:ready[\s-]*to[\s-]*move|(?:full\s+)?oc\s+(?:received|granted|issued|obtained)|project\s+completed|100%\s+possession\s+(?:achieved|completed))\b/i;
