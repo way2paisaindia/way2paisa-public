@@ -28,6 +28,7 @@ function summarizeConfigurations(values, market) {
     else if (/retail|shop/i.test(raw)) tokens.add('Retail');
     else if (/plot/i.test(raw)) tokens.add('Plot');
     else if (/villa/i.test(raw)) tokens.add('Villa');
+    else if (/\bmansion\b/i.test(raw)) tokens.add(raw);
   }
   const rank = token => token === 'Studio' ? 0 : (Number(token.match(/^([0-9]+(?:\.[0-9]+)?)/)?.[1]) || 90);
   return [...tokens].sort((a, b) => rank(a) - rank(b) || a.localeCompare(b)).join(' | ');
