@@ -2,6 +2,7 @@
 
 import {useCallback, useEffect, useRef, useState} from 'react';
 import {isKnownUnavailableProjectImage as isKnownUnavailableProjectSource} from '../lib/unavailable-project-media';
+import {officialEmaarImageFallback} from '../lib/official-emaar-image-fallback.mjs';
 
 export default function ListingImage({src, alt, projectId, mediaId, fallbackSources = [], imageVariant = 'full', ...props}) {
   const imageRef = useRef(null);
@@ -11,9 +12,13 @@ export default function ListingImage({src, alt, projectId, mediaId, fallbackSour
   const useOriginalEmaarImage = originalUrl.startsWith('https://uae-cms.emaar.com/');
   const useOriginalMahindraImage = originalUrl.startsWith('https://cms.mahindralifespaces.com/web/sites/default/files/')
     && !originalUrl.includes('/styles/');
-  const alternatives = Array.isArray(fallbackSources)
-    ? [...new Set(fallbackSources.filter(url => typeof url === 'string' && url.startsWith('https://') && url !== src && !isKnownUnavailableProjectSource(url)))].slice(0, 3)
-    : [];
+  // The official CMS image source can reject third-party page requests. First
+  // try it without a Referer, then try Emaar's own approved Next image path.
+  // Only fall back to other images already verified for THIS project; never
+  // swap in a logo, unrelated image or a guessed image from another listing.
+  const officialEmaarBackup = officialEmaarImageFallback(src);
+  const possibleAlternatives = [officialEmaarBackup, ...(Array.isArray(fallbackSources) ? fallbackSources : [])];
+  const alternatives = [...new Set(possibleAlternatives.filter(url => typeof url === 'string' && url.startsWith('https://') && url !== src && !isKnownUnavailableProjectSource(url)))].slice(0, 4);
   const initialAlternative = unavailableOriginal && alternatives.length ? 0 : -1;
   // A confirmed-dead original may still have a working, same-project gallery
   // photograph available through the server relay. Try that once, but never
@@ -86,6 +91,7 @@ export default function ListingImage({src, alt, projectId, mediaId, fallbackSour
       ref={imageRef}
       src={displaySrc}
       alt={alt}
+      referrerPolicy={useOriginalEmaarImage && alternateIndex < 0 ? 'no-referrer' : props.referrerPolicy}
       onError={handleImageFailure}
     />
   );

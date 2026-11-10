@@ -104,8 +104,6 @@ const confirmedMissingProjectImageURLs = new Set([
 export function isKnownUnavailableProjectImage(url){
   const src=String(url||'');
   return confirmedMissingProjectImageURLs.has(src)
-    || /^https:\/\/uae-cms\.emaar\.com\/uploads\//i.test(src)
-    || (/^https:\/\/www\.emaar\.com\/_next\/image\?/i.test(src) && /uae-cms\.emaar\.com/i.test(src))
     || /^https:\/\/newwayint\.com\/image\/cache\/catalog\/projects-chini\/serro-emaar\/serro-emaar-02-750x563\.webp(?:\?.*)?$/i.test(src)
     || /^https:\/\/gplwebsitecdnblob\.blob\.core\.windows\.net\/godrej-cdn\/Images\/Godrej-Bliss-Mumbai-Gallery0[1-4]-1332X750/i.test(src);
 }
@@ -122,6 +120,11 @@ const knownUnavailableSocialPreviewURLs = new Set([
 ]);
 
 export function isKnownUnavailableSocialPreview(url) {
-  return isKnownUnavailableProjectImage(url)
-    || knownUnavailableSocialPreviewURLs.has(String(url || ''));
+  const src = String(url || '');
+  // Browser on-page photography may work using Emaar's direct/first-party
+  // fallback, but social crawlers cannot reliably access those image hosts.
+  return isKnownUnavailableProjectImage(src)
+    || /^https:\/\/uae-cms\.emaar\.com\/uploads\//i.test(src)
+    || (/^https:\/\/www\.emaar\.com\/_next\/image\?/i.test(src) && /uae-cms\.emaar\.com/i.test(src))
+    || knownUnavailableSocialPreviewURLs.has(src);
 }
