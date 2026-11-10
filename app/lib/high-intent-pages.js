@@ -200,4 +200,149 @@ export const highIntentPages = {
   }
 };
 
+
+highIntentPages["thane-residential-property"] = {
+  "slug": "thane-residential-property",
+  "market": "Mumbai",
+  "markets": [
+    "Mumbai",
+    "MMR"
+  ],
+  "categories": [
+    "apartment"
+  ],
+  "eyebrow": "THANE RESIDENTIAL PROPERTY",
+  "title": "Residential Property in Thane",
+  "subtitle": "Compare published residential projects, configurations and locations with Way2Paisa.",
+  "seoTitle": "Residential Projects in Thane | Way2Paisa",
+  "seoDescription": "Explore published residential projects in Thane. Compare configurations, locations and current starting prices with Way2Paisa.",
+  "cardHeading": "Explore published residential projects",
+  "cardIntro": "The projects below are published listings. Confirm current unit availability, prices and project details before booking.",
+  "primaryAction": "Request a Property Shortlist",
+  "leadName": "Thane Residential Property Advisory",
+  "catalogueLink": "/properties?market=Mumbai&zone=Thane&category=apartment",
+  "slugs": [
+    "ace-parkside-thane",
+    "lodha-bellavista-thane-west",
+    "dosti-west-county-willow-thane",
+    "dosti-eden-dosti-realty-thane-west-brahmand",
+    "narang-privado-tower-b-thane",
+    "kalpataru-primera-kolshet-road-thane"
+  ],
+  "introduction": [
+    "Compare homes by their actual location, RERA carpet area, budget and possession timeline. Starting prices are indicative and the availability of an individual home must be reconfirmed.",
+    "Way2Paisa can help you shortlist published residential projects and coordinate site visits and current developer quotations."
+  ],
+  "sections": [
+    {
+      "title": "Choose the right neighbourhood for daily life",
+      "paragraphs": [
+        "Compare the actual project address with your regular journeys, schools, healthcare, public transport and local amenities. Visit at a time that reflects the journeys you expect to make.",
+        "Look beyond a broad marketing location name: road access, surrounding development and the time needed to reach your destinations can differ between projects."
+      ]
+    },
+    {
+      "title": "Compare homes and the full cost",
+      "paragraphs": [
+        "Use RERA carpet area and the approved floor plan to compare layouts. Check the price of the specific configuration and ask for an itemised quotation that sets out applicable taxes, duties, maintenance deposits and other charges.",
+        "Consider the payment schedule, loan eligibility and the amount required at each milestone. Seek lender-specific terms rather than treating an online estimate as an approval."
+      ]
+    },
+    {
+      "title": "Check approvals and possession",
+      "paragraphs": [
+        "Verify the registered project and phase on MahaRERA. Compare the developer's target date with the registered completion date and check the status of the specific building and unit.",
+        "Review the agreement, cancellation terms, promised amenities and, for a completed property, relevant occupancy documentation with an independent professional before making a commitment."
+      ]
+    }
+  ],
+  "faqs": [
+    [
+      "Are the prices final?",
+      "Starting prices are indicative. Obtain a written quotation for the specific unit, including applicable charges."
+    ],
+    [
+      "Are all homes ready to move into?",
+      "No. Construction and occupancy status vary by project and phase; confirm the status of the specific unit."
+    ],
+    [
+      "Can Way2Paisa arrange a visit?",
+      "We can help coordinate a visit and obtain updated project information, subject to availability."
+    ],
+    [
+      "Can I get financing assistance?",
+      "We can introduce suitable lender discussions; eligibility and terms depend on the lender and your circumstances."
+    ]
+  ]
+};
+highIntentPages["navi-mumbai-residential-property"] = {
+  "slug": "navi-mumbai-residential-property",
+  "market": "Mumbai",
+  "markets": [
+    "Mumbai",
+    "MMR"
+  ],
+  "categories": [
+    "apartment"
+  ],
+  "eyebrow": "NAVI MUMBAI RESIDENTIAL PROPERTY",
+  "title": "Residential Property in Navi Mumbai",
+  "subtitle": "Compare published residential projects, configurations and locations with Way2Paisa.",
+  "seoTitle": "Residential Projects in Navi Mumbai | Way2Paisa",
+  "seoDescription": "Explore published residential projects in Navi Mumbai. Compare configurations, locations and current starting prices with Way2Paisa.",
+  "cardHeading": "Explore published residential projects",
+  "cardIntro": "The projects below are published listings. Confirm current unit availability, prices and project details before booking.",
+  "primaryAction": "Request a Property Shortlist",
+  "leadName": "Navi Mumbai Residential Property Advisory",
+  "catalogueLink": "/properties?market=Mumbai&zone=Navi%20Mumbai%20%26%20Outer%20MMR&category=apartment",
+  "slugs": [
+    "marathon-nexzone-nirvana-collection-panvel"
+  ],
+  "introduction": [
+    "Compare homes by their actual location, RERA carpet area, budget and possession timeline. Starting prices are indicative and the availability of an individual home must be reconfirmed.",
+    "Way2Paisa can help you shortlist published residential projects and coordinate site visits and current developer quotations."
+  ],
+  "sections": [
+    {
+      "title": "Choose the right neighbourhood for daily life",
+      "paragraphs": [
+        "Compare the actual project address with your regular journeys, schools, healthcare, public transport and local amenities. Visit at a time that reflects the journeys you expect to make.",
+        "Look beyond a broad marketing location name: road access, surrounding development and the time needed to reach your destinations can differ between projects."
+      ]
+    },
+    {
+      "title": "Compare homes and the full cost",
+      "paragraphs": [
+        "Use RERA carpet area and the approved floor plan to compare layouts. Check the price of the specific configuration and ask for an itemised quotation that sets out applicable taxes, duties, maintenance deposits and other charges.",
+        "Consider the payment schedule, loan eligibility and the amount required at each milestone. Seek lender-specific terms rather than treating an online estimate as an approval."
+      ]
+    },
+    {
+      "title": "Check approvals and possession",
+      "paragraphs": [
+        "Verify the registered project and phase on MahaRERA. Compare the developer's target date with the registered completion date and check the status of the specific building and unit.",
+        "Review the agreement, cancellation terms, promised amenities and, for a completed property, relevant occupancy documentation with an independent professional before making a commitment."
+      ]
+    }
+  ],
+  "faqs": [
+    [
+      "Are the prices final?",
+      "Starting prices are indicative. Obtain a written quotation for the specific unit, including applicable charges."
+    ],
+    [
+      "Are all homes ready to move into?",
+      "No. Construction and occupancy status vary by project and phase; confirm the status of the specific unit."
+    ],
+    [
+      "Can Way2Paisa arrange a visit?",
+      "We can help coordinate a visit and obtain updated project information, subject to availability."
+    ],
+    [
+      "Can I get financing assistance?",
+      "We can introduce suitable lender discussions; eligibility and terms depend on the lender and your circumstances."
+    ]
+  ]
+};
+
 export const highIntentSlugs = Object.keys(highIntentPages);
