@@ -33,3 +33,11 @@ Official Maharashtra Police Co-operative Housing Federation Ltd (MPCHFL) project
 
 ## Next work
 Recheck normal live site after its cache naturally expires, no forced purge. Focus Mumbai/MMR high-demand developer-first verified 2/3/4BHK allocations and current cost sheets/approved project photography, not unsourced private rows. Further published-site quality corrections should take precedence over misleading buyer offers. Never turn sold-out offers into current search results; always distinguish first-party project-level starts from exact allocated apartment prices.
+
+## Final post-cache production read-only browser validation — PASS
+A third independent TinyFish read-only live browser check **after natural cache expiry** completed, with exact [run evidence](https://agent.tinyfish.ai/runs/d683a5aa-c5b9-443e-ab1f-a50d15491034):
+- Public canonical https://www.way2paisa.in/projects/galaxy-heights-tower-iii displays exactly **2 BHK, 523 sq.ft, ₹88 Lakh** in its inventory table.
+- Live availability badge now correctly displays **"Confirm Availability"**, **NOT "Sold Out"**. This confirms the previous wrong badge was stale cached HTML/data after the earlier active inventory note mentioned a different sold-out configuration. No code deployment or forced cache refresh necessary.
+- Historical 1 BHK ₹50.85L and 2 BHK ₹74.82L do not appear in live public inventory, and project summary says **2 BHK only**.
+- No form submission, CDN purge, code change, hosting change or email occurred during any browser validation.
+- As of this check, the Tower III production correction is **verified live**. Individual exact unit and final all-inclusive developer quote still require reconfirmation before booking; **"Confirm Availability" is the appropriate honest buyer-facing state**.
