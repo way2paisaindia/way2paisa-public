@@ -91,7 +91,10 @@ export default function ListingImage({src, alt, projectId, mediaId, fallbackSour
       ref={imageRef}
       src={displaySrc}
       alt={alt}
-      referrerPolicy={useOriginalEmaarImage && alternateIndex < 0 ? 'no-referrer' : props.referrerPolicy}
+      // Prevent Way2Paisa's origin from being sent as the Referer to either
+      // official Emaar delivery host. Other developer images keep their
+      // existing referrer behavior.
+      referrerPolicy={useOriginalEmaarImage && (alternateIndex < 0 || selectedSource === officialEmaarBackup) ? 'no-referrer' : props.referrerPolicy}
       onError={handleImageFailure}
     />
   );
