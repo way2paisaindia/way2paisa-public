@@ -1,0 +1,181 @@
+{
+  "purpose": "Official project OG image source candidate mapping for 16 Emaar projects not matched to same original filename in on-page gallery. Browsability and usage rights require separate verification.",
+  "records": [
+    {
+      "project_slug": "emaar-avarra-by-palace-business-bay",
+      "project_name": "Emaar Avarra by Palace at Business Bay",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/428137_property_Hero_Image_2fa5947374.jpg",
+      "official_project_page": "https://cdn.emaar.com/en/properties/avarra-by-palace-at-business-bay",
+      "official_project_og_image": "https://uae-cms.emaar.com/uploads/428137_property_Hero_Image_2fa5947374_prod.jpg",
+      "candidate_official_cdn": "https://cdn.emaar.com/cms-media/uploads/428137_property_Hero_Image_2fa5947374_prod.jpg",
+      "image_identical_to_prior": true,
+      "browser_status": "not yet tested",
+      "rights": "no new permission inferred"
+    },
+    {
+      "project_slug": "emaar-cedar-dubai-creek-harbour",
+      "project_name": "Emaar Cedar at Dubai Creek Harbour",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/323640_property_Hero_Image_a7a49d097a.jpg",
+      "official_project_page": "https://cdn.emaar.com/en/properties/cedar",
+      "official_project_og_image": "https://uae-cms.emaar.com/uploads/323640_property_Hero_Image_a7a49d097a_prod.jpg",
+      "candidate_official_cdn": "https://cdn.emaar.com/cms-media/uploads/323640_property_Hero_Image_a7a49d097a_prod.jpg",
+      "image_identical_to_prior": true,
+      "browser_status": "not yet tested",
+      "rights": "no new permission inferred"
+    },
+    {
+      "project_slug": "emaar-creek-bay",
+      "project_name": "Emaar Creek Bay at Dubai Creek Harbour",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/427131_hero_slide_0_3f9e04f173.jpg",
+      "official_project_page": "https://cdn.emaar.com/en/properties/creek-bay-at-dubai-creek-harbour",
+      "official_project_og_image": "https://uae-cms.emaar.com/uploads/427104_property_Hero_Image_9fa0ef5983_prod.jpg",
+      "candidate_official_cdn": "https://cdn.emaar.com/cms-media/uploads/427104_property_Hero_Image_9fa0ef5983_prod.jpg",
+      "image_identical_to_prior": false,
+      "browser_status": "not yet tested",
+      "rights": "no new permission inferred"
+    },
+    {
+      "project_slug": "emaar-creek-haven",
+      "project_name": "Emaar Creek Haven at Dubai Creek Harbour",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/427314_hero_slide_0_93295d2738.jpg",
+      "official_project_page": "https://cdn.emaar.com/en/properties/creek-haven-at-dubai-creek-harbour",
+      "official_project_og_image": "https://uae-cms.emaar.com/uploads/427353_property_Hero_Image_610e16fccf_prod.jpg",
+      "candidate_official_cdn": "https://cdn.emaar.com/cms-media/uploads/427353_property_Hero_Image_610e16fccf_prod.jpg",
+      "image_identical_to_prior": false,
+      "browser_status": "not yet tested",
+      "rights": "no new permission inferred"
+    },
+    {
+      "project_slug": "emaar-golf-vale",
+      "project_name": "Emaar Golf Vale at Emaar South",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/HERO_1620_X832_2_2_fe6be81843.jpg",
+      "official_project_page": "https://cdn.emaar.com/en/properties/golf-vale-at-emaar-south",
+      "official_project_og_image": "https://uae-cms.emaar.com/uploads/HERO_1620_X832_1_9ae1c6c4ac_prod.jpg",
+      "candidate_official_cdn": "https://cdn.emaar.com/cms-media/uploads/HERO_1620_X832_1_9ae1c6c4ac_prod.jpg",
+      "image_identical_to_prior": false,
+      "browser_status": "not yet tested",
+      "rights": "no new permission inferred"
+    },
+    {
+      "project_slug": "emaar-grove-ridge",
+      "project_name": "Emaar Grove Ridge at Emaar South",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/429494_property_Hero_Image_26e08ad8ce.jpg",
+      "official_project_page": "https://cdn.emaar.com/en/properties/grove-ridge-at-emaar-south",
+      "official_project_og_image": "https://uae-cms.emaar.com/uploads/429494_property_Hero_Image_26e08ad8ce_prod.jpg",
+      "candidate_official_cdn": "https://cdn.emaar.com/cms-media/uploads/429494_property_Hero_Image_26e08ad8ce_prod.jpg",
+      "image_identical_to_prior": true,
+      "browser_status": "not yet tested",
+      "rights": "no new permission inferred"
+    },
+    {
+      "project_slug": "emaar-marina-cove-dubai-marina",
+      "project_name": "Emaar Marina Cove at Dubai Marina",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/393636_property_Hero_Image_e5d544eb37.png",
+      "official_project_page": "https://cdn.emaar.com/en/properties/marina-cove-at-dubai-marina",
+      "official_project_og_image": "https://uae-cms.emaar.com/uploads/393636_property_Hero_Image_e5d544eb37_prod.png",
+      "candidate_official_cdn": "https://cdn.emaar.com/cms-media/uploads/393636_property_Hero_Image_e5d544eb37_prod.png",
+      "image_identical_to_prior": true,
+      "browser_status": "not yet tested",
+      "rights": "no new permission inferred"
+    },
+    {
+      "project_slug": "emaar-ovelle-the-valley",
+      "project_name": "Emaar Ovelle at The Valley",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/426566_property_Hero_Image_ca0039d550.jpg",
+      "official_project_page": "https://cdn.emaar.com/en/properties/ovelle-at-the-valley",
+      "official_project_og_image": "https://uae-cms.emaar.com/uploads/426566_property_Hero_Image_ca0039d550_prod.jpg",
+      "candidate_official_cdn": "https://cdn.emaar.com/cms-media/uploads/426566_property_Hero_Image_ca0039d550_prod.jpg",
+      "image_identical_to_prior": true,
+      "browser_status": "not yet tested",
+      "rights": "no new permission inferred"
+    },
+    {
+      "project_slug": "emaar-palace-residences-hillside-a-dubai-hills-estate",
+      "project_name": "Emaar Palace Residences Hillside A at Dubai Hills Estate",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/423088_property_Hero_Image_e09bc215eb.jpg",
+      "official_project_page": "https://cdn.emaar.com/en/properties/palace-residences-hillside-at-dubai-hills-estate",
+      "official_project_og_image": "https://uae-cms.emaar.com/uploads/423088_property_Hero_Image_e09bc215eb_prod.jpg",
+      "candidate_official_cdn": "https://cdn.emaar.com/cms-media/uploads/423088_property_Hero_Image_e09bc215eb_prod.jpg",
+      "image_identical_to_prior": true,
+      "browser_status": "not yet tested",
+      "rights": "no new permission inferred"
+    },
+    {
+      "project_slug": "emaar-park-lane-dubai-hills-estate",
+      "project_name": "Emaar Park Lane at Dubai Hills Estate",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/382035_property_Hero_Image_5218217c9c.jpg",
+      "official_project_page": "https://cdn.emaar.com/en/properties/park-lane",
+      "official_project_og_image": "https://uae-cms.emaar.com/uploads/382035_property_Hero_Image_5218217c9c_prod.jpg",
+      "candidate_official_cdn": "https://cdn.emaar.com/cms-media/uploads/382035_property_Hero_Image_5218217c9c_prod.jpg",
+      "image_identical_to_prior": true,
+      "browser_status": "not yet tested",
+      "rights": "no new permission inferred"
+    },
+    {
+      "project_slug": "emaar-salva",
+      "project_name": "Emaar Salva at The Heights",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/430613_hero_slide_0_8b290b0425.jpg",
+      "official_project_page": "https://cdn.emaar.com/en/properties/salva-at-the-heights-country-club-and-wellness",
+      "official_project_og_image": "https://uae-cms.emaar.com/uploads/430601_property_Hero_Image_96792de878_prod.jpg",
+      "candidate_official_cdn": "https://cdn.emaar.com/cms-media/uploads/430601_property_Hero_Image_96792de878_prod.jpg",
+      "image_identical_to_prior": false,
+      "browser_status": "not yet tested",
+      "rights": "no new permission inferred"
+    },
+    {
+      "project_slug": "emaar-savanna-dubai-creek-harbour",
+      "project_name": "Emaar Savanna at Dubai Creek Harbour",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/299910_property_Hero_Image_940c3c507b.jpg",
+      "official_project_page": "https://cdn.emaar.com/en/properties/savanna",
+      "official_project_og_image": "https://uae-cms.emaar.com/uploads/299910_property_Hero_Image_940c3c507b_prod.jpg",
+      "candidate_official_cdn": "https://cdn.emaar.com/cms-media/uploads/299910_property_Hero_Image_940c3c507b_prod.jpg",
+      "image_identical_to_prior": true,
+      "browser_status": "not yet tested",
+      "rights": "no new permission inferred"
+    },
+    {
+      "project_slug": "emaar-serro-2",
+      "project_name": "Emaar Serro 2 at The Heights",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/430543_property_Hero_Image_3684ba6c94.jpg",
+      "official_project_page": "https://cdn.emaar.com/en/properties/serro-2-at-the-heights-country-club-and-wellness",
+      "official_project_og_image": "https://uae-cms.emaar.com/uploads/430543_property_Hero_Image_3684ba6c94_prod.jpg",
+      "candidate_official_cdn": "https://cdn.emaar.com/cms-media/uploads/430543_property_Hero_Image_3684ba6c94_prod.jpg",
+      "image_identical_to_prior": true,
+      "browser_status": "not yet tested",
+      "rights": "no new permission inferred"
+    },
+    {
+      "project_slug": "emaar-terra-woods",
+      "project_name": "Emaar Terra Woods at Expo Living",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/HERO_1620_X832_1_3_f1d65d83fa.jpg",
+      "official_project_page": "https://cdn.emaar.com/en/properties/terra-woods-at-expo-living",
+      "official_project_og_image": "https://uae-cms.emaar.com/uploads/HERO_1620_X832_1_3_f1d65d83fa_prod.jpg",
+      "candidate_official_cdn": "https://cdn.emaar.com/cms-media/uploads/HERO_1620_X832_1_3_f1d65d83fa_prod.jpg",
+      "image_identical_to_prior": true,
+      "browser_status": "not yet tested",
+      "rights": "no new permission inferred"
+    },
+    {
+      "project_slug": "emaar-valia",
+      "project_name": "Emaar Valia at Dubai Creek Harbour",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/HERO_1620_X832_1_19ed3b4185.jpg",
+      "official_project_page": "https://cdn.emaar.com/en/properties/valia-at-dubai-creek-harbour",
+      "official_project_og_image": "https://uae-cms.emaar.com/uploads/HERO_1620_X832_1_19ed3b4185_prod.jpg",
+      "candidate_official_cdn": "https://cdn.emaar.com/cms-media/uploads/HERO_1620_X832_1_19ed3b4185_prod.jpg",
+      "image_identical_to_prior": true,
+      "browser_status": "not yet tested",
+      "rights": "no new permission inferred"
+    },
+    {
+      "project_slug": "emaar-vista-ridge",
+      "project_name": "Emaar Vista Ridge at Emaar South",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/429708_hero_slide_0_db8b3fc9c9.jpg",
+      "official_project_page": "https://cdn.emaar.com/en/properties/vista-ridge-at-emaar-south",
+      "official_project_og_image": "https://uae-cms.emaar.com/uploads/400617_property_Hero_Image_0cc9a478bb_prod.jpg",
+      "candidate_official_cdn": "https://cdn.emaar.com/cms-media/uploads/400617_property_Hero_Image_0cc9a478bb_prod.jpg",
+      "image_identical_to_prior": false,
+      "browser_status": "not yet tested",
+      "rights": "no new permission inferred"
+    }
+  ]
+}
