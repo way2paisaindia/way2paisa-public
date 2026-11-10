@@ -13,7 +13,10 @@ function hasImageSignature(bytes) {
     || (x.length >= 8 && [137, 80, 78, 71, 13, 10, 26, 10].every((v, i) => x[i] === v))
     || (x.length >= 12
       && String.fromCharCode(...x.slice(0, 4)) === 'RIFF'
-      && String.fromCharCode(...x.slice(8, 12)) === 'WEBP');
+      && String.fromCharCode(...x.slice(8, 12)) === 'WEBP')
+    || (x.length >= 12
+      && String.fromCharCode(...x.slice(4, 8)) === 'ftyp'
+      && ['avif', 'avis'].includes(String.fromCharCode(...x.slice(8, 12))));
 }
 async function probe(label, url) {
   try {
