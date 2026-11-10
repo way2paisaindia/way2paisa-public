@@ -11,12 +11,18 @@
  const orig='https://uae-cms.emaar.com/uploads/HERO_1620_X832_2_d200e4e4ec.jpg';
  const optimized='https://www.emaar.com/_next/image?url='+encodeURIComponent(orig)+'&w=1200&q=75';
  const gallery='https://uae-cms.emaar.com/uploads/HERO_1620_X832_3_aa21f5bfb4.jpg';
+ const officialCDN='https://cdn.emaar.com/cms-media/uploads/HERO_1620_X832_2_d200e4e4ec_prod_75d32ccb95.jpg';
+ const officialCDNOptimizer='https://cdn.emaar.com/_next/image?url='+encodeURIComponent('/cms-media/uploads/HERO_1620_X832_2_d200e4e4ec_prod_75d32ccb95.jpg')+'&w=1200&q=75';
+ const officialCDNGallery='https://cdn.emaar.com/cms-media/uploads/PRO_EXT_2_f5513de86b_prod.jpg';
  const tests=[
   ['Golf Trails hero: direct, no-referrer',orig,'no-referrer'],
   ['Golf Trails hero: default referrer',orig,null],
   ['Golf Trails hero: origin referrer',orig,'origin'],
   ['Golf Trails second gallery: direct, no-referrer',gallery,'no-referrer'],
-  ['Golf Trails hero: Emaar optimizer',optimized,'no-referrer']
+  ['Golf Trails hero: Emaar optimizer',optimized,'no-referrer'],
+  ['Golf Trails hero: official cdn.emaar.com direct',officialCDN,'no-referrer'],
+  ['Golf Trails hero: official cdn.emaar.com optimizer',officialCDNOptimizer,'no-referrer'],
+  ['Golf Trails exterior: official cdn.emaar.com direct',officialCDNGallery,'no-referrer']
  ];
  const el=document.getElementById('results');
  for(const [name,url,policy] of tests){
