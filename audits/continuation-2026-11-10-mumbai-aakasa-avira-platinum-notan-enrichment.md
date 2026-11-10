@@ -1,0 +1,44 @@
+# Way2Paisa — 10 November 2026: Mumbai priority, three private projects and Notan Tides improvement
+
+## Authorization and limits
+User expressly directed **Mumbai/MMR as 95% business priority** and instructed to leave Emaar photos and GoDaddy publishing aside. This cycle made **only database private research staging, internal source-evidence additions, and one private existing-project data enrichment.** No website deployment, DNS, hosting, developer emails, paid services, public listing or price alterations.
+
+## Verified outcome
+- Created **3 new projects** in `public.projects`, all `market='Mumbai'`, `active=false`, `verified=false`, and publisher `enrichment_status` a descriptive HOLD, with no active `public.inventory` and no licensed images assumed:
+  1. `aakasa-shivaji-park-dadar-west` — MahaRERA **PR1170002501204**; 3 BHK developer-labelled 890 and 1,150 sq.ft; first-party Gala Habitats marketing with Techno/Kamra; statutory promoter **GFT Realtors LLP**. Developer site lists ten distinct specific renders but licence to republish not established. Location Lt Dilip Gupte Marg, Shivaji Park/Mahim 400016; regulator parcel coordinate **19.0307639,72.840008**. Original registration completion **31 Mar 2029**; GharKundli applies eligible four-month automatic shift to **Jul 2029**, check actual updated certificate before public claim. Third-party price from ₹4.65Cr is not costed, current promoter-allocated unit stock. Statutory 30 units include non-open-sale categories; no inference that all unbooked units are available.
+  2. `avira-sai-shreeji-andheri-west` — **PR1180002502562**; legal promoter **Avira Realty Private Limited**, 5-home residential registered site Model JP Road, Ambivali, Andheri West 400053. Filed coordinate **19.1338168,72.8219134**. Historic Apr 2026 QPR 0/5 booked is NOT currently confirmed 5 saleable units. Original completion **29 Dec 2029** and regulator-derived auto-extension to April 2030; certified current filing to confirm. Marketplace 1/2/4BHK and INR1.61–4.96Cr are NOT verified first-party floor/area/price pairs. No authorised gallery.
+  3. `platinum-casa-millennia-andheri-west` — **P51800028304**; brand **Platinum Corp** but statutory promoter **Platinum Aashiana LLP**, D.N. Nagar Andheri West. Mixed-use registration has **86 1BHK + 19 2BHK + 7 office + 7 shop = 119 units**. Original/revised filed completion **30 Mar 2025** and independent derivative labels completed; **occupancy certificate not verified**. Developer official `platinumcorpprojects.com` *still* says 1/2BHK from ₹1.22Cr with `units available YES`, while MPE Sep2026 says only resale/rental stock visible: do **not** represent as fresh promoter first-sale inventory without named current unit or charge sheet. This is a completed project, not a new launch; private research only.
+
+- Created **2 new inactive developer profiles**, `Gala Habitats` (marketing partner, distinct GFT legal promoter) and `Avira Realty Private Limited` (legal promoter), both without any fabricated logo. Platinum Corp existing master reused.
+- Added **15** idempotent internal `public.project_sources` records (3 Aakasa + 3 Avira + 3 Casa + 3 Notan Tides + 1 each Platinum Avenue, Grandeur and Crest). Source records are citations for due diligence, not product-salability certification.
+- Enriched existing **private** `notan-tides-juhu-tara-road` **PM1180002501737**:
+  - Official Notandas Realty project `https://www.notandasrealty.com/projects/notan-tides/` linked for overview and details.
+  - Registered parcel coordinate **19.0936337,72.8284996** from statutory filing (not the entrance); Juhu Tara Road 400049; map anchored.
+  - Seven amenity groups from developer: owner's lounge, rooftop sanctuary, roof jogging, concierge/valet, double-height lobby, fitness/wellness, sea-facing sit-outs.
+  - Private marketing-brand developer Notandas Realty matched; legal promoter remains **Notan Residency Private Limited**. RERA mixed-use file shows 2 Wing A commercial + 15 Wing B residential + 16 Wing C residential = 33 units; 31 residential, NOT 33 apartments for sale. Zero historically booked at May2026 registry not an offer. Explicitly **no current promoter allocated 2/3/5BR costed flats**, no photo rights; remains private.
+  - Formal project-enrichment checker **7 gaps → 4** after verifying geo, amenities and map. Remaining exact unit inventory, developer logo/profile, project hero and gallery.
+- Three already published high-demand **Platinum** projects got source evidence only (not stock changes): Khar West Platinum Avenue, Versova Platinum Grandeur and Upper Juhu Platinum Crest.
+  - Official Platinum Corp corporate source `https://platinumcorpprojects.com/` lists Avenue 2/3BHK available, Grandeur **only 2BHK presently marketed available**, Crest 2BHK with Jodi options and availability.
+  - IMPORTANT: the more detailed Crest first-party `https://crest.platinumcorp.in/` markets **1 and 2 BHK** as project mix, but its current price enquiry table only shows **2BED 560/590/610 sf** with pricing on request; it does NOT certify 1BHK sold out. Two existing public 1BHK inventory rows were preserved and still require specific seller confirmation; no blanket deactivation performed.
+  - Other complete projects in the area (Rustomjee Vista Bay, Sugee Janai Heritage, Embassy Citadel, Platinum Avenue/Grandeur/Crest, Sattva Sumera etc) were checked for duplicates rather than recreated.
+  - Platinum Privé `P51800000494` developer corporate lists `few units available` but registry `https://www.squareyards.com/mumbai-residential-property/platinum-prive/164687/project/rera/p51800000494` labels **PLATINUM TOWER-4** with **83/83 historically booked**; do NOT create a misleading marketed first-sale record until brand/phase/RERA and resale/unsold status resolved.
+  - Marquis Residences Phase 1 Malad West appears to have statutory **commercial** registration `P51800050800` under Embassy Enterprises despite residential marketing and microsite variant `P51800005800` + Phase 2 `P51800051092`; avoid creation as a residential first-sale project without legally clear phase identification.
+
+## Data and access QA
+Connected Supabase final read:
+- **1,852 total projects = 681 published + 1,171 private**, 366 published Mumbai, 119 published MMR (485 combined).
+- **2,413 active inventory**, **3,174 active media** unchanged.
+- `BEGIN READ ONLY; SET LOCAL ROLE anon;` verified **0 of the 3 new private rows are visible to public visitors**, and the 681 published projects are visible under public DB role.
+- No `min_price` or priced `inventory` inserted; no active project/stock/photo status changed; no user emails or GoDaddy/Emaar work.
+
+## Evidence: dated first party and independent registrations
+**Aakasa:** developer https://www.galahabitats.com/projects/aakasa-shivaji-park/ ; MahaRERA derivative https://www.squareyards.com/mumbai-residential-property/techno-aakasa-shivaji-park/341381/project/rera/pr1170002501204 ; auto-extension commentary https://gharkundli.com/projects/1220 .
+**Avira:** https://reragenie.com/p/avira-sai-shreeji-co-operative-housing-society-limited-ambivali-8ypbtmpr/ ; location/registered carpet https://www.squareyards.com/mumbai-residential-property/avira-sai-shreeji-chs/343476/project/rera/pr1180002502562 ; third-party marketed ads https://www.mumbaipropertyexchange.com/project/avira-sai-shreeji-chsl-andheri-west/33952 .
+**Casa Millennia:** developer https://platinumcorpprojects.com/ ; RERA https://www.squareyards.com/mumbai-residential-property/platinum-casa-millennia/103849/project/rera/p51800028304 ; resale https://www.mumbaipropertyexchange.com/project/casa-millennia-andheri-west/28324 .
+**Notan Tides:** official https://www.notandasrealty.com/projects/notan-tides/ ; RERA statutory wings https://reragenie.com/p/notan-tides-juhu-4dn8qp0k/ ; RERA geocode https://www.squareyards.com/mumbai-residential-property/notan-tides/342271/project/rera/pm1180002501737 .
+**Platinum active source:** https://platinumcorpprojects.com/ and https://crest.platinumcorp.in/ .
+
+## Next highest-value Mumbai publication work
+Prioritize first-party **currently allocatable 2/3/4BHK unit number, registered carpet, full all-inclusive cost sheet and legal promoter approval to market**, plus genuine property-specific image use rights for Aakasa, Navkar Palace Andheri, H. Rishabraj Trident Juhu, Notan Tides and Malad/Andheri developer projects. One-off resale and generic unit-lists must not be framed as promoter inventory. Continue high-demand Mumbai 2–10Cr and premium 10Cr+ zones before peripheral MMR. No invented developer bookings, opening prices, square footage or copied unlicensed project photo galleries.
+
+**Project publication count this cycle: 0 new live projects**, because source conditions do not meet the project's strict publication standard. This is an explicit quality hold, not a claim that database additions became live GoDaddy pages.
