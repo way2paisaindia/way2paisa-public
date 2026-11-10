@@ -49,3 +49,21 @@ Five `20261110_*` source evidence records inserted, one per candidate/status con
 1. **Actually publish new projects** once the exact current promoter/agent-authorized stock, phase-specific RERA/DLD carpet/area, price/taxes, and genuine licensed project images pass the existing formal validator. No bypass of `project_enrichment_gaps` or activation of a stale `Sold Out`/resale/duplicate umbrella.
 2. Get independent GoDaddy visitor/browser verification of `/properties`, `/sitemap.xml` and this improved Panvel map after deployment; do not assert live parity from a SQL read.
 3. Clear remaining **44 published quality-check instances**, notably missing legitimate hero/gallery for Nirvana and many others; prioritize approved images and current exact allotment.
+
+
+## Subsequent continuation: six Emaar first-party unit offers reconfirmed (10 Nov 2026)
+
+Source: https://www.emaar.com/en/property-for-sale/emaar-south , Emaar official current first-party listing indexed/crawled 10 Nov 2026. It displays the precise following unit identifiers as available/bookable at the *developer* listed values. All SIX were already ACTIVE in Way2Paisa, so creating additional rows would have been an error. Individually matched all six against existing `public.inventory` rows on **project slug, exact unit number, exact AED price and exact developer unit area**. Refreshed `last_verified` and `updated_at` to UTC `2026-11-10T06:42:43.653864Z` on six matched active records ONLY; no price/area/availability/unit/active flag was altered:
+
+| Emaar project | Exact existing developer unit | Developer area, sq.ft | Price AED |
+|---|---|---:|---:|
+| Emaar Golf Dale | ES Golf Dale T2-G-G04 | 1,399 | 2,701,888 |
+| Emaar Golf Dale | ES Golf Dale TH-G-G01 | 2,559 | 4,717,888 |
+| Emaar Golf Dale | ES Golf Dale TH-G-G02 | 2,542 | 4,681,888 |
+| Emaar Golf Point | ES Golf Point 1-P-P18 | 1,880 | 3,601,888 |
+| Emaar Golf Point | ES Golf Point 2-P-P18 | 1,880 | 3,601,888 |
+| Emaar Golf Point | ES Golf Point 2-P-P15 | 1,902 | 3,610,888 |
+
+**New current evidence records:** `20261110_emaar_property_for_sale_six_units_golf_dale` and `20261110_emaar_property_for_sale_six_units_golf_point` in `public.project_sources`. The existing Golf Dale TH-prefixed layouts are reported as 3BR by Emaar, but their unit detail page may label them Apartment; the original public configuration honestly flags classification for reconfirmation and was intentionally not modified. Confirm current reservation and all charges before a client commits.
+
+**Final post-write SQL QA:** 681 published, 1,161 private, 2,413 active inventory, 3,174 active media. 14 published project records have gaps; 44 individual incomplete checks. **Exactly 10** new `20261110_` evidence rows (3 Nirvana coordinate, 5 publication/legal/asset holds, 2 Emaar first-party unit checks). **Exactly 6** unit rows match today's developer refresh date. Zero newly activated projects, zero inventory rows inserted or disabled in this 10 Nov cycle, zero changed selling prices. Public anon Supabase permissions and canonical relation joins passed earlier in cycle, but actual GoDaddy visitor HTML/sitemap still independently unverified.
