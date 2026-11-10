@@ -17,8 +17,13 @@ export default function ListingImage({src, alt, projectId, mediaId, fallbackSour
   // Only fall back to other images already verified for THIS project; never
   // swap in a logo, unrelated image or a guessed image from another listing.
   const officialEmaarBackup = officialEmaarImageFallback(src);
-  const possibleAlternatives = [officialEmaarBackup, ...(Array.isArray(fallbackSources) ? fallbackSources : [])];
-  const alternatives = [...new Set(possibleAlternatives.filter(url => typeof url === 'string' && url.startsWith('https://') && url !== src && !isKnownUnavailableProjectSource(url)))].slice(0, 4);
+  // Try each source-confirmed gallery image on its own CDN and, for Emaar
+  // photos, also through Emaar's first-party optimizer. The parent passes only
+  // verified same-project gallery URLs; no cross-project substitutions.
+  const projectGalleryAlternatives = (Array.isArray(fallbackSources) ? fallbackSources : [])
+    .flatMap(url => [url, officialEmaarImageFallback(url)]);
+  const possibleAlternatives = [officialEmaarBackup, ...projectGalleryAlternatives];
+  const alternatives = [...new Set(possibleAlternatives.filter(url => typeof url === 'string' && url.startsWith('https://') && url !== src && !isKnownUnavailableProjectSource(url)))].slice(0, 6);
   const initialAlternative = unavailableOriginal && alternatives.length ? 0 : -1;
   // A confirmed-dead original may still have a working, same-project gallery
   // photograph available through the server relay. Try that once, but never
