@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+const image = readFileSync(new URL('../app/components/ListingImage.js', import.meta.url), 'utf8');
+const helper = readFileSync(new URL('../app/lib/official-emaar-image-fallback.mjs', import.meta.url), 'utf8');
+const unavailable = readFileSync(new URL('../app/lib/unavailable-project-media.js', import.meta.url), 'utf8');
+assert.match(image, /selectedSource === officialEmaarBackup\) \? 'no-referrer'/);
+assert.match(image, /const officialEmaarBackup = officialEmaarImageFallback\(src\)/);
+assert.match(image, /onError=\{handleImageFailure\}/);
+assert.match(helper, /source\.hostname !== 'uae-cms\.emaar\.com'/);
+assert.match(unavailable, /export function isKnownUnavailableSocialPreview/);
+assert.match(unavailable, /uae-cms\\\.emaar\\\.com/);
+console.log('Emaar referrer and fallback source checks passed');
