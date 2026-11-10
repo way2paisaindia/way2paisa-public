@@ -17,3 +17,20 @@ export function officialEmaarImageFallback(value) {
     return null;
   }
 }
+
+export function isOfficialEmaarDeliveryUrl(value) {
+  try {
+    const url = new URL(String(value ?? ''));
+    if (url.protocol !== 'https:') return false;
+    if (url.hostname === 'uae-cms.emaar.com') {
+      return url.pathname.startsWith('/uploads/')
+        && /\.(?:jpe?g|png|webp)$/i.test(url.pathname);
+    }
+    if (url.hostname === 'www.emaar.com' && url.pathname === '/_next/image') {
+      return officialEmaarImageFallback(url.searchParams.get('url')) !== null;
+    }
+    return false;
+  } catch {
+    return false;
+  }
+}
