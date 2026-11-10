@@ -2,7 +2,7 @@
 
 import {useCallback, useEffect, useRef, useState} from 'react';
 import {isKnownUnavailableProjectImage as isKnownUnavailableProjectSource} from '../lib/unavailable-project-media';
-import {officialEmaarImageFallback} from '../lib/official-emaar-image-fallback.mjs';
+import {officialEmaarImageFallback, isOfficialEmaarDeliveryUrl} from '../lib/official-emaar-image-fallback.mjs';
 
 export default function ListingImage({src, alt, projectId, mediaId, fallbackSources = [], imageVariant = 'full', ...props}) {
   const imageRef = useRef(null);
@@ -99,7 +99,7 @@ export default function ListingImage({src, alt, projectId, mediaId, fallbackSour
       // Prevent Way2Paisa's origin from being sent as the Referer to either
       // official Emaar delivery host. Other developer images keep their
       // existing referrer behavior.
-      referrerPolicy={useOriginalEmaarImage && (alternateIndex < 0 || selectedSource === officialEmaarBackup) ? 'no-referrer' : props.referrerPolicy}
+      referrerPolicy={isOfficialEmaarDeliveryUrl(displaySrc) ? 'no-referrer' : props.referrerPolicy}
       onError={handleImageFailure}
     />
   );

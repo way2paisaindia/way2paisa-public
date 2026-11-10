@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {officialEmaarImageFallback} from '../app/lib/official-emaar-image-fallback.mjs';
+import {officialEmaarImageFallback, isOfficialEmaarDeliveryUrl} from '../app/lib/official-emaar-image-fallback.mjs';
 
 const original='https://uae-cms.emaar.com/uploads/427131_hero_slide_0_3f9e04f173.jpg';
 const fallback=officialEmaarImageFallback(original);
@@ -19,3 +19,13 @@ for(const invalid of [
 ]) assert.equal(officialEmaarImageFallback(invalid), null);
 assert.match(officialEmaarImageFallback('https://uae-cms.emaar.com/uploads/hero.webp'), /^https:\/\/www\.emaar\.com\/_next\/image\?/);
 console.log('Emaar first-party image fallback: passed source, format, and redirect guards');
+
+assert.equal(isOfficialEmaarDeliveryUrl(original), true);
+assert.equal(isOfficialEmaarDeliveryUrl(fallback), true);
+assert.equal(isOfficialEmaarDeliveryUrl('https://uae-cms.emaar.com/uploads/lobby.webp'), true);
+assert.equal(isOfficialEmaarDeliveryUrl('https://uae-cms.emaar.com/_next/image'), false);
+assert.equal(isOfficialEmaarDeliveryUrl('https://www.emaar.com/_next/image?url=https%3A%2F%2Fevil.test%2Fx.jpg&w=1200&q=75'), false);
+assert.equal(isOfficialEmaarDeliveryUrl('https://uae-cms.emaar.com.evil.test/uploads/lobby.webp'), false);
+assert.equal(isOfficialEmaarDeliveryUrl('/api/project-image?project=abc'), false);
+assert.equal(isOfficialEmaarDeliveryUrl('https://www.emaar.com/en/properties/creek-bay'), false);
+console.log('Emaar referrer controls pass for direct and first-party fallback gallery assets');
