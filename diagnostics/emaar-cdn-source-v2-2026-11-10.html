@@ -1,0 +1,10 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow"><title>Way2Paisa Emaar CDN second source test v2</title></head><body style="font-family:Arial,sans-serif;max-width:760px;margin:25px auto"><h1>Way2Paisa Emaar CDN source verification v2</h1><p>Read-only external-browser test, not GoDaddy, not a site deployment. Results must report dimensions.</p><div id="out"></div><script>
+const cases=[
+['Emaar official CDN raw Golf Trails','https://cdn.emaar.com/cms-media/uploads/HERO_1620_X832_2_d200e4e4ec_prod_75d32ccb95.jpg'],
+['Emaar official CDN image optimized Golf Trails','https://cdn.emaar.com/_next/image?url=%2Fcms-media%2Fuploads%2FHERO_1620_X832_2_d200e4e4ec_prod_75d32ccb95.jpg&w=1200&q=75'],
+['Emaar official CDN exterior Golf Trails','https://cdn.emaar.com/cms-media/uploads/PRO_EXT_2_f5513de86b_prod.jpg'],
+['Legacy Emaar CMS same project control','https://uae-cms.emaar.com/uploads/HERO_1620_X832_2_d200e4e4ec.jpg']
+];
+const list=document.getElementById('out');
+for(let i=0;i<cases.length;i++){const [name,url]=cases[i], el=document.createElement('section'),status=document.createElement('p'),img=document.createElement('img');el.style='border:1px solid #ccd;padding:10px;margin-bottom:12px';status.textContent='PENDING';status.id='status-'+i;img.referrerPolicy='no-referrer';img.alt=name;img.width=500;img.height=250;img.style='max-width:100%;object-fit:contain;background:#eee';img.onload=()=>{status.textContent='LOADED '+img.naturalWidth+'x'+img.naturalHeight};img.onerror=()=>{status.textContent='FAILED'};img.src=url;const title=document.createElement('h2');title.textContent=(i+1)+'. '+name;const source=document.createElement('code');source.textContent=url;el.append(title,status,img,source);list.append(el);setTimeout(()=>{if(status.textContent==='PENDING')status.textContent='TIMEOUT'},15000)}
+</script></body></html>
