@@ -5,7 +5,7 @@
 As directed, focus on Mumbai/MMR buyer-first-sale opportunities, not Dubai/Emaar and not GoDaddy publishing. User wants substantially more **genuine live** residential and commercial projects, preferably 2–10Cr Mumbai and high-value Juhu/Bandra/Dadar, then MMR. Maintain all existing public prices, active inventories, premium consistent listing data, licensed genuine media, separate registered carpet and market area and valid MahaRERA project/phase identities. No developer emails/paid upgrade.
 
 ## This cycle: actual connected Supabase operations
-- Created **TWO** missing, unique Marathi/MMR Marathon Group township collection project rows as **private**: `active=false`, `verified=false`, with no fake active unit allocation, no photos scraped or uploaded, no map pin invented.
+- Created **TWO** missing, unique Mumbai/MMR Marathon Group township collection project rows as **private**: `active=false`, `verified=false`, with no fake active unit allocation, no photos scraped or uploaded, no map pin invented.
   1. **Marathon Nexworld — Aura, Elara, Nova & Flora**, `marathon-nexworld-dombivli-east`, `market=MMR`, 7 individually registered phases:
      - Aura 1 `P51700000652`, Aura 2 `P51700000507`, Aura 3 `P51700022847`;
      - Elara 1 `P51700000478`, Elara 2 `P51700000470`;
