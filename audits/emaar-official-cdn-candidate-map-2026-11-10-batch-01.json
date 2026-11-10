@@ -1,0 +1,126 @@
+{
+  "scope": "Read-only candidate discovery from Emaar official project pages. CDN images not copied; asset usage permission and browser embedding must be verified before website publication.",
+  "created": "2026-11-10",
+  "records": [
+    {
+      "project_slug": "emaar-aeon-dubai-creek-harbour",
+      "project_name": "Emaar Aeon at Dubai Creek Harbour",
+      "official_project_page": "https://cdn.emaar.com/en/properties/aeon",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/378755_hero_slide_0_b7970cf577.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/378755_hero_slide_0_b7970cf577_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-albero-dubai-creek-harbour",
+      "project_name": "Emaar Albero at Dubai Creek Harbour",
+      "official_project_page": "https://cdn.emaar.com/en/properties/albero-at-dubai-creek-harbour",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/401606_hero_slide_0_cd33cd0b55.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/401606_hero_slide_0_cd33cd0b55_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-altan-dubai-creek-harbour",
+      "project_name": "Emaar Altan at Dubai Creek Harbour",
+      "official_project_page": "https://cdn.emaar.com/en/properties/altan-at-dubai-creek-harbour",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/410869_hero_slide_0_f11daca164.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/410869_hero_slide_0_f11daca164_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 12,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-altus-dubai-creek-harbour",
+      "project_name": "Emaar Altus at Dubai Creek Harbour",
+      "official_project_page": "https://cdn.emaar.com/en/properties/altus-at-dubai-creek-harbour",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/388596_hero_slide_0_1dc74b09be.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/388596_hero_slide_0_1dc74b09be_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-aurea-rashid-yachts-marina",
+      "project_name": "Emaar Aurea at Rashid Yachts & Marina",
+      "official_project_page": "https://cdn.emaar.com/en/properties/aurea-at-rashid-yachts-and-marina",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/421558_hero_slide_0_1716a1a179.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/421558_hero_slide_0_1716a1a179_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-avarra-by-palace-business-bay",
+      "project_name": "Emaar Avarra by Palace at Business Bay",
+      "official_project_page": "https://cdn.emaar.com/en/properties/avarra-by-palace-at-business-bay",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/428137_property_Hero_Image_2fa5947374.jpg",
+      "verified_same_file_cdn": null,
+      "matched_candidates": 0,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-baystar-by-vida-rashid-yachts-marina",
+      "project_name": "Emaar Baystar by Vida at Rashid Yachts & Marina",
+      "official_project_page": "https://cdn.emaar.com/en/properties/baystar-by-vida-at-rashid-yachts-marina",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/418968_hero_slide_0_52a19513fe.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/418968_hero_slide_0_52a19513fe_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-bayview-by-address-resorts-emaar-beachfront",
+      "project_name": "Emaar Bayview by Address Resorts at Emaar Beachfront",
+      "official_project_page": "https://cdn.emaar.com/en/properties/bayview-by-address-resorts",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/361635_hero_slide_0_d318e41f25.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/361635_hero_slide_0_d318e41f25_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 11,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-beach-mansion-emaar-beachfront",
+      "project_name": "Emaar Beach Mansion at Emaar Beachfront",
+      "official_project_page": "https://cdn.emaar.com/en/properties/beach-mansion",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/117851_property_Hero_Image_7ed57f0f7a.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/117851_property_Hero_Image_7ed57f0f7a_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 7,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-beach-vista-emaar-beachfront",
+      "project_name": "Emaar Beach Vista at Emaar Beachfront",
+      "official_project_page": "https://cdn.emaar.com/en/properties/beach-vista",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/13228_property_Hero_Image_1abc293833.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/13228_property_Hero_Image_1abc293833_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 5,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    }
+  ]
+}
