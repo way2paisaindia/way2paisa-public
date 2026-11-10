@@ -1,0 +1,126 @@
+{
+  "scope": "Official project page crossmatch; do not publicize until browser/rights verification",
+  "date": "2026-11-10",
+  "records": [
+    {
+      "project_slug": "emaar-creekside-18-dubai-creek-harbour",
+      "project_name": "Emaar Creekside 18 at Dubai Creek Harbour",
+      "official_project_page": "https://cdn.emaar.com/en/properties/creekside-18",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/64398_property_Hero_Image_43d79ae3ea.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/64398_property_Hero_Image_43d79ae3ea_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 6,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-downtown-views-ii",
+      "project_name": "Emaar Downtown Views II",
+      "official_project_page": "https://cdn.emaar.com/en/properties/downtown-views-ii",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/2338_property_Hero_Image_eeef5a7633.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/2338_property_Hero_Image_eeef5a7633_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 7,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-dubai-creek-residences-dubai-creek-harbour",
+      "project_name": "Emaar Dubai Creek Residences at Dubai Creek Harbour",
+      "official_project_page": "https://cdn.emaar.com/en/properties/dubai-creek-residences",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/2600_property_Hero_Image_1a30ffc18b.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/2600_property_Hero_Image_1a30ffc18b_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 7,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-forte-downtown-dubai",
+      "project_name": "Emaar Forte at Downtown Dubai",
+      "official_project_page": "https://cdn.emaar.com/en/properties/forte",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/10946_property_Hero_Image_1db0c1fc35.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/10946_property_Hero_Image_1db0c1fc35_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 7,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-golf-acres-emaar-south",
+      "project_name": "Emaar Golf Acres at Emaar South",
+      "official_project_page": "https://cdn.emaar.com/en/properties/golf-acres-at-emaar-south",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/395914_hero_slide_0_b520e7739f.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/395914_hero_slide_0_b520e7739f_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-golf-dale-emaar-south",
+      "project_name": "Emaar Golf Dale at Emaar South",
+      "official_project_page": "https://cdn.emaar.com/en/properties/golf-dale-at-emaar-south",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/395800_hero_slide_0_04dec240ce.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/395800_hero_slide_0_04dec240ce_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-golf-grand-dubai-hills-estate",
+      "project_name": "Emaar Golf Grand at Dubai Hills Estate",
+      "official_project_page": "https://cdn.emaar.com/en/properties/golf-grand",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/329264_hero_slide_0_723e51219a.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/329264_hero_slide_0_723e51219a_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-golf-hills-2-emaar-south",
+      "project_name": "Emaar Golf Hills 2 at Emaar South",
+      "official_project_page": "https://cdn.emaar.com/en/properties/golf-hills-2-at-emaar-south",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/424038_hero_slide_0_47f7c983a8.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/424038_hero_slide_0_47f7c983a8_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-golf-hillside-dubai-hills-estate",
+      "project_name": "Emaar Golf Hillside at Dubai Hills Estate",
+      "official_project_page": "https://cdn.emaar.com/en/properties/golf-hillside-at-dubai-hills-estate",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/391567_hero_slide_0_517dfaccb9.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/391567_hero_slide_0_517dfaccb9_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-golf-meadow-emaar-south",
+      "project_name": "Emaar Golf Meadow at Emaar South",
+      "official_project_page": "https://cdn.emaar.com/en/properties/golf-meadow-at-emaar-south",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/400721_hero_slide_0_031955c027.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/400721_hero_slide_0_031955c027_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    }
+  ]
+}
