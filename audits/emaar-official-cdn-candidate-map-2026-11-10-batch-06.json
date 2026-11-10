@@ -1,0 +1,126 @@
+{
+  "scope": "Read-only official Emaar CDN exact filename image candidates",
+  "date": "2026-11-10",
+  "records": [
+    {
+      "project_slug": "emaar-parkside-views-residence-dubai-hills-estate",
+      "project_name": "Emaar Parkside Views Residence at Dubai Hills Estate",
+      "official_project_page": "https://cdn.emaar.com/en/properties/parkside-views-residence",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/375462_hero_slide_0_ac0b790ced.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/375462_hero_slide_0_ac0b790ced_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-parkwood-dubai-hills-estate",
+      "project_name": "Emaar Parkwood at Dubai Hills Estate",
+      "official_project_page": "https://cdn.emaar.com/en/properties/parkwood-at-dubai-hills-estate",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/398588_hero_slide_0_8c8f2fd029.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/398588_hero_slide_0_8c8f2fd029_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-pier-point-1-rashid-yachts-marina",
+      "project_name": "Emaar Pier Point 1 at Rashid Yachts & Marina",
+      "official_project_page": "https://cdn.emaar.com/en/properties/pier-point-at-rashid-yachts-marina",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/392368_hero_slide_0_7219105cc4.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/392368_hero_slide_0_7219105cc4_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-rosehill-dubai-hills-estate",
+      "project_name": "Emaar Rosehill at Dubai Hills Estate",
+      "official_project_page": "https://cdn.emaar.com/en/properties/rosehill-dubai-hills-estate",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/418468_hero_slide_0_3f519f7f13.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/418468_hero_slide_0_3f519f7f13_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-salva",
+      "project_name": "Emaar Salva at The Heights",
+      "official_project_page": "https://cdn.emaar.com/en/properties/salva-at-the-heights-country-club-and-wellness",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/430613_hero_slide_0_8b290b0425.jpg",
+      "verified_same_file_cdn": null,
+      "matched_candidates": 0,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-savanna-dubai-creek-harbour",
+      "project_name": "Emaar Savanna at Dubai Creek Harbour",
+      "official_project_page": "https://cdn.emaar.com/en/properties/savanna",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/299910_property_Hero_Image_940c3c507b.jpg",
+      "verified_same_file_cdn": null,
+      "matched_candidates": 0,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-seascape-rashid-yachts-marina",
+      "project_name": "Emaar Seascape at Rashid Yachts & Marina",
+      "official_project_page": "https://cdn.emaar.com/en/properties/seascape",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/281465_property_Hero_Image_42f1878910.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/281465_property_Hero_Image_42f1878910_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 7,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-selvara-3-grand-polo-club-resort",
+      "project_name": "Emaar Selvara 3 at Grand Polo Club & Resort",
+      "official_project_page": "https://cdn.emaar.com/en/properties/selvara-3-at-grand-polo-club-and-resort",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/420027_hero_slide_0_3d49c14e97.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/420027_hero_slide_0_3d49c14e97_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-selvara-4-grand-polo-club-resort",
+      "project_name": "Emaar Selvara 4 at Grand Polo Club & Resort",
+      "official_project_page": "https://cdn.emaar.com/en/properties/selvara-4-at-grand-polo-club-and-resort",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/420047_hero_slide_0_13188e71b5.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/420047_hero_slide_0_13188e71b5_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-sera-2-rashid-yachts-marina",
+      "project_name": "Emaar Sera 2 at Rashid Yachts & Marina",
+      "official_project_page": "https://cdn.emaar.com/en/properties/sera-2-at-rashid-yachts-and-marina",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/420510_hero_slide_0_4fac7cebc3.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/420510_hero_slide_0_4fac7cebc3_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    }
+  ]
+}
