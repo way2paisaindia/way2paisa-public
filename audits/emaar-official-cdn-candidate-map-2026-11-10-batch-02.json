@@ -1,0 +1,126 @@
+{
+  "scope": "Read-only matching on official Emaar CDN; no assets copied, no publication, usage permission unverified.",
+  "date": "2026-11-10",
+  "records": [
+    {
+      "project_slug": "emaar-beachgate-by-address-emaar-beachfront",
+      "project_name": "Emaar Beachgate by Address at Emaar Beachfront",
+      "official_project_page": "https://cdn.emaar.com/en/properties/beachgate-by-address",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/232325_property_Hero_Image_a0718bad85.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/232325_property_Hero_Image_a0718bad85_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 7,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-blvd-crescent-downtown-dubai",
+      "project_name": "Emaar BLVD Crescent at Downtown Dubai",
+      "official_project_page": "https://cdn.emaar.com/en/properties/blvd-crescent",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/12413_property_Hero_Image_0c9e70dc8d.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/12413_property_Hero_Image_0c9e70dc8d_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 7,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-blvd-heights-downtown-dubai",
+      "project_name": "Emaar BLVD Heights at Downtown Dubai",
+      "official_project_page": "https://cdn.emaar.com/en/properties/boulevard-heights",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/46834_property_Hero_Image_f8f2f70407.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/46834_property_Hero_Image_f8f2f70407_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 6,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-cedar-dubai-creek-harbour",
+      "project_name": "Emaar Cedar at Dubai Creek Harbour",
+      "official_project_page": "https://cdn.emaar.com/en/unit-details/DC%20Cedar%20Building%202-6-610",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/323640_property_Hero_Image_a7a49d097a.jpg",
+      "verified_same_file_cdn": null,
+      "matched_candidates": 0,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-clearpoint-rashid-yachts-marina",
+      "project_name": "Emaar Clearpoint at Rashid Yachts & Marina",
+      "official_project_page": "https://cdn.emaar.com/en/properties/clearpoint",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/372699_hero_slide_0_b10f4f8599.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/372699_hero_slide_0_b10f4f8599_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-club-place-dubai-hills-estate",
+      "project_name": "Emaar Club Place at Dubai Hills Estate",
+      "official_project_page": "https://cdn.emaar.com/en/properties/club-place-at-dubai-hills-estate",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/388876_hero_slide_0_aef116f340.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/388876_hero_slide_0_aef116f340_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-creek-bay",
+      "project_name": "Emaar Creek Bay at Dubai Creek Harbour",
+      "official_project_page": "https://cdn.emaar.com/en/properties/creek-bay-at-dubai-creek-harbour",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/427131_hero_slide_0_3f9e04f173.jpg",
+      "verified_same_file_cdn": null,
+      "matched_candidates": 0,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-creek-haven",
+      "project_name": "Emaar Creek Haven at Dubai Creek Harbour",
+      "official_project_page": "https://cdn.emaar.com/en/properties/creek-haven-at-dubai-creek-harbour",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/427314_hero_slide_0_93295d2738.jpg",
+      "verified_same_file_cdn": null,
+      "matched_candidates": 0,
+      "source_assets_count": 12,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-creek-palace-dubai-creek-harbour",
+      "project_name": "Emaar Creek Palace at Dubai Creek Harbour",
+      "official_project_page": "https://cdn.emaar.com/en/properties/creek-palace",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/161907_property_Hero_Image_17af8c8cde.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/161907_property_Hero_Image_17af8c8cde_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 7,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-creek-waters-2-dubai-creek-harbour",
+      "project_name": "Emaar Creek Waters 2 at Dubai Creek Harbour",
+      "official_project_page": "https://cdn.emaar.com/en/properties/creek-waters-2",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/355516_hero_slide_0_bbfb451448.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/355516_hero_slide_0_bbfb451448_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    }
+  ]
+}
