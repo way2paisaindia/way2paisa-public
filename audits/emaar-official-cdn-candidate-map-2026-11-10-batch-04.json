@@ -1,0 +1,126 @@
+{
+  "scope": "Read-only official image path provenance. No assets copied, no public image publication.",
+  "date": "2026-11-10",
+  "records": [
+    {
+      "project_slug": "emaar-golf-point-emaar-south",
+      "project_name": "Emaar Golf Point at Emaar South",
+      "official_project_page": "https://cdn.emaar.com/en/properties/golf-point-at-emaar-south",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/389514_hero_slide_0_a474f4fd5e.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/389514_hero_slide_0_a474f4fd5e_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-golf-vale",
+      "project_name": "Emaar Golf Vale at Emaar South",
+      "official_project_page": "https://cdn.emaar.com/en/properties/golf-vale-at-emaar-south",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/HERO_1620_X832_2_2_fe6be81843.jpg",
+      "verified_same_file_cdn": null,
+      "matched_candidates": 0,
+      "source_assets_count": 14,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-golf-verge-emaar-south",
+      "project_name": "Emaar Golf Verge at Emaar South",
+      "official_project_page": "https://cdn.emaar.com/en/properties/golf-verge-at-emaar-south",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/400828_hero_slide_0_a817abf074.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/400828_hero_slide_0_a817abf074_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-grand-bleu-tower-emaar-beachfront",
+      "project_name": "Emaar Grand Bleu Tower at Emaar Beachfront",
+      "official_project_page": "https://cdn.emaar.com/en/properties/grand-bleu-tower",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/2635_property_Hero_Image_ade3d16c00.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/2635_property_Hero_Image_ade3d16c00_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 7,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-greenside-residence-dubai-hills-estate",
+      "project_name": "Emaar Greenside Residence at Dubai Hills Estate",
+      "official_project_page": "https://cdn.emaar.com/en/properties/greenside-residence",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/370882_hero_slide_0_b3a1e10b1d.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/370882_hero_slide_0_b3a1e10b1d_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 11,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-grove-ridge",
+      "project_name": "Emaar Grove Ridge at Emaar South",
+      "official_project_page": "https://cdn.emaar.com/en/properties/grove-ridge-at-emaar-south",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/429494_property_Hero_Image_26e08ad8ce.jpg",
+      "verified_same_file_cdn": null,
+      "matched_candidates": 0,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-harbour-gate-dubai-creek-harbour",
+      "project_name": "Emaar Harbour Gate at Dubai Creek Harbour",
+      "official_project_page": "https://cdn.emaar.com/en/properties/harbour-gate",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/28687_property_Hero_Image_f34e8fd2ec.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/28687_property_Hero_Image_f34e8fd2ec_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 5,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-hillsedge-dubai-hills-estate",
+      "project_name": "Emaar Hillsedge at Dubai Hills Estate",
+      "official_project_page": "https://cdn.emaar.com/en/properties/hillsedge-at-dubai-hills-estate",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/395533_hero_slide_0_24f1b1445e.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/395533_hero_slide_0_24f1b1445e_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-lyvia-by-palace-dubai-creek-harbour",
+      "project_name": "Emaar Lyvia by Palace at Dubai Creek Harbour",
+      "official_project_page": "https://cdn.emaar.com/en/properties/lyvia-by-palace-at-dubai-creek-harbour",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/421932_hero_slide_0_7378c1dcfd.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/421932_hero_slide_0_7378c1dcfd_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 12,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-mangrove-dubai-creek-harbour",
+      "project_name": "Emaar Mangrove at Dubai Creek Harbour",
+      "official_project_page": "https://cdn.emaar.com/en/properties/mangrove-at-dubai-creek-harbour",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/383639_hero_slide_0_f9520cd5a2.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/383639_hero_slide_0_f9520cd5a2_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    }
+  ]
+}
