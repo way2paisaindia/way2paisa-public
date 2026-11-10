@@ -1,0 +1,126 @@
+{
+  "scope": "Read-only Emaar official CDN same-asset mappings; usage authorization not asserted",
+  "date": "2026-11-10",
+  "records": [
+    {
+      "project_slug": "emaar-serro-2",
+      "project_name": "Emaar Serro 2 at The Heights",
+      "official_project_page": "https://cdn.emaar.com/en/properties/serro-2-at-the-heights-country-club-and-wellness",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/430543_property_Hero_Image_3684ba6c94.jpg",
+      "verified_same_file_cdn": null,
+      "matched_candidates": 0,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-silva-dubai-creek-harbour",
+      "project_name": "Emaar Silva at Dubai Creek Harbour",
+      "official_project_page": "https://cdn.emaar.com/en/properties/silva-dubai-creek-harbour",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/417761_hero_slide_0_3aa54fa3cb.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/417761_hero_slide_0_3aa54fa3cb_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-terra-gardens-expo-living",
+      "project_name": "Emaar Terra Gardens at Expo Living",
+      "official_project_page": "https://cdn.emaar.com/en/properties/terra-gardens-at-expo-living",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/422604_hero_slide_0_658baa7ad8.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/422604_hero_slide_0_658baa7ad8_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-terra-woods",
+      "project_name": "Emaar Terra Woods at Expo Living",
+      "official_project_page": "https://cdn.emaar.com/en/properties/terra-woods-at-expo-living",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/HERO_1620_X832_1_3_f1d65d83fa.jpg",
+      "verified_same_file_cdn": null,
+      "matched_candidates": 0,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-the-cove-ii-dubai-creek-harbour",
+      "project_name": "Emaar The Cove II at Dubai Creek Harbour",
+      "official_project_page": "https://cdn.emaar.com/en/properties/the-cove",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/274533_hero_slide_0_9e40a748a2.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/274533_hero_slide_0_9e40a748a2_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-valia",
+      "project_name": "Emaar Valia at Dubai Creek Harbour",
+      "official_project_page": "https://cdn.emaar.com/en/properties/valia-at-dubai-creek-harbour",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/HERO_1620_X832_1_19ed3b4185.jpg",
+      "verified_same_file_cdn": null,
+      "matched_candidates": 0,
+      "source_assets_count": 14,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-valo-dubai-creek-harbour",
+      "project_name": "Emaar Valo at Dubai Creek Harbour",
+      "official_project_page": "https://cdn.emaar.com/en/properties/valo-at-dubai-creek-harbour",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/383232_hero_slide_0_3d3805c08b.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/383232_hero_slide_0_3d3805c08b_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-vida-residences-dubai-marina",
+      "project_name": "Emaar Vida Residences Dubai Marina",
+      "official_project_page": "https://cdn.emaar.com/en/properties/vida-residences-dubai-marina",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/13298_property_Hero_Image_0c6f52be2b.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/13298_property_Hero_Image_0c6f52be2b_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 7,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-vida-residences-hillside-dubai-hills-estate",
+      "project_name": "Emaar Vida Residences Hillside at Dubai Hills Estate",
+      "official_project_page": "https://cdn.emaar.com/en/properties/vida-residences-hillside",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/414118_hero_slide_0_62b456c518.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/414118_hero_slide_0_62b456c518_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-vista-ridge",
+      "project_name": "Emaar Vista Ridge at Emaar South",
+      "official_project_page": "https://cdn.emaar.com/en/properties/vista-ridge-at-emaar-south",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/429708_hero_slide_0_db8b3fc9c9.jpg",
+      "verified_same_file_cdn": null,
+      "matched_candidates": 0,
+      "source_assets_count": 12,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    }
+  ]
+}
