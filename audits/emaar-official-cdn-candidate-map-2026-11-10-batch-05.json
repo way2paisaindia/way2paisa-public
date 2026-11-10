@@ -1,0 +1,126 @@
+{
+  "scope": "Source-only review; live photo delivery and promotional rights remain unverified except tested samples",
+  "date": "2026-11-10",
+  "records": [
+    {
+      "project_slug": "emaar-marina-cove-dubai-marina",
+      "project_name": "Emaar Marina Cove at Dubai Marina",
+      "official_project_page": "https://cdn.emaar.com/en/properties/marina-cove-at-dubai-marina",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/393636_property_Hero_Image_e5d544eb37.png",
+      "verified_same_file_cdn": null,
+      "matched_candidates": 0,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-montiva-by-vida-dubai-creek-harbour",
+      "project_name": "Emaar Montiva by Vida at Dubai Creek Harbour",
+      "official_project_page": "https://cdn.emaar.com/en/properties/montiva-by-vida-at-dubai-creek-harbour",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/419634_hero_slide_0_59dea9f8be.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/419634_hero_slide_0_59dea9f8be_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-mulberry-dubai-hills-estate",
+      "project_name": "Emaar Mulberry at Dubai Hills Estate",
+      "official_project_page": "https://cdn.emaar.com/en/properties/mulberry",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/10997_property_Hero_Image_5e1c3a5167.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/10997_property_Hero_Image_5e1c3a5167_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 7,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-ocean-cove-rashid-yachts-marina",
+      "project_name": "Emaar Ocean Cove at Rashid Yachts & Marina",
+      "official_project_page": "https://cdn.emaar.com/en/properties/ocean-cove-at-rashid-yachts-marina",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/387446_hero_slide_0_c5d903092c.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/387446_hero_slide_0_c5d903092c_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-ovelle-the-valley",
+      "project_name": "Emaar Ovelle at The Valley",
+      "official_project_page": "https://cdn.emaar.com/en/properties/ovelle-at-the-valley",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/426566_property_Hero_Image_ca0039d550.jpg",
+      "verified_same_file_cdn": null,
+      "matched_candidates": 0,
+      "source_assets_count": 12,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-palace-residences-hillside-a-dubai-hills-estate",
+      "project_name": "Emaar Palace Residences Hillside A at Dubai Hills Estate",
+      "official_project_page": "https://cdn.emaar.com/en/properties/palace-residences-hillside-at-dubai-hills-estate",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/423088_property_Hero_Image_e09bc215eb.jpg",
+      "verified_same_file_cdn": null,
+      "matched_candidates": 0,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-palace-residences-north-dubai-creek-harbour",
+      "project_name": "Emaar Palace Residences North at Dubai Creek Harbour",
+      "official_project_page": "https://cdn.emaar.com/en/properties/palace-residences-north",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/305565_hero_slide_0_aa8bdeea7d.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/305565_hero_slide_0_aa8bdeea7d_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-park-horizon-dubai-hills-estate",
+      "project_name": "Emaar Park Horizon at Dubai Hills Estate",
+      "official_project_page": "https://cdn.emaar.com/en/properties/park-horizon",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/276426_property_Hero_Image_0d6c8a00ba.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/276426_property_Hero_Image_0d6c8a00ba_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 7,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-park-lane-dubai-hills-estate",
+      "project_name": "Emaar Park Lane at Dubai Hills Estate",
+      "official_project_page": "https://cdn.emaar.com/en/properties/park-lane",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/382035_property_Hero_Image_5218217c9c.jpg",
+      "verified_same_file_cdn": null,
+      "matched_candidates": 0,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    },
+    {
+      "project_slug": "emaar-parkside-hills-dubai-hills-estate",
+      "project_name": "Emaar Parkside Hills at Dubai Hills Estate",
+      "official_project_page": "https://cdn.emaar.com/en/properties/parkside-hills",
+      "legacy_hero": "https://uae-cms.emaar.com/uploads/380757_hero_slide_0_05978a82f9.jpg",
+      "verified_same_file_cdn": "https://cdn.emaar.com/cms-media/uploads/380757_hero_slide_0_05978a82f9_prod.jpg",
+      "matched_candidates": 1,
+      "source_assets_count": 13,
+      "source_page_accessible": true,
+      "usage_permission": "not asserted",
+      "rendering_status": "not browser-tested for this project"
+    }
+  ]
+}
