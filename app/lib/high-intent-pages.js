@@ -296,7 +296,15 @@ highIntentPages["navi-mumbai-residential-property"] = {
   "leadName": "Navi Mumbai Residential Property Advisory",
   "catalogueLink": "/properties?market=Mumbai&zone=Navi%20Mumbai%20%26%20Outer%20MMR&category=apartment",
   "slugs": [
-    "marathon-nexzone-nirvana-collection-panvel"
+    "marathon-nexzone-nirvana-collection-panvel",
+    "sai-world-one-paradise-group-nerul-navi-mumbai",
+    "l-t-crestoria-estate-t1-panvel",
+    "9pbr-adani-realty-nerul",
+    "eternal-palms-godrej-properties-sanpada",
+    "green-terraces-at-godrej-city-panvel",
+    "bayview-seabreeze-godrej-properties-vashi",
+    "t11-raheja-jade-city-juinagar",
+    "godrej-varanya-godrej-properties-kharghar-navi-mumbai"
   ],
   "introduction": [
     "Compare homes by their actual location, RERA carpet area, budget and possession timeline. Starting prices are indicative and the availability of an individual home must be reconfirmed.",
