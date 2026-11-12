@@ -260,3 +260,10 @@ footer .footerBrand .logoTagline{display:block!important;color:#ffffff!important
 
 /* Footer share choices shown only when native sharing is unavailable. */
 .footerShareWrap{position:relative;display:grid;place-items:center}.footerShareChoices{position:absolute;right:0;bottom:calc(100% + 9px);z-index:10;display:grid;min-width:130px;overflow:hidden;border:1px solid #c7d8e7;border-radius:8px;background:#fff;box-shadow:0 12px 28px rgba(3,30,59,.24)}.footerShareChoices a,.footerShareChoices button{display:block!important;width:auto!important;height:auto!important;padding:10px 12px!important;border:0!important;border-radius:0!important;background:#fff!important;color:#0b3a66!important;font:700 12px Inter,Arial,sans-serif!important;text-align:left!important;text-decoration:none!important;white-space:nowrap}.footerShareChoices a:hover,.footerShareChoices button:hover{background:#eef6ff!important}
+
+/* Regional buyer guides: compact, crawlable links under Mumbai/MMR location cards. */
+.regionGuideLinks{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:22px;padding-top:18px;border-top:1px solid #d9e6f1}
+.regionGuideLinks>span{font-size:11px;letter-spacing:1.1px;font-weight:800;color:#627d95;margin-right:6px}
+.regionGuideLinks>a{display:inline-flex;align-items:center;min-height:42px;padding:10px 15px;border-radius:10px;background:#fff;border:1px solid #d4e2ed;color:#0e4379;font-weight:700;font-size:12px;text-decoration:none;transition:border-color .2s ease,box-shadow .2s ease}
+.regionGuideLinks>a:hover,.regionGuideLinks>a:focus-visible{border-color:#6eaaec;box-shadow:0 5px 18px rgba(14,67,121,.09)}
+@media(max-width:560px){.regionGuideLinks{align-items:stretch;flex-direction:column}.regionGuideLinks>a{justify-content:center}}
