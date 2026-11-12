@@ -69,7 +69,7 @@ export default async function HighIntentLandingPage({params}){
   if(!page)notFound();
   const catalogue=await loadLandingProjects({slugs:page.slugs});
   const eligible=new Map((catalogue.projects||[])
-    .filter(project=>project.market===page.market&&page.categories.includes(project.category))
+    .filter(project=>(page.markets||[page.market]).includes(project.market)&&page.categories.includes(project.category))
     .map(project=>[project.slug,project]));
   const selected=page.slugs.map(key=>eligible.get(key)).filter(Boolean);
   const currentUrl='https://www.way2paisa.in/solutions/'+slug;

@@ -57,6 +57,8 @@ export default async function sitemap() {
     { url: baseUrl + '/solutions/mumbai-luxury-homes', changeFrequency: 'weekly', priority: 0.75 },
     { url: baseUrl + '/solutions/mumbai-commercial-property', changeFrequency: 'weekly', priority: 0.75 },
     { url: baseUrl + '/solutions/dubai-property-investment', changeFrequency: 'weekly', priority: 0.75 },
+    { url: baseUrl + '/solutions/thane-residential-property', changeFrequency: 'weekly', priority: 0.75 },
+    { url: baseUrl + '/solutions/navi-mumbai-residential-property', changeFrequency: 'weekly', priority: 0.75 },
     { url: baseUrl + '/legal', changeFrequency: 'monthly', priority: 0.3 },
     ...intentLandingSlugs.map(slug => ({ url: baseUrl + '/explore/' + slug, changeFrequency: 'weekly', priority: 0.8 })),
   ];

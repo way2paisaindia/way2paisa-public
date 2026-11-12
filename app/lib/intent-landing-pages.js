@@ -13,6 +13,7 @@ export const intentLandingPages = {
     browseHref: '/properties?market=Mumbai',
     browseLabel: 'Explore all Mumbai & MMR properties',
     match: project => project.market === 'MMR'
+      && !/\bdapoli\b/i.test(String(project.locations?.name || '') + ' ' + String(project.address || ''))
       && ['villa', 'plot', 'land'].includes(project.category),
     sections: [
       {
