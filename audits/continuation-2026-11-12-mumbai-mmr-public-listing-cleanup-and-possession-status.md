@@ -38,3 +38,11 @@ Independent read-only TinyFish production browser QA https://agent.tinyfish.ai/r
 1. Fresh read-only production check after cache for **Ashiana** (no misleading Ready to Move) and **Acenza** (show correct separately registered phase dates and no blanket Ready to Move).
 2. Convert currently held new Mumbai Juhu–Bandra–Santacruz–Andheri–Dadar projects only when exact promoter-allocated carpet, current priced unit and legally usable project-specific photos are verified. Do not lower quality gate to inflate count.
 3. Finish 13 Mumbai/MMR published-page gaps prioritizing verified project images, exact commercial-vs-residential carpet and maps. No external developer emails.
+
+## Follow-up live QA: Acenza PASS, Ashiana cache pending (12 Nov)
+
+A second TinyFish **read-only** live verification https://agent.tinyfish.ai/runs/3d7e8816-8edf-41bb-9636-5c1aa69b8850 inspected both projects after the data-only possession changes.
+
+- **Lodha Acenza PASS:** Customer-facing page https://www.way2paisa.in/projects/lodha-acenza displays **Under Construction**, **RERA Towers Sep 2027** and **RERA Tower C Apr 2028**, with **no blanket Ready to Move** and correct **₹5.63Cr** headline. Browser counted two **configuration groups** (3BHK, 4BHK); DB contains three active source inventory records, since app/projects/[slug]/page.js publicInventoryRows() deliberately groups two 4BHK price/size quotations into one range. This is intended aggregation, not a missing active row.
+- **Rustomjee Ashiana CHECK STILL PENDING:** Live page https://www.way2paisa.in/projects/rustomjee-ashiana-juhu displayed public status **Under Construction** but possession **Ready to Move** even though Supabase now stores a safe RERA target and no 'OC received' substring. Existing code in app/projects/[slug]/page.js has both 300-second route revalidation and 300-second Supabase fetch revalidation; the earlier first-pass cached version could still persist after database update. No cache purge, GoDaddy dashboard login or production deployment attempted. Do **not claim** the on-page contradiction resolved until a later fresh browser check after natural cache expiration. No unauthorized change to source code. The developer's OC claim may be true, but original occupancy document was not independently checked.
+
