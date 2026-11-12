@@ -216,6 +216,9 @@ function Footer(){return <footer><div className="footerBrand"><img src="/way2pai
 function videoLabel(v,i){const u=String(v.source_url||v.image_url||'').toLowerCase();if(u.includes('youtube.com')||u.includes('youtu.be'))return 'Watch project video on YouTube';if(u.includes('instagram.com'))return 'Watch project reel on Instagram';return `Watch project video${i? ` ${i+1}`:''}`}function Block({kicker,title,children}){return <div className="contentBlock"><span className="kicker">{kicker}</span><h2>{title}</h2>{children}</div>};function Detail({label,value}){return <div><span>{label}</span><strong className="stackedValue">{value||'Available on request'}</strong></div>};const possessionText=value=>{
  const raw=String(value||'').trim();
  if(!raw)return'Available on request';
+ // Do not reduce an explicitly phase-wise, unsettled registration timeline to
+ // an empty date or to one blanket completion promise for all towers.
+ if(/^phase[-\s]?wise\b/i.test(raw)&&/\b(?:confirm|verify|verification)\b/i.test(raw))return'Phase-wise — verify registered tower dates';
  // A bare mention of "OC" is not evidence of occupancy. Do not convert
  // "OC pending", "OC to verify", or a partly completed tower into Ready to Move.
  const readyProof=/\b(?:ready[\s-]*to[\s-]*move|(?:full\s+)?oc\s+(?:received|granted|issued|obtained)|project\s+completed|100%\s+possession\s+(?:achieved|completed))\b/i;
