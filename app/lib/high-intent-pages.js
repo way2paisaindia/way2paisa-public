@@ -235,9 +235,9 @@ highIntentPages["thane-residential-property"] = {
   ],
   "sections": [
     {
-      "title": "Choose the right neighbourhood for daily life",
+      "title": "Compare locations across Thane",
       "paragraphs": [
-        "Compare the actual project address with your regular journeys, schools, healthcare, public transport and local amenities. Visit at a time that reflects the journeys you expect to make.",
+        "Compare the project address in areas such as Majiwada, Kolshet, Pokhran Road and Ghodbunder Road against your regular journeys, schools, healthcare and transport options. Visit at the time you expect to travel.",
         "Look beyond a broad marketing location name: road access, surrounding development and the time needed to reach your destinations can differ between projects."
       ]
     },
@@ -312,10 +312,10 @@ highIntentPages["navi-mumbai-residential-property"] = {
   ],
   "sections": [
     {
-      "title": "Choose the right neighbourhood for daily life",
+      "title": "Compare Navi Mumbai neighbourhoods and Panvel",
       "paragraphs": [
-        "Compare the actual project address with your regular journeys, schools, healthcare, public transport and local amenities. Visit at a time that reflects the journeys you expect to make.",
-        "Look beyond a broad marketing location name: road access, surrounding development and the time needed to reach your destinations can differ between projects."
+        "Compare the actual project address in areas such as Vashi, Sanpada, Nerul, Kharghar and Panvel with your daily journeys, schools, healthcare and transport options. Visit at the time you expect to travel.",
+        "Check the specific node, sector and access roads: a broad Navi Mumbai or Panvel label alone does not tell you how close a project is to your destinations."
       ]
     },
     {
