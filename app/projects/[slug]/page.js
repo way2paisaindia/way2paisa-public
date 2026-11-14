@@ -416,7 +416,13 @@ function publicDescription(p){const raw=String(p?.description||'').trim();const 
 // location pages. Retain the precise public address as the safe fallback.
 function publicLocationDescription(p){
   const raw=String(p?.location_details||'').trim();
-  const internal=/(?:mapped\s+(?:named[- ]project\s+)?(?:project\s+)?pin|approximate\s+project\s+pin|project\s+pin\s*[:\d]|inventory\s+source|source\s+(?:notes?|links?)|coordinate\s+anchored|sourced\s+from\s+published)/i.test(raw);
-  return raw&&!internal?raw:(p?.address||p?.locations?.description||p?.locations?.name||p?.market||'Location details available on request');
+  // Historical data may contain a buyer-readable first paragraph followed by a
+  // dated internal QA log. Never expose old GPS guesses, third-party map disputes
+  // or provenance prose as a location description, including on cached records.
+  const qaBoundary=/(?:^|\n)\s*(?:\d{1,2}[-/\s][A-Za-z]{3,9}[-/\s]\d{4}|\d{4}-\d{2}-\d{2})\s*:?[ \t]*(?:maps?\s*QA|location\s*QA|(?:removed|corrected)\s+(?:disproven|incorrect|unverified)|internal\s+audit)/i;
+  const match=qaBoundary.exec(raw);
+  const publicCopy=(match?raw.slice(0,match.index):raw).trim();
+  const internal=/(?:mapped\s+(?:named[- ]project\s+)?(?:project\s+)?pin|approximate\s+project\s+pin|project\s+pin\s*[:\d]|inventory\s+source|source\s+(?:notes?|links?)|coordinate\s+anchored|sourced\s+from\s+published|\b(?:SquareYards|NoBroker)\b[^.\n]*(?:coordinate|marker|pin|source)|\b(?:map|geo)\s*QA\b)/i.test(publicCopy);
+  return publicCopy&&!internal?publicCopy:(p?.address||p?.locations?.description||p?.locations?.name||p?.market||'Location details available on request');
 }
 function displayConfigurations(items,p){const vals=[...new Set((items||[]).filter(x=>String(x.availability||'').toLowerCase()!=='sold out').map(x=>publicConfigurationLabel(x.configuration)).filter(Boolean))];return vals.length?vals.join(' | '):cleanConfiguration(p.bhk_original)}
