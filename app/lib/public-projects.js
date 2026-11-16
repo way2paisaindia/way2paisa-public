@@ -249,7 +249,8 @@ export async function loadLandingProjects({ slugs, market, categories } = {}) {
           throw new Error('Buyer-guide keyset pagination did not advance: ' + table);
         }
         rows.push(...response.data);
-        if (response.data.length < 500) return rows;
+        // A server-side row cap may return fewer than 500 rows before the end.
+        if (response.data.length === 0) return rows;
         const nextCursor = response.data[response.data.length - 1]?.id;
         if (!nextCursor || cursor === nextCursor) throw new Error('Buyer-guide pagination stalled');
         cursor = nextCursor;

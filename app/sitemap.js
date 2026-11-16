@@ -34,7 +34,9 @@ async function fetchAllPublicRows(table, columns, filters, supabaseUrl, key) {
       throw new Error('Sitemap pagination cursor did not advance for ' + table);
     }
     rows.push(...batch);
-    if (batch.length < pageSize) return rows;
+    // A server-side row cap can make a non-final page shorter than requested.
+    // Only an empty page proves that no later IDs remain.
+    if (batch.length === 0) return rows;
     const lastId = batch[batch.length - 1]?.id;
     if (!lastId || lastId === cursor) {
       throw new Error('Sitemap pagination cursor did not advance for ' + table);
