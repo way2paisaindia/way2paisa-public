@@ -88,7 +88,9 @@ export const highIntentPages = {
       'suraj-one-business-bay-mahim',
       'kalpataru-virtus-mumbai',
       'godrej-square-bhandup-west',
-      'kalpataru-summit-mumbai'
+      'kalpataru-summit-mumbai',
+      'lodha-signet-matunga-offices',
+      'lodha-signet-vikhroli-offices'
     ],
     introduction: [
       'A commercial office acquisition should be evaluated as an operating decision as well as a property purchase. Access for employees and clients, approved commercial use, floor efficiency, building services and future fit-out requirements can matter as much as the headline rate. Mumbai office buyers may be comparing a prestigious western corridor address with an eastern suburb location that serves the workforce better.',
@@ -119,7 +121,7 @@ export const highIntentPages = {
       {
         title: 'Build a shortlist across Mumbai corridors',
         paragraphs: [
-          'Bandra West, Khar West and Mahim can support briefs where client access and established commercial catchments are central. Vikhroli West, Bhandup West and Mulund West may suit businesses prioritising other transit connections, office sizes or budgets. Compare at least two realistic alternatives using the same area basis, fit-out assumption and possession window so that an apparent price advantage is not misleading.',
+          'Bandra West, Khar West, Mahim and Matunga can support briefs where client access and established commercial catchments are central. Vikhroli West, Bhandup West and Mulund West may suit businesses prioritising other transit connections, office sizes or budgets. Compare at least two realistic alternatives using the same area basis, fit-out assumption and possession window so that an apparent price advantage is not misleading.',
           'Way2Paisa can coordinate current listings, developer conversations, site visits and finance introductions. Provide your target location, intended commercial use, carpet-area requirement, budget and occupation timeline. A precise brief produces a more useful office shortlist than a generic request for commercial property anywhere in Mumbai.'
         ]
       }
