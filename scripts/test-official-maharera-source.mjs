@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {officialMahaReraSource} from '../lib/official-maharera-source.mjs';
+import {officialMahaReraSource} from '../app/lib/official-maharera-source.mjs';
 
 const reg='PR1180002400002';
 test('permits an exact HTTPS MahaRERA project detail with a single registration',()=>{
