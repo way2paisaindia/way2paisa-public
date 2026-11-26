@@ -29,3 +29,10 @@
 Publish only when the **specific RERA/phase**, **current available promoter sale allocation**, **unit/configuration-specific carpet or plot area**, **current properly described price basis**, **verified project imagery with appropriate reuse authorization**, and **validated project location** are all established. Do not use stale or mismatched fee-basis quotes as live prices; do not activate duplicate umbrella, sold-out, or unverified phases. Mumbai/MMR takes priority over Dubai photo backlog.
 
 This file is a dated audit trail only, not a deployment artifact.
+
+## Later same-day live listing-card fix (26 Nov 2026)
+- A fresh production scrape of `/properties?market=Mumbai&zone=Navi%20Mumbai%20%26%20Outer%20MMR` returned HTTP 200 and initially showed **Price on request** but still displayed **1,200 sq.ft plot area** on Godrej Hillview Estate's search card.
+- Root cause: `app/components/PropertiesClient.js` `cardArea()` uses a regex fallback against `projects.carpet_area_original` when there are no active inventory area offers; that field still contained a numeric historical plot quote.
+- The database's published Godrej Hillview Estate row was narrowly updated to replace the fallback text with a nonnumeric disclaimer: current plot area on request. **No historical inventory row, quoted price or project status was deleted or changed**. One `project_sources` audit record was added (`public_card_area_correction_2026_11_26`).
+- **Verified live after change** with a new no-cache scrape: Godrej Hillview card now shows **Starting Price on request**, **no 1,200 sq.ft area**, and no ₹54.4 lakh value. HTTP 200. The detailed project page had already shown Price on request.
+- Long-term hardening recommendation: prevent any future card from deriving marketed current areas from unverified historic `carpet_area_original` prose when there is no validated active area offer. Code change requires separately controlled deployment review; no GoDaddy restart or redeploy was performed.
