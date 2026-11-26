@@ -60,3 +60,36 @@ Completed and confirmed live (HTTP 200, fresh/no-cache public card requests):
 - Projects total **1,898**; published **683** (Mumbai/MMR **487**), private **1,215**.
 - Private Mumbai/MMR projects **1,131**; private Mumbai/MMR active-priced inventories remain **0**.
 - **New projects published this continuation: 0**. No invented unit allocation, fake current offer, developer email, GoDaddy restart/redeploy or price replacement.
+
+
+## 26 Nov 2026 evening continuation — source images, phase reconciliation, and two-stage gallery deduplication
+
+### Database baseline before/after
+- Total projects 1,898. Published 683; private 1,215. Published Mumbai/MMR 487. Private Mumbai/MMR active inventory rows 0.
+- **13 published Mumbai/MMR projects still lack a licensed/verified hero image**. No image URL was made publicly active without documented commercial-reuse authorization.
+- **New projects published in this continuation: 0.** No existing project unpublished, no unit price changed, no GoDaddy redeployment, no developer emails.
+
+### Media source investigation
+First-party live project pages checked 26 Nov with current browser fetch:
+1. Dosti Willow, Thane P51700056278: https://www.dostirealty.com/project/dosti-willow — official project gallery includes artist impressions and photos; existing single inactive staged asset retained; avoid generic West County photos and seek approved Willow-only asset.
+2. Godrej Bliss, Kandivali East P51800051172: https://www.godrejproperties.com/mumbai/residential/godrej-bliss — current official site has named banner and four labelled gallery assets; inactive media stock already exists (25 records total), pending business rights and actual browser delivery.
+3. Marathon Nexzone Nirvana Collection, Panvel PM1273032502296 / PM1273032502304: https://marathon.in/nexzone/gallery/ — Nirvana-labelled apartment images exist; six inactive media already staged, source rights and wing allocation pending.
+4. Marathon Zaver Arcade, Mulund P51800020332: https://marathon.in/zaver-arcade/ — original building render and gallery, developer still markets last few 2BHK at ₹2.30Cr, project photo rights unresolved; five inactive media already staged.
+5. Lodha Casa Olivia, Palava P51700052243: current official page exposes named Casa_OliviaBanner desktop. One URL was staged in `project_media` **active=false**, `license_status=quarantined_first_party_url_candidate_not_licensed_for_partner_reuse_visual_delivery_and_phase_check_pending`. Exact project-page image provenance established, not legal permission or visitor rendering.
+6. Lodha Signet Thane, Kolshet Road P51700050421: current official project page shows `Spotlight_1903X800px.jpg` banner. Staged one **inactive** candidate with same explicit rights and visual-identification hold.
+7. Lodha Casa Foresta, Palava P51700032990: official site banner file is called `casa-rio-gold--082-1903x800.jpg`, gallery includes Casa Premier-marketed images; cannot establish Foresta-specific imagery for registered A/B/H/I wings. No inactive hero was staged.
+8. Lodha Signet Kalyan–Shil Road: **phase split**. Current official product page's header carries `PC1330002602612` (Signet-3), but Way2Paisa's existing published Signet 2 listing is `P51700054751`. The newer Signet-3 is already an independent private database record, so no duplicate was created and no new phase pictures were attached to old registration. Older official retail subpage and developer beta page cite `P51700054751`. Resolve phase-specific marketing/stock before media or pricing publication. Current: https://www.lodhagroup.com/projects/commercial-property-in-mumbai/lodha-signet-kalyan-shil-road .
+9. Sunset Gardens, Mulund P51800047418: https://sunset.in/gardens/ — discovered image inventory dominated by logos, icons and a project-branded thumbnail; not an independently verified exterior hero. No media activated.
+10. Lodha website legal terms: https://www.lodhagroup.com/terms-and-conditions prohibit assuming unrestricted use of site photographs; all Lodha media held pending appropriate partner permission.
+
+Five `project_sources` audit entries created for Casa Olivia, Signet Thane, Signet Kalyan-Shil, Casa Foresta and Sunset Gardens. Two new `project_media` references staged **inactive only**. Existing quarantined image media preserved.
+
+### Gallery duplicate integrity fix: 146 deactivated, 146 projects improved
+Two independent sources of repeated gallery photos were checked:
+- **19** active `project_media` gallery rows duplicated an active `project_media` hero within the same project; deactivated exact duplicate gallery rows only.
+- **127** additional active gallery rows had the exact same URL as `projects.hero_image_url` (not represented by a matching active `project_media` hero). These were discovered by expanding the audit beyond the first media-table query. The 127 rows were deactivated only where **at least 2 other distinct active gallery URLs** remained.
+- Post-change SQL verifies **0** active duplicates matching media-table hero, **0** active duplicates matching published project hero; no exact gallery/gallery duplicate groups were present. Every project retained its hero and distinct images.
+- **146 unique published projects cleaned**, **146 audit-source rows** written with fields `hero_duplicate_gallery_dedup_20261126` (19) and `project_hero_gallery_dedup_20261126` (127). Historical media rows were deactivated, not deleted.
+- This corrects the earlier narrow finding of zero `project_media`-hero duplicates: it had not yet tested `projects.hero_image_url`, which indeed revealed the additional 127. Both paths are now tested and clean.
+
+No unverified photos or plot/unit allotments were promoted to active inventory.
