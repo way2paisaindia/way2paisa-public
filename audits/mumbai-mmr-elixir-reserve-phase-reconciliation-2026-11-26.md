@@ -75,3 +75,9 @@ https://www.squareyards.com/mumbai-residential-property/lnt-elixir-reserve/14142
 1. Recheck the Dove project page HTML after route cache regeneration.
 2. Find direct promoter-issued, dated wing/flat/area/cost sheets and verified first-party permissible project media for a subset of the seven staged phases, prioritizing Barbet and Cygnus.
 3. Confirm exact Dove tower entrance and phase-specific image rights before re-enabling pin/gallery changes; avoid generic development pin and stock cross-allocation.
+
+
+## Late evening verification — Dove detail route and BHK formatter
+- Public `/projects/elixir-reserve-l-t-realty-powai` subsequently regenerated with HTTP 200, current SEO title `L&T Elixir Reserve Dove Powai | Price on Request`, current Dove name and **Starting Price on request**; no former ₹9.25 Cr starting price.
+- Immediately following the developer source and map correction, the rendered location section was still serving its **earlier** broad description and old Google Maps 19.125739,72.892047 link. This is a distinct ISR snapshot from the later Supabase source updates and requires another route-cache refresh before confirming that the exact unverified map link disappeared. **Database** location coordinates, `google_maps_url` already verified NULL, no invented replacement pin.
+- In the live detail page configuration formatter, `cleanConfiguration` split `3 BHK | 4 BHK` at the pipe and displayed only 3 BHK, whereas public search showed both. Rather than redeploy code, corrected Dove `bhk_original` to the equivalent `3 & 4 BHK`, which existing renderer expands to both options on refresh. One audit entry `dove_bhk_display_formatter_fix_20261126` added. No inventory, pricing, RERA or publish status change.
