@@ -17,6 +17,19 @@ function googleBusinessLocationName() {
   return locationId ? `locations/${locationId.replace(/^locations\//, '')}` : '';
 }
 
+function googleBusinessRequestError(payload, status) {
+  const violations = Array.isArray(payload?.error?.details)
+    ? payload.error.details.flatMap(detail => Array.isArray(detail?.fieldViolations) ? detail.fieldViolations : [])
+    : [];
+  // Only return field paths, never Google's descriptions, request values or credentials.
+  const fields = [...new Set(violations.map(item => item?.field).filter(field =>
+    typeof field === 'string' && /^[a-zA-Z][a-zA-Z0-9_.\[\]-]{0,99}$/.test(field)))].slice(0, 5);
+  const code = Number.isInteger(status) && status >= 400 && status <= 599 ? status : 'unknown';
+  return fields.length
+    ? `Google Business rejected the request (HTTP ${code}). Check these fields: ${fields.join(', ')}.`
+    : `Google Business rejected the request (HTTP ${code}); Google did not identify a field. Check the business location, post text, image and website link.`;
+}
+
 function errorMessage(payload, fallback) {
   if (typeof payload?.error === 'string') return payload.error_description || payload.error;
   return payload?.error?.message || payload?.error_description || payload?.message || fallback;
@@ -196,6 +209,9 @@ async function publishYouTube({ promotion }) {
 async function publishGoogleBusiness({ promotion, request }) {
   const locationName = googleBusinessLocationName();
   if (!locationName) throw new Error('Google Business is not configured yet. Add the Google Business location name in Vercel first.');
+  if (!/^accounts\/[^/]+\/locations\/[^/]+$/.test(locationName)) {
+    throw new Error('Google Business location configuration is incomplete. In GoDaddy Secrets, set GOOGLE_BUSINESS_LOCATION_NAME to accounts/ACCOUNT_ID/locations/LOCATION_ID.');
+  }
   const accessToken = await getGoogleAccessToken();
   const generatedCreativeUrl = new URL('/api/admin/promotion-creative', request.url);
   generatedCreativeUrl.searchParams.set('project', promotion.project_id);
@@ -216,7 +232,7 @@ async function publishGoogleBusiness({ promotion, request }) {
     cache: 'no-store',
   });
   const published = await response.json().catch(() => ({}));
-  if (!response.ok || !published.name) throw new Error(errorMessage(published, 'Google Business could not publish this post.'));
+  if (!response.ok || !published.name) throw new Error(googleBusinessRequestError(published, response.status));
   return { id: published.name, permalink: published.searchUrl || 'https://business.google.com/' };
 }
 
