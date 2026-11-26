@@ -36,3 +36,27 @@ This file is a dated audit trail only, not a deployment artifact.
 - The database's published Godrej Hillview Estate row was narrowly updated to replace the fallback text with a nonnumeric disclaimer: current plot area on request. **No historical inventory row, quoted price or project status was deleted or changed**. One `project_sources` audit record was added (`public_card_area_correction_2026_11_26`).
 - **Verified live after change** with a new no-cache scrape: Godrej Hillview card now shows **Starting Price on request**, **no 1,200 sq.ft area**, and no ₹54.4 lakh value. HTTP 200. The detailed project page had already shown Price on request.
 - Long-term hardening recommendation: prevent any future card from deriving marketed current areas from unverified historic `carpet_area_original` prose when there is no validated active area offer. Code change requires separately controlled deployment review; no GoDaddy restart or redeploy was performed.
+
+## Additional 26 Nov continuation — six more stale public area/price corrections
+
+This pass audited all 7 published Mumbai/MMR projects with no `inventory.active=true` records. Initially 6 of those projects still carried stale numerical public-card area fields, and some carried archived `max_price` values that could affect budget filters, despite showing "Price on request".
+
+Completed and confirmed live (HTTP 200, fresh/no-cache public card requests):
+- Godrej Reserve — Wings **1, 3, 4, 5**: cleared historic numeric `min_carpet_sqft`, `max_carpet_sqft`, `max_price` and the old numeric excerpt in `carpet_area_original`. Historical unit examples and prices remain in `price_original` and/or inactive research inventory. All 4 cards now display **Price on request** with **no old unit area**.
+- Vaswani Seascape, Juhu: cleared archived ~2,421–2,422 sq.ft structured area range and historical maximum price; card now **Price on request** with no area implying a current available apartment.
+- Rustomjee Balmoral, Chembur: cleared archived 1,671–3,026 sq.ft structured area range and historic ₹18.85 Cr max marketing price; card now **Price on request** with no stale area or old amount. Historic multi-wing price examples remain in `price_original`.
+- Godrej Hillview Estate: previous card clean-up already verified earlier on 26 Nov.
+
+**Final SQL check:** published Mumbai/MMR records lacking active inventory = **7**; of those, records still exposing numeric structured asking price, minimum/maximum area, or area-regex legacy description = **0**. No active pricing or inventory rows altered, no live project statuses modified.
+
+11 project-specific audit-source rows were added in this cycle for the six public corrections (5 + 6) plus 6 first-party verification/media investigation records (6), making **17 added source rows**, all dated 26 November 2026. [Correction: individual count 5 `public_card_archived_area_suppression`, 5 `public_card_structured_area_price_suppression` + 1 Balmoral `public_card_structured_area_price_suppression` + 6 private/media source rechecks = 17.] The historical Godrej Hillview correction is documented in the previous same-day section.
+
+### Private project verification (still held)
+- Skylon Suburbia: first-party marketing page confirms the marketer Hariko and explicitly says **developed by Sai Krupa Developers**, preserving the statutory identity from RERA-derived records. Current numbered allotment, legally attributable sale-unit scope, price and legal status remain blockers. Sources: https://harikoproperties.com/skylon-suburbia/ and https://skylonsuburbia.harikoproperties.com/ .
+- Goodlife by Holistic Group (Karjat): first-party project page confirms 3/4/5-bed concept, 48 villas across 8.5 acres, **advertised ₹1.29 Cr project-wide** and registration P52000079493, but no confirmed particular saleable villa, fee basis and legal plot-villa scope. Remains private. Source: https://holisticgroup.in/goodlife/ .
+- Marathon Nexzone — Nirvana Collection and Dosti Willow: first-party official galleries/source pages discovered for further validation; **no project images were copied/activated**, because specific asset matching and permitted commercial reuse were not established. Sources: https://marathon.in/nexzone/gallery/ and https://dostirealty.com/project/dosti-willow .
+
+### Publication result
+- Projects total **1,898**; published **683** (Mumbai/MMR **487**), private **1,215**.
+- Private Mumbai/MMR projects **1,131**; private Mumbai/MMR active-priced inventories remain **0**.
+- **New projects published this continuation: 0**. No invented unit allocation, fake current offer, developer email, GoDaddy restart/redeploy or price replacement.
