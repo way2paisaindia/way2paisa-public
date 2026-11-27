@@ -64,3 +64,10 @@ Production https://www.way2paisa.in is on GoDaddy. Keep premium design and publi
 2. Verify the Invictus current *numbered promoter unit* and actual all-inclusive quote, tower, floor, RERA carpet and first-party photo rights before reactivating any price.
 3. Develop new Sixty3 registered residential candidate only with builder current stock, dated legally binding cost, exact area and photo permissions. Never confuse separate Bizpark office RERA.
 4. Expand Mumbai/MMR phase-aware project audit and avoid suppressing plausible confirmed current advertisements solely because their registration is complex.
+
+
+## Post-audit direct-browser HTML refresh verified (27 November 2026)
+A final read-only Firecrawl browser GET confirmed both previous cache issues had cleared:
+- Raymond Invictus BKC published detail HTTP200, x-nextjs-cache HIT, new ETag yarto2jaeo1tar. Page title Raymond Invictus by GS BKC Bandra East | Price on Request. Starting Price on request; old Rs 6.99Cr+ was absent. Invictus public search HTTP200 no old numeric price or outdated area fallback.
+- Raymond The Address by GS Sion published detail HTTP200, x-nextjs-cache HIT, new ETag xa79glymb11w37. Title Raymond The Address by GS Sion | 2, 3 & 4 BHK; no old 2+2 BHK or 3+3 BHK Jodi strings present.
+The earlier provisional Invictus stale detail HTML issue in Section 2 is RESOLVED without GoDaddy redeployment.
