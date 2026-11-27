@@ -69,3 +69,10 @@ Private Mumbai/MMR portfolio at end of cycle: **1,139** records; **937** have so
 
 ## Next candidate work
 Seek a present first-party promoter issued **unit-number, RERA carpet, date-stamped price and live allocation** (and authorized media) for a private project. Avoid publishing an old generic "from ₹" or unbooked RERA aggregate as active inventory. Finish exact tower/rera mapping for ambiguous Rustomjee Crown 4BHK 4,700 sqft quote if sufficiently supported; avoid speculative removal of confirmed project-wide official ₹17.01Cr price.
+
+
+## Post-audit direct-browser render verification (27 Nov 2026)
+Separate live Firecrawl direct-browser GETs, not stale scrape cache, confirmed:
+- Godrej Bliss: HTTP 200, `x-nextjs-cache:HIT`, detail **Configuration 2 BHK | 3 BHK**, correct **Price on request** with no old ₹2.02 Cr starting price. ETag `17q5zk0j7sx1po4`.
+- Rustomjee Balmoral: HTTP 200, `x-nextjs-cache:HIT`, detail **Configuration 3 BHK | 4 BHK | 5 BHK**, correct **Price on request**; ETag `83k4cvq0mc1w17`.
+These direct checks confirm the two `bhk_original` grouped-notation database corrections have already propagated to customer-facing project pages without a GoDaddy deployment.
